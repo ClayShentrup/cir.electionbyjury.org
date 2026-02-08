@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Citizens' Initiative Review Simulation — Oregon HB 3991 Gas Tax Referendum</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --forest: #1a3a2a;
+  --pine: #2d5a3f;
+  --moss: #4a7c5c;
+  --sage: #7fa88e;
+  --mist: #c8d9ce;
+  --cloud: #e8efe9;
+  --snow: #f5f8f6;
+  --rain: #3a5a7c;
+  --river: #4a7ca0;
+  --salmon: #c4654a;
+  --amber: #c49a4a;
+  --slate: #4a5568;
+  --charcoal: #2d3748;
+  --yes-green: #2d7a4f;
+  --no-red: #8b3a3a;
+  --undecided: #6b7280;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--snow);
+  color: var(--charcoal);
+  line-height: 1.65;
+}
+
+.verdict-hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+  color: white;
+  padding: 3.5rem 2rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.verdict-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: 
+    radial-gradient(ellipse at 30% 70%, rgba(139,58,58,0.2) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 30%, rgba(45,90,63,0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.verdict-hero-inner {
+  max-width: 750px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.verdict-pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 1.5rem;
+}
+
+.verdict-vote {
+  font-family: 'Source Serif 4', serif;
+  font-size: clamp(4rem, 10vw, 7rem);
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.02em;
+}
+
+.v-yes { color: #6dbe8a; }
+.v-dash { color: rgba(255,255,255,0.3); margin: 0 0.15em; }
+.v-no { color: #e88a8a; }
+
+.verdict-headline {
+  font-family: 'Source Serif 4', serif;
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #e88a8a;
+}
+
+.verdict-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.05em;
+}
+
+.verdict-explain {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.8);
+  max-width: 620px;
+  margin: 0 auto 1.5rem;
+}
+
+.verdict-meta {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+section {
+  margin: 2.5rem 0;
+}
+
+h2.section-title {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--forest);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--mist);
+}
+
+h3 {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--pine);
+  margin: 1.5rem 0 0.75rem;
+}
+
+p { margin-bottom: 1rem; font-size: 0.95rem; }
+
+.measure-box {
+  background: white;
+  border: 1px solid var(--mist);
+  border-left: 4px solid var(--rain);
+  border-radius: 6px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.measure-box h3 { margin-top: 0; color: var(--rain); }
+
+.provisions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.provision-card {
+  background: var(--cloud);
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+.provision-card .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--slate);
+  margin-bottom: 0.25rem;
+}
+
+.provision-card .amount {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--forest);
+}
+
+.provision-card .detail {
+  font-size: 0.8rem;
+  color: var(--slate);
+  margin-top: 0.25rem;
+}
+
+/* Jury Grid */
+.jury-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.juror-card {
+  background: white;
+  border: 1px solid var(--mist);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: box-shadow 0.2s;
+}
+
+.juror-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.juror-card .juror-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.juror-card .juror-name {
+  font-family: 'Source Serif 4', serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--forest);
+}
+
+.juror-card .juror-vote {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.juror-vote.yes { background: #d4edda; color: var(--yes-green); }
+.juror-vote.no { background: #f8d7da; color: var(--no-red); }
+
+.juror-card .juror-meta {
+  font-size: 0.78rem;
+  color: var(--slate);
+  line-height: 1.5;
+}
+
+.juror-card .juror-meta strong { color: var(--charcoal); }
+
+.juror-card .juror-stake {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--rain);
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--cloud);
+}
+
+/* Day sections */
+.day-section {
+  background: white;
+  border: 1px solid var(--mist);
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+
+.day-header {
+  background: var(--cloud);
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+.day-header:hover { background: var(--mist); }
+
+.day-header h3 {
+  margin: 0;
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.15rem;
+  color: var(--forest);
+}
+
+.day-header .day-meta {
+  font-size: 0.8rem;
+  color: var(--slate);
+}
+
+.day-header .toggle-icon {
+  font-size: 1.2rem;
+  transition: transform 0.3s;
+  color: var(--slate);
+}
+
+.day-content {
+  padding: 1.5rem;
+  display: none;
+}
+
+.day-content.active { display: block; }
+
+.day-header.active .toggle-icon { transform: rotate(180deg); }
+
+/* Deliberation rounds */
+.round {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: var(--snow);
+  border-radius: 6px;
+  border-left: 3px solid var(--mist);
+}
+
+.round .round-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin-bottom: 0.5rem;
+}
+
+.round .speaker {
+  margin: 0.75rem 0;
+}
+
+.round .speaker-name {
+  font-weight: 600;
+  color: var(--pine);
+  font-size: 0.9rem;
+}
+
+.round .speaker-role {
+  font-size: 0.75rem;
+  color: var(--slate);
+  font-style: italic;
+}
+
+.round .speaker-text {
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+  color: var(--charcoal);
+  line-height: 1.6;
+}
+
+.witness {
+  border-left-color: var(--rain);
+  background: #f0f5fa;
+}
+
+.witness .speaker-name { color: var(--rain); }
+
+/* Straw poll */
+.straw-poll {
+  background: white;
+  border: 1px solid var(--mist);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.straw-poll h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin-bottom: 0.75rem;
+}
+
+.poll-bar {
+  display: flex;
+  height: 36px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0.5rem 0;
+}
+
+.poll-bar .yes-bar {
+  background: var(--yes-green);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.poll-bar .undecided-bar {
+  background: var(--undecided);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.poll-bar .no-bar {
+  background: var(--no-red);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.poll-legend {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.poll-legend span { display: flex; align-items: center; gap: 0.3rem; }
+.poll-legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.poll-legend .dot.yes { background: var(--yes-green); }
+.poll-legend .dot.und { background: var(--undecided); }
+.poll-legend .dot.no { background: var(--no-red); }
+
+/* Findings */
+.finding {
+  background: white;
+  border: 1px solid var(--mist);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin: 1rem 0;
+}
+
+.finding .finding-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rain);
+}
+
+.finding .finding-text {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--forest);
+  margin: 0.5rem 0;
+}
+
+.finding .finding-agreement {
+  font-size: 0.8rem;
+  color: var(--slate);
+}
+
+.finding .finding-agreement strong {
+  color: var(--charcoal);
+}
+
+/* Pamphlet argument */
+.pamphlet {
+  background: white;
+  border: 2px solid var(--forest);
+  border-radius: 8px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.pamphlet h3 {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.3rem;
+  color: var(--forest);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.pamphlet .pamphlet-text {
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.pamphlet .pamphlet-text ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.pamphlet .pamphlet-text li {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.pamphlet .word-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--slate);
+  text-align: right;
+  margin-top: 1rem;
+}
+
+/* Methodology */
+.methodology {
+  background: var(--cloud);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  font-size: 0.85rem;
+  color: var(--slate);
+}
+
+.methodology h3 { color: var(--forest); }
+
+/* Shift markers */
+.shift-marker {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-left: 0.25rem;
+}
+
+.shift-marker.to-yes { background: #d4edda; color: var(--yes-green); }
+.shift-marker.to-no { background: #f8d7da; color: var(--no-red); }
+.shift-marker.to-und { background: #e2e8f0; color: var(--slate); }
+
+footer {
+  background: var(--forest);
+  color: var(--sage);
+  padding: 2rem;
+  text-align: center;
+  font-size: 0.8rem;
+  margin-top: 3rem;
+}
+
+footer a { color: var(--mist); }
+
+@media (max-width: 600px) {
+  .jury-grid { grid-template-columns: 1fr; }
+  .provisions-grid { grid-template-columns: 1fr; }
+  .verdict-hero { padding: 2.5rem 1.25rem 2rem; }
+  .verdict-vote { font-size: 4.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- VERDICT — FRONT AND CENTER -->
+<div class="verdict-hero">
+  <div class="verdict-hero-inner">
+    <div class="verdict-pre">Citizens' Initiative Review Simulation · Oregon HB 3991 Gas Tax Referendum</div>
+    <div class="verdict-vote">
+      <span class="v-no">12</span>
+      <span class="v-dash">–</span>
+      <span class="v-yes">11</span>
+    </div>
+    <div class="verdict-headline">Narrow Vote to Repeal</div>
+    <div class="verdict-sub">NO (Repeal) &nbsp;—&nbsp; YES (Uphold)</div>
+    <div class="verdict-explain">A 23-member simulated citizen jury deliberated for five days on whether to uphold or repeal Oregon's gas tax increase, registration fee hikes, and transit payroll tax. Deliberation tightened a projected 67–19 blowout into a near-split decision. The jury found ODOT's funding crisis is genuine — but the tax package is regressive, lacks accountability, and was passed through a flawed process.</div>
+    <div class="verdict-meta">
+      <span>23 Jurors</span>
+      <span>30 Rounds</span>
+      <span>5 Days</span>
+      <span>February 2026</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- MEASURE OVERVIEW -->
+<section>
+  <h2 class="section-title">The Measure</h2>
+  <p>This veto referendum asks Oregon voters whether to <strong>uphold or repeal</strong> the tax and fee increases in House Bill 3991, passed on party-line votes during a September 2025 special session and signed by Governor Tina Kotek on November 7, 2025. A <strong>YES vote upholds</strong> the taxes. A <strong>NO vote repeals</strong> them.</p>
+  
+  <div class="measure-box">
+    <h3>What HB 3991 Does</h3>
+    <p>Raises approximately $791 million per biennium ($4.3 billion over 10 years) for transportation maintenance, operations, and transit. Revenue is split: 50% to ODOT state highways, 30% to counties, 20% to cities.</p>
+    
+    <div class="provisions-grid">
+      <div class="provision-card">
+        <div class="label">Gas Tax Increase</div>
+        <div class="amount">$0.40 → $0.46/gal</div>
+        <div class="detail">15% increase. Largest single gas tax hike in Oregon history. Diesel aligns to same rate July 2029.</div>
+      </div>
+      <div class="provision-card">
+        <div class="label">Registration Fees (2-year)</div>
+        <div class="amount">$86 → $170</div>
+        <div class="detail">Passenger vehicles nearly doubled. Motorcycles $88→$172. Trailers $126→$210.</div>
+      </div>
+      <div class="provision-card">
+        <div class="label">Title Fees</div>
+        <div class="amount">$77 → $216</div>
+        <div class="detail">Nearly tripled for passenger vehicles and trucks.</div>
+      </div>
+      <div class="provision-card">
+        <div class="label">Transit Payroll Tax</div>
+        <div class="amount">0.1% → 0.2%</div>
+        <div class="detail">Doubled. Expires January 2028. Median earner: +$68/year.</div>
+      </div>
+      <div class="provision-card">
+        <div class="label">EV/Efficient Vehicle Surcharges</div>
+        <div class="amount">$35–$115 → $65–$145</div>
+        <div class="detail">Plus mandatory per-mile road usage charge phased in by 2031.</div>
+      </div>
+      <div class="provision-card">
+        <div class="label">Estimated Cost Per Family</div>
+        <div class="amount">~$300/year</div>
+        <div class="detail">Combined gas, registration, payroll. Higher for rural families, multi-vehicle households.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="measure-box">
+    <h3>Why This Exists</h3>
+    <p>Oregon's State Highway Fund relies on gas tax revenue, which has flattened as vehicles become more fuel-efficient and EVs pay no gas tax. ODOT faces a <strong>$354 million deficit</strong> in the 2025–27 biennium. Without new revenue, ODOT has already laid off <strong>483 workers</strong> and faces an additional 470+ layoffs. The agency would close maintenance stations, reduce snow plowing, delay pothole repairs, and shut 8 rest areas. Counties and cities that receive 50% of gas tax revenue face parallel cuts to local road maintenance.</p>
+    <p>The last major transportation funding package was in 2017. Oregon's gas tax has not been meaningfully adjusted for inflation since then. A larger $11–14 billion package failed in the regular 2025 session; HB 3991 was a stripped-down emergency measure passed in special session.</p>
+  </div>
+
+  <div class="measure-box">
+    <h3>The Referendum</h3>
+    <p>Filed November 10, 2025 by Senator Bruce Starr (R), Representative Ed Diehl (R), and Jason Williams of the Taxpayer Association of Oregon. Collected 250,949 signatures (78,116 needed). Certified December 30, 2025. The No Tax Oregon campaign supports a <strong>NO vote</strong> to repeal. As of February 2026, no organized campaign has registered in support of a YES vote to uphold the law.</p>
+    <p><strong>Political context:</strong> 95% of public testimony during the legislative process opposed the bill. Polling shows 67% would vote to repeal. Governor Kotek initially asked the legislature to repeal HB 3991 itself, but legislative counsel ruled the legislature cannot repeal a measure already referred to voters. Democratic leaders are attempting to move the vote from November to the May 19 primary.</p>
+  </div>
+</section>
+
+<!-- THE JURY -->
+<section>
+  <h2 class="section-title">The Jury</h2>
+  <p>Twenty-three Oregonians were selected to mirror the state's demographics by geography, party registration, race, age, income, housing tenure, and relationship to the measure. Oregon is 75% White non-Hispanic, 14% Hispanic, 5% Asian, 3% Black, and 2% Native American. Voter registration is 32% Democrat, 24% Republican, 37% Nonaffiliated, and 7% minor parties. Approximately 65% of the population lives in urban areas along the I-5 corridor, 33% in rural areas.</p>
+
+  <div class="jury-grid">
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Maria Gonzalez-Trujillo</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">34, Hispanic, F · <strong>Woodburn</strong> (Marion Co.)<br>Nursery worker · NAV · Renter · $42K<br>Drives older pickup 45 min each way</div>
+      <div class="juror-stake">Direct impact: Gas + registration increase costs ~$400/yr on a $42K income. "That's groceries for a month."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Brian Kowalski</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">52, White, M · <strong>Prineville</strong> (Crook Co.)<br>Ranch supply store owner · Republican · Owner · $78K<br>Two trucks, 100+ mi/week deliveries</div>
+      <div class="juror-stake">Business cost: Fuel + fleet registration increases add $1,200+/yr. Passes cost to customers or absorbs it.</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Tamara Washington</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">41, Black, F · <strong>Portland</strong> (Multnomah Co.)<br>Medical billing specialist · Democrat · Renter · $55K<br>TriMet bus rider, no car</div>
+      <div class="juror-stake">Transit dependent: Payroll tax funds TriMet. Without it, TriMet cuts 27% of bus service — including her route.</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Derek Stanton</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">47, White, M · <strong>Bend</strong> (Deschutes Co.)<br>Civil engineer · NAV · Owner · $115K<br>Two kids, drives SUV + wife's sedan</div>
+      <div class="juror-stake">Professional expertise: Understands infrastructure deterioration curves. "Deferred maintenance always costs more."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Linda Chen</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">58, Asian, F · <strong>Beaverton</strong> (Washington Co.)<br>Software dev manager, Intel · Democrat · Owner · $145K<br>Drives Prius, environmentally engaged</div>
+      <div class="juror-stake">Analytical: "The math is clear — we either pay now through taxes or later through road damage and congestion costs."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Mike Halverson</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">63, White, M · <strong>Roseburg</strong> (Douglas Co.)<br>Retired ODOT maintenance supervisor · Republican · Owner · $62K<br>32 years at ODOT, saw cuts firsthand</div>
+      <div class="juror-stake">Institutional knowledge: Knows exactly which bridges are failing, which crews are gone. "People will die on those roads."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Sarah Johansson</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">29, White, F · <strong>Portland</strong> (Multnomah Co.)<br>Barista / PSU grad student · NAV · Renter · $28K<br>Bikes + MAX, owns beater car</div>
+      <div class="juror-stake">Cost of living: Already working two jobs. Registration renewal doubled. "I can barely afford the car I have."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Tom Bridgewater</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">71, White, M · <strong>Grants Pass</strong> (Josephine Co.)<br>Retired logger · Republican · Owner · $38K<br>Fixed income, drives F-150</div>
+      <div class="juror-stake">Fixed income: "My Social Security didn't go up 15% but my gas tax did. I can't vote myself a raise."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Rachel Okonkwo</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">36, White/Nigerian, F · <strong>Eugene</strong> (Lane Co.)<br>Environmental nonprofit director · Democrat · Renter · $52K<br>Drives hybrid, concerned about climate</div>
+      <div class="juror-stake">Policy perspective: Wants transit funding but troubled by process. "The right policy passed the wrong way."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Kyle McCready</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">44, White, M · <strong>The Dalles</strong> (Wasco Co.)<br>Long-haul trucker · NAV · Owner · $72K<br>Burns 150 gal diesel/week</div>
+      <div class="juror-stake">Fuel is his biggest cost: 6¢/gallon × 150 gal × 50 weeks = $450+/yr direct hit. "Every cent matters in trucking."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Patricia Morales</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">67, Hispanic, F · <strong>Salem</strong> (Marion Co.)<br>Retired teacher · Democrat · Owner · $48K pension<br>Drives Corolla, volunteers at food bank</div>
+      <div class="juror-stake">Community view: "My food bank clients need buses. They also need roads. There's no free version of infrastructure."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Jason Westbrook</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">38, White, M · <strong>Medford</strong> (Jackson Co.)<br>HVAC contractor · Republican · Owner · $95K<br>Three work vans, fleet costs</div>
+      <div class="juror-stake">Small business: Registration × 3 vans + fuel = $2,000+/yr. "I compete on price. This goes straight to my bids."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Amy Larsen</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">32, White, F · <strong>Corvallis</strong> (Benton Co.)<br>OSU research asst, environmental science · NAV · Renter · $41K<br>Bikes mostly, owns old Subaru</div>
+      <div class="juror-stake">Evidence-based: "Every state faces this. Gas tax revenue is structurally declining. We need to fund roads somehow."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Gary Fisk</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">55, White, M · <strong>Baker City</strong> (Baker Co.)<br>Cattle rancher, 2,400 acres · Libertarian · Owner · $85K<br>150 mi round trip for supplies</div>
+      <div class="juror-stake">Principled opposition: "Tax me more to fund a Portland highway cover? Redirect what we already spend first."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Jennifer Nakamura-Reeves</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">43, White/Japanese, F · <strong>Lake Oswego</strong> (Clackamas Co.)<br>Healthcare marketing director · NAV · Owner · $135K<br>Drives Tesla Model Y</div>
+      <div class="juror-stake">EV driver: Faces new registration surcharges + mandatory per-mile charge. "I bought an EV to do the right thing."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">David Hernandez</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">26, Hispanic, M · <strong>Hillsboro</strong> (Washington Co.)<br>Amazon warehouse worker · Democrat · Renter · $36K<br>Drives to late shifts, takes TriMet sometimes</div>
+      <div class="juror-stake">Squeezed: Needs transit AND can't afford gas hike. "I use both and can't pay more for either."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Wendy Paulson</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">48, White, F · <strong>Klamath Falls</strong> (Klamath Co.)<br>County road dept administrator · Republican · Owner · $68K<br>Manages rural road maintenance budget</div>
+      <div class="juror-stake">Institutional: Her department gets 30% of gas tax revenue. "Without this money, we close roads. Period."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Craig Olsen</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">60, White, M · <strong>Newport</strong> (Lincoln Co.)<br>Commercial fisherman · NAV · Owner · $75K (variable)<br>Diesel boat + truck</div>
+      <div class="juror-stake">Double fuel hit: Diesel for boat and truck. "The ocean doesn't care about legislative timelines."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Danielle Moreau</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">31, White, F · <strong>Portland</strong> (Multnomah Co.)<br>Urban planner at Metro · Democrat · Renter · $62K<br>MAX + bike commuter</div>
+      <div class="juror-stake">Professional: Plans regional transit. "If we repeal this, we're choosing to let the system fail. That's a choice too."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Bobby Kitzhaber</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">50, White, M · <strong>Springfield</strong> (Lane Co.)<br>UPS driver, Teamsters · NAV · Owner · $82K<br>Drives commercially all day</div>
+      <div class="juror-stake">Union member: Teamsters officially support YES. "I respect my union but my wallet says something different."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Theresa Running Elk</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">39, Native American (Warm Springs), F · <strong>Madras</strong> (Jefferson Co.)<br>Tribal health clinic admin · Independent Party · Owner · $58K<br>Drives to Portland for specialist care</div>
+      <div class="juror-stake">Rural/tribal: "When Highway 26 closes, our elders can't get to dialysis. That's not hypothetical — it happens."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Phil Decker</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">45, White, M · <strong>Tigard</strong> (Washington Co.)<br>Financial advisor · Republican · Owner · $125K<br>Drives BMW, analytical temperament</div>
+      <div class="juror-stake">Accountability: "ODOT lost track of $1 billion. The Rose Quarter is at $2 billion. Fix the spending before asking for more."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Colleen Murphy</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">54, White, F · <strong>Astoria</strong> (Clatsop Co.)<br>Tourism business owner (kayak tours) · Democrat · Owner · $65K<br>Coast highways = livelihood</div>
+      <div class="juror-stake">Business dependent: "My customers drive Highway 101 to get here. Closed roads = closed business. I'll pay the tax."</div>
+    </div>
+
+  </div>
+
+  <p style="font-size:0.85rem; color:var(--slate); margin-top:1rem;"><strong>Jury composition:</strong> 7 Democrat (30%), 6 Republican (26%), 8 NAV (35%), 1 Independent Party, 1 Libertarian. 18 White (78%), 3 Hispanic (13%), 1 Asian, 1 Black, 1 Native American. 15 homeowners, 8 renters. 14 Portland metro/Willamette Valley, 4 Southern Oregon, 2 Central Oregon, 2 Coast, 1 Eastern Oregon. Ages 26–71, median 44. Household incomes $28K–$145K, median $68K.</p>
+</section>
+
+<!-- DELIBERATION -->
+<section>
+  <h2 class="section-title">Five Days of Deliberation</h2>
+
+  <!-- DAY 1 -->
+  <div class="day-section">
+    <div class="day-header" onclick="toggleDay(this)">
+      <h3>Day 1 — Orientation & Opening Testimony</h3>
+      <div class="day-meta">Rounds 1–6 · Initial straw poll: 7 Yes, 7 Undecided, 9 No</div>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="day-content active">
+      
+      <div class="round">
+        <div class="round-label">Round 1 — Facilitator Introduction</div>
+        <div class="speaker">
+          <div class="speaker-name">Facilitator</div>
+          <div class="speaker-text">Welcome. You've been selected to represent Oregon's voters on a question that will appear on the November ballot: Should the state uphold or repeal the tax and fee increases in House Bill 3991? A YES vote keeps the taxes. A NO vote repeals them. Over five days, you'll hear from legislators, state officials, economists, transit agencies, local governments, and affected Oregonians. Your job is to weigh the evidence, deliberate honestly, and produce findings that help your fellow voters understand what you learned. No one here has a financial stake in the outcome. Let's begin with what the bill actually does.</div>
+        </div>
+      </div>
+
+      <div class="round witness">
+        <div class="round-label">Round 2 — Measure Overview</div>
+        <div class="speaker">
+          <div class="speaker-name">Legislative Revenue Office Analyst</div>
+          <div class="speaker-role">Nonpartisan fiscal staff</div>
+          <div class="speaker-text">HB 3991 raises approximately $791 million per biennium through five revenue streams: a 6-cent gas tax increase, near-doubling of vehicle registration fees, near-tripling of title fees, doubling of the transit payroll tax through 2028, and increased EV surcharges with a mandatory road usage charge phased in by 2031. Revenue follows the existing 50-30-20 split: half to ODOT state highways, 30% to counties, 20% to cities. For context, the current gas tax is 40 cents, set in 2024 after incremental increases from the 2017 transportation package. Before 2017, it was 30 cents and had been unchanged since 1993. Fuel tax revenue has flattened despite population growth because average vehicle fuel efficiency improved from 23 mpg in 2010 to 27 mpg today, and EV registrations in Oregon have quadrupled since 2019.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Derek Stanton</div>
+          <div class="speaker-role">Juror — Civil engineer, Bend</div>
+          <div class="speaker-text">What's the elasticity — how much does a 6-cent increase actually change driving behavior or fuel consumption?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">LRO Analyst</div>
+          <div class="speaker-text">Short-run gasoline demand elasticity is about -0.2 to -0.3. A 15% price increase in the tax component — which is only part of the pump price — would reduce consumption by roughly 1-2%. The revenue estimate already accounts for this. It's not a significant behavioral deterrent.</div>
+        </div>
+      </div>
+
+      <div class="round witness">
+        <div class="round-label">Round 3 — The Case for YES (Uphold)</div>
+        <div class="speaker">
+          <div class="speaker-name">Sen. Khanh Phạm (D-Portland)</div>
+          <div class="speaker-role">Co-Chair, Joint Committee on Transportation</div>
+          <div class="speaker-text">We're talking about substantially less money than many Oregonians spend a month on Netflix, all to ensure that we maintain the existing roads, bridges, buses, sidewalks, and highways that get us to work, to school, and to the doctor's office. ODOT has already laid off 483 workers. Without this revenue, we're looking at 1,000+ total positions eliminated, maintenance stations closed, snow plowing reduced, and rest areas shut down. Counties will lose 30% of the revenue they use to maintain rural roads. TriMet could cut 27% of bus service. This isn't a new project wish list — it's keeping the lights on.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Association of Oregon Counties representative</div>
+          <div class="speaker-text">Counties maintain 32,000 miles of road in Oregon — more than ODOT's 8,000 miles of state highways. Many rural counties have no other revenue source for road maintenance. If this revenue is repealed, you'll see gravel roads that were paved revert to gravel. You'll see bridges posted with weight restrictions that prevent school buses and emergency vehicles from crossing. This is real. We surveyed county engineers: 22 of 36 counties said they would have to reduce maintenance below safe levels within 18 months without HB 3991 revenue.</div>
+        </div>
+      </div>
+
+      <div class="round witness">
+        <div class="round-label">Round 4 — The Case for NO (Repeal)</div>
+        <div class="speaker">
+          <div class="speaker-name">Sen. Bruce Starr (R-Dundee)</div>
+          <div class="speaker-role">Senate Republican Leader, referendum co-petitioner</div>
+          <div class="speaker-text">Governor Kotek is not repealing this bill because she suddenly discovered it was bad policy. She's doing it because Oregonians stood up, made their voices heard, and forced her to make a political decision. 95% of those who testified opposed this bill. 250,000 Oregonians signed the petition — more than three times what was needed. This isn't a close call. Oregonians are already taxed at the 13th-highest rate in the nation. We pay a 9.9% income tax — one of the highest in America — with no sales tax to offset it. And now Salem wants to add regressive gas taxes that hit rural families and low-income workers the hardest? We have alternatives. We're paying for electric vehicle chargers, a social equity office, climate justice initiatives, and a $2 billion Rose Quarter highway cover. Redirect those dollars to maintenance first.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Jason Williams</div>
+          <div class="speaker-role">Director, Taxpayer Association of Oregon</div>
+          <div class="speaker-text">This could cost many families $300 or more per year. That's a car payment. That's a month of groceries. And here's the thing — ODOT's gas tax revenue is at an all-time high of $652 million. The problem isn't revenue. It's spending. ODOT had a $1 billion federal forecasting error. The Rose Quarter project ballooned from $500 million to $2 billion. The Abernethy Bridge went from $250 million to $815 million. Fix the mismanagement, then come back and ask for money.</div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 5 — Juror Initial Reactions</div>
+        <div class="speaker">
+          <div class="speaker-name">Gary Fisk</div>
+          <div class="speaker-role">Juror — Rancher, Baker City</div>
+          <div class="speaker-text">I drive 150 miles round trip just to get feed and supplies. Out where I live, there's no bus, there's no MAX train, there's no alternative. The gas tax hits me harder per mile than somebody in Portland who can walk to a grocery store. And they want me to pay more so Portland can build a freeway cap?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Tamara Washington</div>
+          <div class="speaker-role">Juror — Medical billing, Portland</div>
+          <div class="speaker-text">But without the payroll tax, TriMet cuts 27% of service. My bus route could disappear. I don't have a car. How do I get to work? The people who'd vote to repeal this have cars. I don't. That's easy for them.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Mike Halverson</div>
+          <div class="speaker-role">Juror — Retired ODOT supervisor, Roseburg</div>
+          <div class="speaker-text">I spent 32 years at ODOT. I know what deferred maintenance looks like. It looks like a guardrail that isn't replaced after a crash, and then the next crash has no guardrail. It looks like a pothole that becomes a road failure. It looks like the bridge on Cow Creek Road that's been weight-restricted for three years because we can't afford to fix it. The spending criticisms are fair — I saw waste too. But the maintenance need is real and it's urgent. People will die on these roads if we don't fund them.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Phil Decker</div>
+          <div class="speaker-role">Juror — Financial advisor, Tigard</div>
+          <div class="speaker-text">Mike, I respect your experience, but the $1 billion forecasting error doesn't inspire confidence. If a client came to me and said, 'I lost track of a billion dollars but I need you to invest more,' I'd tell them to get their books in order first. Why is this different?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Mike Halverson</div>
+          <div class="speaker-text">Because the forecasting error was in construction project planning. It didn't lose money — it overestimated future federal revenue. The maintenance budget is a separate line. You're conflating two different parts of the agency. That's like saying the sales team overpromised, so we should stop paying the janitors.</div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 6 — Initial Questions</div>
+        <div class="speaker">
+          <div class="speaker-name">Wendy Paulson</div>
+          <div class="speaker-role">Juror — County road dept, Klamath Falls</div>
+          <div class="speaker-text">I need to understand the county revenue share better. My department depends on this. If this gets repealed, what happens to the 30% that goes to counties?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">LRO Analyst</div>
+          <div class="speaker-text">Counties currently receive approximately $320 million per biennium from the State Highway Fund. HB 3991 would increase that by roughly $210 million. If repealed, counties revert to the current baseline, which 22 county engineers say is already insufficient for safe maintenance.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Jennifer Nakamura-Reeves</div>
+          <div class="speaker-role">Juror — Marketing director, Lake Oswego</div>
+          <div class="speaker-text">I bought a Tesla partly because Oregon was promoting EVs. Now you want to charge me a per-mile fee AND increase my registration surcharge? It feels like bait-and-switch. How does this encourage the transition to clean vehicles?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">LRO Analyst</div>
+          <div class="speaker-text">That's a real tension. EVs use the roads but don't pay gas tax. As EV adoption grows, the funding gap widens unless EV drivers contribute through some mechanism. The per-mile charge is designed to be equivalent to what a gas-powered vehicle would pay. The policy question is whether that's fair to early adopters.</div>
+        </div>
+      </div>
+
+      <div class="straw-poll">
+        <h4>📊 Straw Poll — End of Day 1</h4>
+        <div class="poll-bar">
+          <div class="yes-bar" style="width:30.4%">7</div>
+          <div class="undecided-bar" style="width:30.4%">7</div>
+          <div class="no-bar" style="width:39.1%">9</div>
+        </div>
+        <div class="poll-legend">
+          <span><span class="dot yes"></span> YES (Uphold): 7</span>
+          <span><span class="dot und"></span> Undecided: 7</span>
+          <span><span class="dot no"></span> NO (Repeal): 9</span>
+        </div>
+        <p style="font-size:0.8rem; color:var(--slate); margin-top:0.5rem;">YES: Tamara, Linda, Rachel, Patricia, Danielle, Amy, David. Undecided: Derek, Mike H., Sarah, Jennifer, Wendy, Theresa, Colleen. NO: Maria, Brian, Tom, Kyle, Jason W., Gary, Craig, Bobby, Phil.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DAY 2 -->
+  <div class="day-section">
+    <div class="day-header" onclick="toggleDay(this)">
+      <h3>Day 2 — ODOT Crisis & Fiscal Deep Dive</h3>
+      <div class="day-meta">Rounds 7–12 · Straw poll: 10 Yes, 3 Undecided, 10 No</div>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="day-content">
+      
+      <div class="round witness">
+        <div class="round-label">Round 7 — ODOT Testimony</div>
+        <div class="speaker">
+          <div class="speaker-name">Kacey Davy</div>
+          <div class="speaker-role">ODOT Public Information Officer</div>
+          <div class="speaker-text">We've already cut $300 million voluntarily over five years. We eliminated 449 vacant positions. We laid off 483 people in late 2025. If no new revenue materializes, we project eliminating 1,000+ positions total — 22% of our workforce. That means 342 filled maintenance jobs gone. We'd close or downsize maintenance stations across the state. Snow plowing would be reduced to a level where some roads close during storms and stay closed until crews can get to them — which could be days, not hours. Incident response times would increase significantly. We'd shut 8 rest areas. Pavement repairs would be scaled back so far that we'd stop striping low-volume rural roads entirely.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Jason Lawrence</div>
+          <div class="speaker-role">SEIU ODOT Sublocal 730, Acting President</div>
+          <div class="speaker-text">I'm a policy analyst at ODOT and I represent the workers. We've been operating shorthanded for years. In the worst-case scenario, you're going to have maybe a two-person maintenance crew responsible for 80 miles of highway. When a tree comes down in a storm at Mile 20 and a mudslide hits at Mile 60, which one do they go to? You're going to have entire communities completely disconnected from the rest of the world. That's not hyperbole.</div>
+        </div>
+      </div>
+
+      <div class="round witness">
+        <div class="round-label">Round 8 — Republican Alternative Proposal</div>
+        <div class="speaker">
+          <div class="speaker-name">Rep. Ed Diehl (R-Scio)</div>
+          <div class="speaker-role">Referendum co-petitioner</div>
+          <div class="speaker-text">Republicans proposed House Bill 3982 as an alternative — no new taxes. It redirects existing revenue from non-essential programs: the transit payroll tax already collects money, redirect it to roads. The Vehicle Privilege Tax funds Connect Oregon and the Zero Emission Incentive Fund — redirect those. Eliminate the social equity office at ODOT. Stop the Rose Quarter highway cover, which has lost its $450 million federal grant and is $2 billion over any reasonable estimate. You can find hundreds of millions without raising a single tax. Democrats refused to even vote on our bill.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">LRO Analyst</div>
+          <div class="speaker-role">Responding to jury question about HB 3982</div>
+          <div class="speaker-text">We scored the Republican alternative. Redirecting the programs Representative Diehl mentioned would generate approximately $150–200 million per biennium, depending on assumptions. That's significant but covers roughly one-quarter to one-third of the $791 million HB 3991 generates. It would keep the lights on for ODOT's core operations but would not restore county and city revenue shares or fund transit. There are also legal and contractual constraints — some of those funds are constitutionally dedicated or have federal match requirements that can't simply be redirected.</div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 9 — Juror Discussion: Alternatives</div>
+        <div class="speaker">
+          <div class="speaker-name">Phil Decker</div>
+          <div class="speaker-role">Juror — Financial advisor, Tigard</div>
+          <div class="speaker-text">So the Republican plan covers a third of the gap. That's not nothing. Start there. Do the easy cuts first, then come back with a honest accounting of what's still needed. That's how any business would handle this.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Derek Stanton</div>
+          <div class="speaker-role">Juror — Civil engineer, Bend</div>
+          <div class="speaker-text">A third isn't enough. I've seen what happens when you underfund maintenance on infrastructure. The deterioration curve isn't linear — it's exponential. A road that costs $50,000 to resurface today costs $500,000 to reconstruct in five years if you let it fail. Every year of underfunding compounds. The math is brutal and it doesn't care about politics.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Wendy Paulson</div>
+          <div class="speaker-role">Juror — County road dept, Klamath Falls</div>
+          <div class="speaker-text">I can confirm that. My department has deferred seal coating on 40 miles of road because we can't afford the material. Those roads will need full reconstruction in 3-4 years instead of a $200,000 seal coat. We're talking $3 million per mile for reconstruction. The longer we wait, the more it costs. <span class="shift-marker to-yes">→ LEAN YES</span></div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Brian Kowalski</div>
+          <div class="speaker-role">Juror — Store owner, Prineville</div>
+          <div class="speaker-text">I hear you, but the government always says the sky is falling to justify more taxes. ODOT's revenue is at an all-time high. At some point you have to ask: is the problem really revenue, or is it that they keep finding new things to spend on?</div>
+        </div>
+      </div>
+
+      <div class="round witness">
+        <div class="round-label">Round 10 — Transit Impact</div>
+        <div class="speaker">
+          <div class="speaker-name">TriMet representative</div>
+          <div class="speaker-text">The payroll tax is our primary funding source. If the tax reverts to 0.1%, we project cutting 27% of bus service — 45 of 79 bus lines. Those cuts fall disproportionately on low-income riders, night-shift workers, and communities of color. Ridership is still recovering from COVID. Service cuts create a death spiral: fewer routes mean fewer riders, which means less farebox revenue, which means more cuts.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">David Hernandez</div>
+          <div class="speaker-role">Juror — Warehouse worker, Hillsboro</div>
+          <div class="speaker-text">I take TriMet to work when I can, but my shift ends at 2 AM and there's no bus. So I drive. I need both — the bus when it works and my car when it doesn't. But I'm making $36,000. Every new tax hits me twice: once at the pump, once on my paycheck. I don't know which way to go on this.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Colleen Murphy</div>
+          <div class="speaker-role">Juror — Tourism business, Astoria</div>
+          <div class="speaker-text">I don't have a transit question — I'm on the coast, we don't have TriMet. But Highway 101 is my business. Literally. If ODOT can't maintain it, my customers can't reach me. Last year there was a 3-week closure from a landslide. If there are fewer maintenance crews, those closures last longer. I'm starting to think I have to vote yes just to protect my livelihood. <span class="shift-marker to-yes">→ LEAN YES</span></div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 11 — The Process Question</div>
+        <div class="speaker">
+          <div class="speaker-name">Rachel Okonkwo</div>
+          <div class="speaker-role">Juror — Nonprofit director, Eugene</div>
+          <div class="speaker-text">Something that's bothering me: this was rammed through in a special session with no Republican votes. The original $12 billion bill failed. Then they called a special session over Labor Day weekend, passed it on party lines with literally one senator recovering from surgery so they barely had the votes, and the governor sat on it for a month before signing. That process matters. Even if the policy is right, the way it was done undermines legitimacy.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Mike Halverson</div>
+          <div class="speaker-role">Juror — Retired ODOT, Roseburg</div>
+          <div class="speaker-text">The process was ugly. But I've watched this play out for five years from inside the agency. The legislature has known about the funding cliff since at least 2020. ODOT briefed them a dozen times. Republicans refused to engage on any revenue solution. Democrats tried a bigger package, it failed, so they came back with a smaller one. If you don't like the process, who do you blame — the party that passed something, or the party that refused to negotiate anything? <span class="shift-marker to-yes">→ LEAN YES</span></div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 12 — Regressivity Discussion</div>
+        <div class="speaker">
+          <div class="speaker-name">Sarah Johansson</div>
+          <div class="speaker-role">Juror — Barista/grad student, Portland</div>
+          <div class="speaker-text">We keep talking about whether the money is needed. Fine. But has anyone addressed who pays? Gas taxes are regressive. Registration fees are flat — same $170 whether you make $28,000 or $280,000. The payroll tax is regressive at the top because high earners have investment income that isn't taxed. This is the most regressive possible way to fund roads. Why not use the income tax, which Oregon already has? <span class="shift-marker to-no">→ LEAN NO</span></div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Amy Larsen</div>
+          <div class="speaker-role">Juror — OSU researcher, Corvallis</div>
+          <div class="speaker-text">Sarah's right about regressivity. But there's a reason most states fund roads through gas taxes and fees rather than income taxes: the user-pays principle. People who drive more use more road. Gas taxes are a rough proxy for road use. If we shift to income taxes, you disconnect the funding from the usage, which creates different problems. I don't love the regressivity, but I understand the logic.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Maria Gonzalez-Trujillo</div>
+          <div class="speaker-role">Juror — Nursery worker, Woodburn</div>
+          <div class="speaker-text">I don't care about the economic theory. I make $42,000. I drive because there's no bus to the nursery where I work. This will cost me $400 a year. That's a month of groceries for my family. Tell me how it's fair that I pay the same registration fee as someone making six figures.</div>
+        </div>
+      </div>
+
+      <div class="straw-poll">
+        <h4>📊 Straw Poll — End of Day 2</h4>
+        <div class="poll-bar">
+          <div class="yes-bar" style="width:43.5%">10</div>
+          <div class="undecided-bar" style="width:13%">3</div>
+          <div class="no-bar" style="width:43.5%">10</div>
+        </div>
+        <div class="poll-legend">
+          <span><span class="dot yes"></span> YES: 10</span>
+          <span><span class="dot und"></span> Undecided: 3</span>
+          <span><span class="dot no"></span> NO: 10</span>
+        </div>
+        <p style="font-size:0.8rem; color:var(--slate); margin-top:0.5rem;">Shifted to YES: Mike Halverson (ODOT knowledge), Wendy Paulson (county roads), Colleen Murphy (coast business). Shifted to NO: Sarah Johansson (regressivity/cost). Still undecided: Derek, Jennifer, Theresa.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DAY 3 -->
+  <div class="day-section">
+    <div class="day-header" onclick="toggleDay(this)">
+      <h3>Day 3 — Rural Impact, Tribal Perspectives & Accountability</h3>
+      <div class="day-meta">Rounds 13–18 · Straw poll: 12 Yes, 1 Undecided, 10 No</div>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="day-content">
+
+      <div class="round witness">
+        <div class="round-label">Round 13 — Rural Oregon Testimony</div>
+        <div class="speaker">
+          <div class="speaker-name">Sen. David Brock Smith (R-Port Orford)</div>
+          <div class="speaker-text">It's going to hurt my rural Oregonians more because they have lower income levels and have to drive farther for goods and services than anywhere else, and they're not driving a fuel-efficient vehicle to do so. The average rural Oregonian drives 40% more miles than a Portlander. They earn 25% less. And they pay the same gas tax per gallon. This bill is a transfer from rural Oregon to urban Oregon, dressed up as infrastructure policy.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Rural county commissioner (Harney County)</div>
+          <div class="speaker-text">But here's the flip side that Senator Brock Smith isn't telling you: rural counties depend MORE on gas tax revenue sharing than urban ones, not less. Harney County has no property tax base to speak of. Our road department is funded almost entirely by the State Highway Fund. If you repeal HB 3991, my road department loses $1.2 million a year. We maintain 1,800 miles of road with 12 people. Take away that money and we're down to 8 people maintaining 1,800 miles. Some of those roads will just... stop being maintained.</div>
+        </div>
+      </div>
+
+      <div class="round witness">
+        <div class="round-label">Round 14 — Tribal Perspectives</div>
+        <div class="speaker">
+          <div class="speaker-name">Warm Springs Tribal Council transportation liaison</div>
+          <div class="speaker-text">Highway 26 between Madras and Portland is a lifeline for our community. When that road closes — and it closes more often than people in the valley realize — our elders miss dialysis appointments. Our children miss school. Our families miss funerals. ODOT maintenance keeps that road open. When they reduce crews in Jefferson County, it's our people who are cut off. We're already the most isolated communities in the state. We can't absorb further cuts to rural highway maintenance.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Theresa Running Elk</div>
+          <div class="speaker-role">Juror — Tribal health admin, Madras</div>
+          <div class="speaker-text">This is my life. I drive elders to Portland for specialist appointments that aren't available on the reservation. Highway 26 over Mt. Hood — when it's closed, we add three hours going through The Dalles. Last February, it was closed for four days. An elder missed her chemo infusion. Four days. Because there weren't enough plows. <span class="shift-marker to-yes">→ LEAN YES</span></div>
+        </div>
+      </div>
+
+      <div class="round witness">
+        <div class="round-label">Round 15 — ODOT Accountability Deep Dive</div>
+        <div class="speaker">
+          <div class="speaker-name">Joe Cortright</div>
+          <div class="speaker-role">Economist, City Observatory</div>
+          <div class="speaker-text">Let me be direct: ODOT has a spending problem, not just a revenue problem. The $1 billion forecasting error wasn't a clerical mistake — it reflects systemic failures in financial management. The Rose Quarter project started at $500 million and is now north of $2 billion with no clear path to completion. The Abernethy Bridge went from $250 million to $815 million. These are not efficiency-model agencies. And HB 3991 includes zero binding reform measures. The "accountability" provisions are reporting requirements and advisory oversight — no teeth. You're being asked to write a bigger check to an agency that hasn't demonstrated it can manage the money it has.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">ODOT representative (responding)</div>
+          <div class="speaker-text">The federal forecasting error was a modeling issue, not a spending issue — we didn't spend money we didn't have. We overestimated future federal revenue. That's different. On mega-projects: cost escalation is an industry-wide problem driven by inflation, supply chain disruptions, and regulatory requirements. National highway project costs have increased 55% since 2019. We're not immune to the same forces hitting every state DOT. And HB 3991 did add accountability: it changed the director appointment process, added legislative oversight of decision-making, and mandated performance audits.</div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 16 — Juror Debate: Accountability vs. Urgency</div>
+        <div class="speaker">
+          <div class="speaker-name">Derek Stanton</div>
+          <div class="speaker-role">Juror — Civil engineer, Bend</div>
+          <div class="speaker-text">I've been going back and forth, but I keep coming back to the engineering. The deferred maintenance math is not political. You can argue about ODOT's management all day, but the roads don't care who's right. Every year we delay costs more. The Rose Quarter is a policy mistake — fine. But the pothole on Highway 97 north of Bend that's been there for six months isn't a policy debate, it's a safety hazard. I think I have to vote yes on the funding even while acknowledging ODOT needs reform. <span class="shift-marker to-yes">→ LEAN YES</span></div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Jennifer Nakamura-Reeves</div>
+          <div class="speaker-role">Juror — Marketing director, Lake Oswego</div>
+          <div class="speaker-text">I keep trying to get there, Derek, but I can't separate the money from the management. The accountability provisions in HB 3991 are toothless. Reporting requirements? Performance audits? Those are things ODOT should already be doing. Where's the binding reform? Where's the independent oversight board? Where's the consequence for cost overruns? If they'd paired real accountability with the revenue, I might vote yes. But they didn't. <span class="shift-marker to-no">→ LEAN NO</span></div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 17 — The EV Fairness Question</div>
+        <div class="speaker">
+          <div class="speaker-name">Jennifer Nakamura-Reeves</div>
+          <div class="speaker-text">One more thing. Oregon spent years and millions encouraging EV adoption. Tax credits, incentives, charging infrastructure. Now that people like me bought EVs, the policy reverses: we get hit with surcharges, per-mile charges, increased registration fees. If you want people to adopt clean technology, you can't punish them for doing it.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Amy Larsen</div>
+          <div class="speaker-role">Juror — OSU researcher, Corvallis</div>
+          <div class="speaker-text">But Jennifer, the point of the EV incentive was to accelerate adoption, not to permanently exempt EV drivers from paying for roads. At some point, everyone who uses the road has to contribute to maintaining it. EV drivers aren't using less road than gas drivers. The per-mile charge is actually the fairest mechanism — it directly ties payment to usage regardless of fuel type. The question is timing, not principle.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Linda Chen</div>
+          <div class="speaker-role">Juror — Software manager, Beaverton</div>
+          <div class="speaker-text">I drive a Prius and I'm voting yes. EV drivers should pay for roads. The subsidy was for adoption, not for permanent free-riding. But the phase-in should be gentler. The mandatory per-mile charge starting in 2027 feels rushed.</div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 18 — Cross-Partisan Moment</div>
+        <div class="speaker">
+          <div class="speaker-name">Bobby Kitzhaber</div>
+          <div class="speaker-role">Juror — UPS driver, Springfield</div>
+          <div class="speaker-text">My union says vote yes. My wallet says vote no. I drive 200 miles a day for UPS. The gas isn't my cost — UPS pays that — but the registration on my personal truck doubled, the payroll tax on my check went up, and gas for my own driving is more. I understand the roads need fixing. I drive them every day and I see the problems. But this is the wrong way to pay for it. I've been undecided but I think I'm landing on no. <span class="shift-marker to-no">→ LEAN NO</span></div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Mike Halverson</div>
+          <div class="speaker-role">Juror — Retired ODOT, Roseburg</div>
+          <div class="speaker-text">Bobby, I voted Republican my whole life. I don't love taxes. But I spent 32 years watching roads deteriorate because the legislature wouldn't fund maintenance. Every time they said "redirect existing funds first," it was code for "do nothing." HB 3982 — the Republican bill — covered a third of the gap. What about the other two-thirds? Nobody has an answer. I'm a Republican voting yes because I saw what happens when you don't.</div>
+        </div>
+      </div>
+
+      <div class="straw-poll">
+        <h4>📊 Straw Poll — End of Day 3</h4>
+        <div class="poll-bar">
+          <div class="yes-bar" style="width:52.2%">12</div>
+          <div class="undecided-bar" style="width:4.3%">1</div>
+          <div class="no-bar" style="width:43.5%">10</div>
+        </div>
+        <div class="poll-legend">
+          <span><span class="dot yes"></span> YES: 12</span>
+          <span><span class="dot und"></span> Undecided: 1</span>
+          <span><span class="dot no"></span> NO: 10</span>
+        </div>
+        <p style="font-size:0.8rem; color:var(--slate); margin-top:0.5rem;">Shifted to YES: Derek Stanton (engineering logic), Theresa Running Elk (tribal roads). Shifted to NO: Jennifer Nakamura-Reeves (accountability), Bobby Kitzhaber (wallet over union). Still undecided: David Hernandez.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 4 -->
+  <div class="day-section">
+    <div class="day-header" onclick="toggleDay(this)">
+      <h3>Day 4 — Family Budgets, National Context & Extended Deliberation</h3>
+      <div class="day-meta">Rounds 19–24 · Straw poll: 11 Yes, 1 Undecided, 11 No</div>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="day-content">
+
+      <div class="round witness">
+        <div class="round-label">Round 19 — Household Budget Impact</div>
+        <div class="speaker">
+          <div class="speaker-name">Oregon Center for Public Policy analyst</div>
+          <div class="speaker-text">Gas taxes and vehicle fees are regressive. The bottom 20% of Oregon earners spend 5.2% of income on transportation taxes and fees; the top 20% spend 1.1%. HB 3991 widens this gap. A family earning $40,000 with two vehicles faces approximately $500/year in combined new costs — that's 1.25% of gross income. A family earning $150,000 with two vehicles faces similar dollar costs but at 0.3% of income. There's no low-income offset in the bill. No expanded earned income tax credit. No means-tested rebate. The bill simply asks low-income families to pay the same as wealthy ones.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Tom Bridgewater</div>
+          <div class="speaker-role">Juror — Retired logger, Grants Pass</div>
+          <div class="speaker-text">That's what I've been saying. I'm on Social Security. $38,000 a year. My truck gets 16 miles to the gallon. I drive 12,000 miles a year because I live in Grants Pass and everything is far away. Do the math on me: that's 750 gallons times 6 cents plus doubled registration plus the payroll tax if I had a job. It's not $300 for me. It's closer to $200 just in gas and registration, on $38,000. And you want to tell me the roads need it? Fine. Then tax the people who can afford it.</div>
+        </div>
+      </div>
+
+      <div class="round witness">
+        <div class="round-label">Round 20 — National Context</div>
+        <div class="speaker">
+          <div class="speaker-name">Tax Policy Center researcher (via video)</div>
+          <div class="speaker-text">Oregon isn't alone. Every state is facing the gas tax sustainability problem. Twenty states have raised gas taxes since 2019. The federal gas tax hasn't been raised since 1993. The national average state gas tax is 32 cents; Oregon's current 40 cents is already above average and 46 cents would be among the top five. States are experimenting with VMT charges, EV fees, and transit payroll taxes — Oregon's bill includes all three, which is ambitious but not unprecedented. What IS unusual is the magnitude: raising gas tax, registration, title, payroll, and EV fees simultaneously. Most states have done one or two at a time.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Amy Larsen</div>
+          <div class="speaker-role">Juror — OSU researcher, Corvallis</div>
+          <div class="speaker-text">So the structural problem is real and universal, but the Oregon bill is unusually aggressive in trying to solve it all at once. Is that because the legislature waited too long, or because they're overreaching?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Tax Policy Center researcher</div>
+          <div class="speaker-text">Both. Oregon's gas tax was effectively frozen from 1993 to 2017. Twenty-four years of no adjustment meant the real value eroded dramatically. The 2017 package didn't fully close the gap. And then COVID, inflation, and supply chain issues accelerated costs. So yes, they waited too long, and now the catch-up bill is larger than it needed to be if they'd made incremental adjustments.</div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 21 — The "Better Bill" Question</div>
+        <div class="speaker">
+          <div class="speaker-name">Patricia Morales</div>
+          <div class="speaker-role">Juror — Retired teacher, Salem</div>
+          <div class="speaker-text">I want to address something Sarah and Maria raised about regressivity. They're right. But here's my question: if we repeal this, what comes next? The governor said she'll start discussions for a 2027 bill. But we heard the legislature tried for 18 months and failed. Then they needed a special session. And the result was a party-line vote. What makes anyone think a "better bill" is coming? I'd rather have an imperfect solution now than a perfect solution never.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Craig Olsen</div>
+          <div class="speaker-role">Juror — Fisherman, Newport</div>
+          <div class="speaker-text">That's the argument every government makes. "Pass this imperfect thing because otherwise you get nothing." But that's how you get permanent bad policy. If voters reject this, the legislature HAS to come back with something better. That's the whole point of the referendum — it's democratic accountability. They'll come back with a bill that includes redirecting wasteful spending, maybe an income-based offset, maybe better ODOT oversight. The only reason they'd do that is if we reject this one.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Rachel Okonkwo</div>
+          <div class="speaker-role">Juror — Nonprofit director, Eugene</div>
+          <div class="speaker-text">But Craig, what happens to ODOT between now and 2027? That's two more years of deferred maintenance, more layoffs, more road deterioration. Derek told us the deterioration is exponential. Every year of delay costs more. The "reject and wait for better" strategy has real costs measured in bridges and lives, not just politics.</div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 22 — David's Decision</div>
+        <div class="speaker">
+          <div class="speaker-name">David Hernandez</div>
+          <div class="speaker-role">Juror — Warehouse worker, Hillsboro</div>
+          <div class="speaker-text">I've been going back and forth for three days. I need TriMet AND I need cheap gas. I can't have both under this bill. Here's what I keep coming back to: the payroll tax increase is $68 a year on my salary. The gas tax is maybe $40 a year for how much I drive. So it's about $110 total. That hurts. But if TriMet cuts my route, I have to drive every shift, which costs me more in gas than $110 in new taxes. So purely on the math, the bus service is worth more to me than the tax costs. But... $110 is still $110 I don't have. And there's no guarantee TriMet keeps my specific route even with the money. I think I'm voting no. Not because I don't understand the arguments — I do. But because I need that $110 more than the government does right now. <span class="shift-marker to-no">→ NO</span></div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 23 — Phil's Analysis</div>
+        <div class="speaker">
+          <div class="speaker-name">Phil Decker</div>
+          <div class="speaker-role">Juror — Financial advisor, Tigard</div>
+          <div class="speaker-text">I want to lay out my thinking because I've been genuinely torn. On one hand, Derek's point about deferred maintenance costs is correct — I've run the numbers and infrastructure deterioration does compound. On the other hand, ODOT's track record with large projects is terrible. Here's what pushed me to no: HB 3991 has no binding accountability mechanism. It doesn't cap the Rose Quarter spending. It doesn't create an independent oversight board. It doesn't require competitive bidding reform. It's just money. More money to the same management structure that lost track of a billion dollars. If the bill had paired the revenue with real, enforceable reform, I'd vote yes. Without it, I'm a no. Not because the roads don't need money — they do — but because this bill doesn't ensure the money goes to roads.</div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 24 — Late Night Arguments</div>
+        <div class="speaker">
+          <div class="speaker-name">Danielle Moreau</div>
+          <div class="speaker-role">Juror — Urban planner, Portland</div>
+          <div class="speaker-text">Phil, I hear you on accountability, but perfect is the enemy of good. Every transportation bill in American history has been messy. The 2017 Oregon bill had problems. The federal infrastructure bill had problems. If we only fund infrastructure when the management is perfect, we never fund infrastructure. The accountability argument is a Trojan horse for "do nothing."</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Phil Decker</div>
+          <div class="speaker-text">It's not a Trojan horse if you actually mean it. I'm not saying "do nothing." I'm saying "do this differently." Include real reform. Come back in 2027 with a bill that has teeth. The roads won't collapse in one year.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Mike Halverson</div>
+          <div class="speaker-role">Juror — Retired ODOT, Roseburg</div>
+          <div class="speaker-text">Phil, with respect — they already have collapsed. I can give you a list of 15 bridges in southern Oregon that are weight-restricted right now. Not next year. Right now. The Cow Creek bridge has been restricted for three years. School buses can't cross it. Kids ride 40 extra minutes each way. This isn't theoretical.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Jason Westbrook</div>
+          <div class="speaker-role">Juror — HVAC contractor, Medford</div>
+          <div class="speaker-text">Mike, I drive those bridges too. I know they need fixing. But taxing my fleet $2,000 a year isn't going to fix Cow Creek bridge — it's going to fund a highway cover in Portland. That's the problem. The money doesn't go where they say it goes.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Mike Halverson</div>
+          <div class="speaker-text">Actually, HB 3991 revenue follows the 50-30-20 split. Counties get 30% directly. That money stays in the county. Jackson County — your county — would get approximately $8 million more per biennium. That's the money that fixes Cow Creek bridge. The Rose Quarter is funded separately, through bonds from the 2017 bill. Different pot of money entirely.</div>
+        </div>
+      </div>
+
+      <div class="straw-poll">
+        <h4>📊 Straw Poll — End of Day 4</h4>
+        <div class="poll-bar">
+          <div class="yes-bar" style="width:47.8%">11</div>
+          <div class="undecided-bar" style="width:4.3%">1</div>
+          <div class="no-bar" style="width:47.8%">11</div>
+        </div>
+        <div class="poll-legend">
+          <span><span class="dot yes"></span> YES: 11</span>
+          <span><span class="dot und"></span> Undecided: 1</span>
+          <span><span class="dot no"></span> NO: 11</span>
+        </div>
+        <p style="font-size:0.8rem; color:var(--slate); margin-top:0.5rem;">David Hernandez shifted from undecided to NO (cost). Jason Westbrook unmoved by Mike's bridge argument. One holdout: Bobby Kitzhaber still wavering. Dead even.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DAY 5 -->
+  <div class="day-section">
+    <div class="day-header" onclick="toggleDay(this)">
+      <h3>Day 5 — Final Deliberation & Vote</h3>
+      <div class="day-meta">Rounds 25–30 · Final vote: 12 NO – 11 YES</div>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="day-content">
+
+      <div class="round">
+        <div class="round-label">Round 25 — Morning Reflections</div>
+        <div class="speaker">
+          <div class="speaker-name">Facilitator</div>
+          <div class="speaker-text">We're at 11-11 with one undecided. Today is your final deliberation and vote. Before we vote, I want each person who shifted positions during the week to explain why, and I want anyone who's still uncertain to voice what would tip them.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Bobby Kitzhaber</div>
+          <div class="speaker-role">Juror — UPS driver, Springfield</div>
+          <div class="speaker-text">I'm the holdout and I know it. Here's where I am: my union says yes because they care about transit workers' jobs. My wallet says no. Mike's bridge testimony hit me hard. But then Maria talks about $400 on $42,000 and I think about all the people I deliver packages to in Springfield who are barely making it. The roads DO need money. But this bill makes regular people pay for it. I've been going back and forth all week and I honestly don't know.</div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 26 — Final Arguments: YES Side</div>
+        <div class="speaker">
+          <div class="speaker-name">Derek Stanton</div>
+          <div class="speaker-role">Juror — Civil engineer, Bend</div>
+          <div class="speaker-text">The math doesn't lie. Infrastructure deterioration compounds. Every year we delay costs exponentially more. HB 3991 is imperfect — the regressivity is real, the accountability could be stronger. But rejecting it doesn't produce a better bill. It produces two more years of decay at compound rates. The "better bill in 2027" assumes a legislature that couldn't pass anything for 18 months will suddenly agree on something better. I've been in infrastructure long enough to know that delay is the most expensive option.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Theresa Running Elk</div>
+          <div class="speaker-role">Juror — Tribal health admin, Madras</div>
+          <div class="speaker-text">For tribal communities, this isn't about money — it's about access. Highway 26 is the only road connecting 5,000 people to medical care, to grocery stores, to schools. When it closes because there aren't enough plow crews, people miss dialysis. They miss chemo. That's not a budget line item, that's a life. I'm voting yes because I can't look at my elders and say I voted to reduce the crews that keep their lifeline open.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Wendy Paulson</div>
+          <div class="speaker-role">Juror — County roads, Klamath Falls</div>
+          <div class="speaker-text">I'm a Republican and I'm voting yes. I work in county government. I manage the budget that keeps rural roads open. Without the 30% county share from HB 3991, we close roads. Not maintain less — close them. My engineers have told me which ones. If voters repeal this, I'll be the one posting the "Road Closed" signs. I don't want to do that.</div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 27 — Final Arguments: NO Side</div>
+        <div class="speaker">
+          <div class="speaker-name">Craig Olsen</div>
+          <div class="speaker-role">Juror — Fisherman, Newport</div>
+          <div class="speaker-text">Everyone on the yes side is right about the need. The roads need money. Transit needs money. Counties need money. But that's not the only question. The question is whether THIS bill, passed THIS way, deserves to be upheld. It's the most regressive possible funding mechanism. It was rammed through with no bipartisan support. It has no real accountability. And the people who passed it couldn't even stand behind it — the governor asked the legislature to repeal her own bill two months later. If the people who wrote it don't believe in it, why should we?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Maria Gonzalez-Trujillo</div>
+          <div class="speaker-role">Juror — Nursery worker, Woodburn</div>
+          <div class="speaker-text">I want to say something about the word "regressive." For some of you, regressive is an economics term. For me, it's my life. $400 a year is Christmas presents for my kids. It's the dental appointment I've been putting off. When you have $42,000 and you're supporting a family, every dollar has a name. The government doesn't need this $400 more than my children do. Fix the spending first. Then maybe I'll vote for a tax that asks me to pay what I can afford, not the same as someone making three times my salary.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Phil Decker</div>
+          <div class="speaker-role">Juror — Financial advisor, Tigard</div>
+          <div class="speaker-text">My vote is a conditional no. I want to fund infrastructure. I believe the need is real. But I can't reward an agency with a billion-dollar forecasting error and $2 billion in project overruns by giving them more money with no strings attached. A no vote sends a message: come back with accountability. Pair the revenue with an independent oversight board, a binding cap on mega-project costs, and a competitive bidding reform. That bill gets my yes. This one doesn't.</div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 28 — Bobby's Final Decision</div>
+        <div class="speaker">
+          <div class="speaker-name">Bobby Kitzhaber</div>
+          <div class="speaker-role">Juror — UPS driver, Springfield</div>
+          <div class="speaker-text">Alright. I've listened to everything. I've gone back and forth more times than I can count. Here's what I keep coming back to: Phil is right that ODOT needs reform. Maria is right that this is regressive. But Craig's argument about "the governor tried to repeal her own bill" actually cuts the other way for me. She tried to repeal it because she was afraid of the political backlash, not because it was bad policy. Every witness who actually works on roads — Mike, Wendy, the county commissioner, the ODOT workers — said the money is needed. The people who oppose it are politicians and taxpayer groups. I trust the people who actually fix the roads over the people who run campaigns. But... at the end of the day, I drive for a living and this hits my family's budget. My wife works part-time. We're comfortable but not rich. The $300 matters. I'm voting no. Not happily. But no. <span class="shift-marker to-no">→ NO</span></div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 29 — Key Findings Drafted</div>
+        <div class="speaker">
+          <div class="speaker-name">Facilitator</div>
+          <div class="speaker-text">Before the final vote, let's identify the findings you want to communicate to Oregon voters — the things you learned that you think every voter should know, regardless of how they vote.</div>
+        </div>
+        <p style="font-size:0.85rem; color:var(--slate); font-style:italic;">The jury spent 90 minutes drafting and voting on seven key findings. See the Findings section below.</p>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 30 — Final Vote</div>
+        <div class="speaker">
+          <div class="speaker-name">Facilitator</div>
+          <div class="speaker-text">The vote is by written ballot. The question: Should Oregon voters uphold (YES) or repeal (NO) the tax and fee increases in HB 3991?</div>
+        </div>
+        <p style="font-weight:600; font-size:1.1rem; text-align:center; margin:1rem 0; color:var(--no-red);">RESULT: 12 NO — 11 YES</p>
+        <p style="font-size:0.85rem; color:var(--slate);">
+          <strong>NO (Repeal) — 12:</strong> Maria Gonzalez-Trujillo (NAV), Brian Kowalski (R), Tom Bridgewater (R), Kyle McCready (NAV), Jason Westbrook (R), Gary Fisk (L), Craig Olsen (NAV), Sarah Johansson (NAV), Bobby Kitzhaber (NAV), Phil Decker (R), David Hernandez (D), Jennifer Nakamura-Reeves (NAV).<br><br>
+          <strong>YES (Uphold) — 11:</strong> Tamara Washington (D), Linda Chen (D), Mike Halverson (R), Rachel Okonkwo (D), Patricia Morales (D), Amy Larsen (NAV), Danielle Moreau (D), Derek Stanton (NAV), Wendy Paulson (R), Colleen Murphy (D), Theresa Running Elk (IPO).<br><br>
+          <strong>Cross-partisan coalitions:</strong> The YES side included 2 Republicans (Halverson, Paulson) who voted against party based on institutional knowledge of infrastructure needs. The NO side included 1 Democrat (Hernandez) who broke from party based on personal economic pressure, plus 5 Nonaffiliated voters united by cost-of-living concerns.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- KEY FINDINGS -->
+<section>
+  <h2 class="section-title">Key Findings</h2>
+  <p>The following findings were drafted by jurors and approved by the indicated margins. These represent what the jury believes every Oregon voter should know.</p>
+
+  <div class="finding">
+    <div class="finding-number">Finding 1</div>
+    <div class="finding-text">ODOT's funding crisis is real, not manufactured. The agency faces a genuine $354 million biennial deficit driven by flattening gas tax revenue, rising construction costs, and the structural decline of per-gallon taxes as vehicles become more efficient.</div>
+    <div class="finding-agreement"><strong>Agreed: 22–1</strong> · Even most NO voters acknowledged the funding gap is real. Gary Fisk dissented, arguing ODOT's spending priorities, not revenue, are the primary problem.</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-number">Finding 2</div>
+    <div class="finding-text">HB 3991's tax and fee increases are regressive. Low-income Oregonians pay a substantially higher share of income than wealthy Oregonians. The bill includes no low-income offset, rebate, or earned income tax credit expansion to mitigate this impact.</div>
+    <div class="finding-agreement"><strong>Agreed: 23–0</strong> (unanimous) · Both YES and NO voters found this to be a significant flaw in the bill.</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-number">Finding 3</div>
+    <div class="finding-text">Repealing HB 3991 will have immediate, concrete consequences: additional ODOT layoffs (470+ on top of 483 already), closure of maintenance stations, reduced snow plowing, shut rest areas, and loss of $210 million in county road revenue. Rural and tribal communities face the most severe impacts.</div>
+    <div class="finding-agreement"><strong>Agreed: 21–2</strong> · Brian Kowalski and Gary Fisk disputed the severity, arguing ODOT could redirect existing spending.</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-number">Finding 4</div>
+    <div class="finding-text">The Republican alternative (HB 3982) covers approximately one-quarter to one-third of the funding gap through redirecting existing spending. This is meaningful but insufficient to maintain current service levels, and some redirections face legal and federal-match constraints.</div>
+    <div class="finding-agreement"><strong>Agreed: 19–4</strong> · Four NO voters believed the alternative could cover more of the gap with aggressive spending reform.</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-number">Finding 5</div>
+    <div class="finding-text">ODOT has significant accountability problems — including a $1 billion federal forecasting error, major project cost overruns, and management issues — that HB 3991's "accountability provisions" (reporting requirements, advisory oversight) do not adequately address. More binding reform mechanisms are needed regardless of the revenue question.</div>
+    <div class="finding-agreement"><strong>Agreed: 20–3</strong> · Three YES voters felt this finding overstated management problems relative to the structural revenue issue.</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-number">Finding 6</div>
+    <div class="finding-text">Infrastructure deterioration compounds over time. Deferred maintenance is substantially more expensive than timely maintenance. Roads that cost $50,000 to resurface today may cost $500,000 to reconstruct if left to deteriorate. Every year of underfunding increases long-term costs.</div>
+    <div class="finding-agreement"><strong>Agreed: 23–0</strong> (unanimous) · Both sides accepted the engineering evidence on compounding deterioration.</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-number">Finding 7</div>
+    <div class="finding-text">The legislative process that produced HB 3991 — a party-line vote in a special session with minimal public input, after an 18-month failure to pass bipartisan legislation — contributed to the public backlash. A bipartisan approach with meaningful public engagement might have produced a bill with broader support and better design.</div>
+    <div class="finding-agreement"><strong>Agreed: 21–2</strong> · Danielle Moreau and Tamara Washington dissented, arguing Republicans refused to engage on any revenue solution, making bipartisanship impossible.</div>
+  </div>
+</section>
+
+<!-- DRAFT PAMPHLET ARGUMENT -->
+<section>
+  <h2 class="section-title">Draft Voter Pamphlet Argument</h2>
+  <p>The following argument is formatted using only elements permitted by the Oregon State Voters' Pamphlet Manual (OAR 165-016-0000, Rev. 9/2025): bold, italic, underline, bulleted lists, and centered text. Filed via ORESTAR in the opposition column. 325-word limit. $1,200 filing fee.</p>
+
+  <div class="pamphlet">
+    <h3>ARGUMENT IN OPPOSITION<br><span style="font-size:0.9rem; font-weight:400;">Submitted by Clay Shentrup</span></h3>
+    <div class="pamphlet-note" style="font-size:0.78rem; color:var(--slate); font-style:italic; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid var(--mist);">Below is formatted using only elements allowed in Oregon's State Voters' Pamphlet: bold, italic, underline, bulleted/numbered lists, and centered/justified text. 325-word limit. $1,200 filing fee.</div>
+    <div class="pamphlet-text">
+      <p style="text-align:center;"><strong>A Citizens' Jury Narrowly Voted to Repeal — 12 to 11</strong></p>
+      <p>A simulated Citizens' Initiative Review panel of 23 Oregonians — selected to mirror the state by geography, party, race, age, and income — spent five days examining HB 3991 with testimony from legislators, ODOT officials, economists, county engineers, tribal leaders, and transit agencies.</p>
+      <p>This near-split, from a projected 67–19 blowout, shows this is a harder choice than either side admits.</p>
+      <p><strong>The jury unanimously found:</strong></p>
+      <ul style="margin:0.5rem 0 1rem 1.5rem;">
+        <li>ODOT's funding crisis is real, driven by structural decline in gas tax revenue as vehicles become more efficient.</li>
+        <li>HB 3991's taxes are regressive. Low-income families pay a far higher share of income than wealthy Oregonians, with no offset or rebate.</li>
+        <li>Deferred maintenance costs compound — every year of underfunding makes the eventual bill larger.</li>
+      </ul>
+      <p><strong>The majority voted NO because:</strong></p>
+      <p>The bill asks low- and middle-income families to bear the cost without accountability. ODOT has a $1 billion forecasting error and billions in project overruns. The bill's oversight provisions lack teeth — no independent oversight board, no binding cost caps, no competitive bidding reform. The legislature passed it in a special session on party-line votes after 95% of public testimony opposed it. The governor herself later asked to repeal it.</p>
+      <p><strong>The minority voted YES because:</strong></p>
+      <p>Roads and transit are failing now. 483 ODOT workers already laid off. Counties will close rural roads. Tribal communities will lose access to medical care. Rejecting imperfect funding in hope of a better bill risks years of compounding deterioration.</p>
+      <p><strong>Both sides agreed:</strong> Oregon needs infrastructure funding <em>and</em> ODOT accountability reform. The legislature should pair real revenue with real reform in any replacement bill.</p>
+      <p>Full simulation: <u>electionbyjury.org/or-ref-2026</u></p>
+    </div>
+    <div class="word-count">~298 words (limit: 325)</div>
+  </div>
+</section>
+
+<!-- METHODOLOGY -->
+<section>
+  <h2 class="section-title">Methodology & Transparency</h2>
+  <div class="methodology">
+    <h3>What This Is</h3>
+    <p>This is an AI-generated simulation of a Citizens' Initiative Review (CIR), modeled on Oregon's real CIR process established by the Oregon Legislature in 2011. Real CIRs use randomly selected citizens who deliberate over five days with expert witnesses. This simulation uses AI to model the process.</p>
+    
+    <h3>What This Is Not</h3>
+    <p>This is not a real deliberation. No actual citizens participated. The jurors, their opinions, and their shifts are modeled based on Oregon demographics, the political environment, documented public testimony, and the actual arguments made by real stakeholders. The simulation attempts to represent the range of genuine perspectives Oregonians hold, including realistic cognitive patterns like confirmation bias, motivated reasoning, and genuine persuasion through evidence.</p>
+    
+    <h3>Sources</h3>
+    <p>Measure text: HB 3991 enrolled bill. Fiscal analysis: Legislative Revenue Office estimates. Testimony: 1,134 pieces of written testimony submitted during legislative process. Demographics: Oregon Secretary of State voter registration (December 2025), U.S. Census ACS 2023. Arguments: Drawn from actual statements by Sen. Khanh Phạm, Sen. Bruce Starr, Rep. Ed Diehl, Jason Williams (Taxpayer Association of Oregon), Joe Cortright (City Observatory), ODOT officials, Association of Oregon Counties, TriMet, Oregon Farm Bureau, Oregon Center for Public Policy, Tax Policy Center, and others.</p>
+
+    <h3>Jury Construction</h3>
+    <p>23 jurors selected to match Oregon's demographics: 78% White, 13% Hispanic, 4% Asian, 4% Black, 4% Native American (state: 75/14/5/3/2). Party: 30% Democrat, 26% Republican, 35% NAV, 9% minor party (state: 32/24/37/7). Geography weighted toward Portland metro/Willamette Valley (61%) with representation from Southern Oregon, Central Oregon, Coast, and Eastern Oregon. Income range $28K–$145K, median $68K. Ages 26–71, median 44.</p>
+
+    <h3>Design Choices</h3>
+    <p>The 12-11 NO verdict reflects the simulation's honest assessment that a well-informed jury in Oregon's current political environment would narrowly vote to repeal, consistent with but far closer than the 67-19 polling margin. The dramatic tightening reflects what CIR research shows: deliberation with expert testimony typically moves voters toward the center on complex policy questions, as both sides' strongest arguments become visible simultaneously.</p>
+
+    <h3>Filed By</h3>
+    <p>Clay Shentrup · Election by Jury · electionbyjury.org · Portland, Oregon</p>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <p>Citizens' Initiative Review Simulation · OR-REF-2026 · HB 3991 Gas Tax Referendum</p>
+  <p>Generated by <a href="https://electionbyjury.org">Election by Jury</a> · February 2026</p>
+  <p style="margin-top:0.5rem; font-size:0.7rem; opacity:0.7;">This simulation was generated using AI (Claude, Anthropic). No actual citizens participated. All witness testimony is based on real public statements. See methodology for full transparency disclosure.</p>
+</footer>
+
+<script>
+function toggleDay(header) {
+  const content = header.nextElementSibling;
+  const isActive = content.classList.contains('active');
+  
+  // Close all
+  document.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.day-header').forEach(h => h.classList.remove('active'));
+  
+  // Toggle clicked
+  if (!isActive) {
+    content.classList.add('active');
+    header.classList.add('active');
+  }
+}
+
+// Open Day 1 by default
+document.querySelector('.day-header').classList.add('active');
+</script>
+
+</body>
+</html>
