@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Citizens' Initiative Review Simulation — Lane County Measure 20-373</title>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Citizens' Initiative Review: Lane County Measure 20-373 — Watersheds Bill of Rights</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --deep: #0c2d48;
@@ -12,1159 +12,926 @@
   --water: #1a6fa0;
   --sky: #5da9e9;
   --mist: #c5e1f5;
-  --foam: #eaf4fc;
-  --cream: #faf9f6;
-  --warm: #f5f0eb;
-  --clay: #92400e;
-  --amber: #b45309;
-  --rust: #9a3412;
-  --slate: #475569;
-  --charcoal: #1e293b;
-  --yes-green: #047857;
-  --no-red: #9f1239;
-  --undecided: #6b7280;
+  --light: #eaf4fc;
+  --sand: #f8f6f0;
+  --slate: #4a5568;
+  --yes-green: #2d8659;
+  --no-red: #c53030;
+  --shift-gold: #b7791f;
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: 'Archivo', sans-serif;
-  background: var(--cream);
-  color: var(--charcoal);
-  line-height: 1.65;
-}
-
-.verdict-hero {
-  background: linear-gradient(160deg, #0c2d48 0%, #145374 35%, #1a6fa0 70%, #0f4c75 100%);
-  color: white;
-  padding: 3.5rem 2rem 3rem;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.verdict-hero::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background:
-    radial-gradient(ellipse at 20% 80%, rgba(20,83,116,0.4) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(26,111,160,0.3) 0%, transparent 50%);
-  pointer-events: none;
-}
-
-.verdict-hero::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M0 0h40v40H0V0zm40 40h40v40H40V40zm0-40h2l-2 2V0zm0 4l4-4h2l-6 6V4zm0 4l8-8h2L40 10V8zm0 4L52 0h2L40 14v-2zm0 4L56 0h2L40 18v-2zm0 4L60 0h2L40 22v-2zm0 4L64 0h2L40 26v-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  pointer-events: none;
-}
-
-.verdict-hero-inner {
-  max-width: 750px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-}
-
-.verdict-pre {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.5);
-  margin-bottom: 1.5rem;
-}
-
-.verdict-vote {
-  font-family: 'Instrument Serif', serif;
-  font-size: clamp(3.5rem, 9vw, 6.5rem);
-  font-weight: 400;
-  line-height: 1;
-  margin-bottom: 0.25rem;
-  letter-spacing: -0.02em;
-  color: var(--mist);
-}
-
-.verdict-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.85rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.6);
-  margin-bottom: 1.5rem;
-}
-
-.verdict-title {
-  font-family: 'Instrument Serif', serif;
-  font-size: clamp(1.2rem, 3vw, 1.6rem);
-  font-weight: 400;
-  font-style: italic;
-  line-height: 1.35;
-  color: rgba(255,255,255,0.85);
-  margin-bottom: 0.75rem;
-}
-
-.verdict-desc {
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: rgba(255,255,255,0.6);
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.container {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-}
-
-section {
-  padding: 2.5rem 0;
-  border-bottom: 1px solid #e2ddd5;
-}
-
-section:last-of-type { border-bottom: none; }
-
-.section-title {
-  font-family: 'Instrument Serif', serif;
-  font-size: 1.8rem;
-  font-weight: 400;
-  color: var(--river);
-  margin-bottom: 1rem;
-  letter-spacing: -0.01em;
-}
-
-.section-title::after {
-  content: '';
-  display: block;
-  width: 40px;
-  height: 2px;
-  background: var(--water);
-  margin-top: 0.5rem;
-}
-
-p { margin-bottom: 1rem; }
-p:last-child { margin-bottom: 0; }
-
-.measure-box {
-  background: white;
-  border: 1px solid #d4cfc7;
-  border-radius: 6px;
-  padding: 1.5rem;
-  margin: 1.5rem 0;
-}
-
-.measure-box-title {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--slate);
-  margin-bottom: 0.75rem;
-}
-
-.measure-box-text {
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: #374151;
-}
-
-.juror-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
-  gap: 0.75rem;
-  margin-top: 1.25rem;
-}
-
-.juror-card {
-  background: white;
-  border: 1px solid #e5e1da;
-  border-radius: 5px;
-  padding: 0.8rem;
-  position: relative;
-  transition: box-shadow 0.15s;
-}
-
-.juror-card:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-.juror-name {
-  font-weight: 700;
-  font-size: 0.85rem;
-  margin-bottom: 0.2rem;
-  color: var(--charcoal);
-}
-
-.juror-meta {
-  font-size: 0.72rem;
-  color: var(--slate);
-  line-height: 1.4;
-  margin-bottom: 0.3rem;
-}
-
-.juror-stake {
-  font-size: 0.72rem;
-  color: #6b7280;
-  font-style: italic;
-  line-height: 1.35;
-}
-
-.vote-badge {
-  position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  padding: 0.15rem 0.45rem;
-  border-radius: 3px;
-  text-transform: uppercase;
-}
-
-.vote-yes { background: #d1fae5; color: #065f46; }
-.vote-no { background: #ffe4e6; color: #9f1239; }
-.vote-undecided { background: #f3f4f6; color: #6b7280; }
-
-.day-block {
-  background: white;
-  border: 1px solid #e5e1da;
-  border-radius: 6px;
-  margin: 1.25rem 0;
-  overflow: hidden;
-}
-
-.day-header {
-  background: linear-gradient(135deg, var(--deep) 0%, var(--river) 100%);
-  color: white;
-  padding: 0.75rem 1.25rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-}
-
-.day-header h3 {
-  font-family: 'Instrument Serif', serif;
-  font-size: 1.15rem;
-  font-weight: 400;
-}
-
-.day-toggle {
-  font-size: 0.8rem;
-  color: rgba(255,255,255,0.6);
-}
-
-.day-content {
-  padding: 1.25rem;
-  display: none;
-}
-
-.day-content.open { display: block; }
-
-.round {
-  margin-bottom: 1.25rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid #f0ece6;
-}
-
-.round:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.round-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--water);
-  margin-bottom: 0.4rem;
-}
-
-.round-title {
-  font-weight: 700;
-  font-size: 0.95rem;
-  margin-bottom: 0.5rem;
-  color: var(--charcoal);
-}
-
-.round-body {
-  font-size: 0.88rem;
-  line-height: 1.7;
-  color: #4b5563;
-}
-
-.round-body .speaker {
-  font-weight: 600;
-  color: var(--charcoal);
-}
-
-.round-body .quote {
-  display: block;
-  margin: 0.5rem 0 0.5rem 1rem;
-  padding-left: 0.75rem;
-  border-left: 2px solid var(--mist);
-  color: #374151;
-  font-style: italic;
-}
-
-.straw-poll {
-  display: flex;
-  gap: 1.5rem;
-  margin: 0.75rem 0;
-  padding: 0.75rem 1rem;
-  background: #f8f6f3;
-  border-radius: 4px;
-  flex-wrap: wrap;
-}
-
-.poll-item {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.75rem;
-}
-
-.poll-num {
-  font-size: 1.3rem;
-  font-weight: 700;
-}
-
-.poll-num.yes { color: var(--yes-green); }
-.poll-num.no { color: var(--no-red); }
-.poll-num.und { color: var(--undecided); }
-
-.finding-box {
-  background: white;
-  border: 1px solid #e5e1da;
-  border-left: 3px solid var(--water);
-  border-radius: 0 5px 5px 0;
-  padding: 1rem 1.25rem;
-  margin: 1rem 0;
-}
-
-.finding-num {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--water);
-  margin-bottom: 0.3rem;
-}
-
-.finding-text {
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: var(--charcoal);
-  margin-bottom: 0.35rem;
-}
-
-.finding-agreement {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  color: var(--slate);
-}
-
-.pamphlet-box {
-  background: white;
-  border: 2px solid var(--river);
-  border-radius: 6px;
-  padding: 1.5rem;
-  margin: 1.5rem 0;
-}
-
-.pamphlet-header {
-  text-align: center;
-  margin-bottom: 1.25rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e5e1da;
-}
-
-.pamphlet-header h3 {
-  font-family: 'Archivo', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--charcoal);
-  margin-bottom: 0.25rem;
-}
-
-.pamphlet-header .subtitle {
-  font-size: 0.8rem;
-  color: var(--slate);
-}
-
-.pamphlet-body {
-  font-size: 0.88rem;
-  line-height: 1.65;
-  color: #374151;
-}
-
-.pamphlet-body .bold { font-weight: 700; }
-.pamphlet-body .italic { font-style: italic; }
-.pamphlet-body .underline { text-decoration: underline; }
-.pamphlet-body .center { text-align: center; }
-
-.pamphlet-body ul {
-  margin: 0.4rem 0 0.4rem 1.5rem;
-  font-size: 0.88rem;
-}
-
-.pamphlet-body ul li {
-  margin-bottom: 0.2rem;
-}
-
-.pamphlet-footer {
-  margin-top: 1rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid #e5e1da;
-  display: flex;
-  justify-content: space-between;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  color: var(--slate);
-}
-
-.methodology {
-  background: var(--warm);
-  border-radius: 6px;
-  padding: 1.25rem 1.5rem;
-  margin-top: 1.5rem;
-  font-size: 0.82rem;
-  line-height: 1.6;
-  color: var(--slate);
-}
-
-.methodology-title {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--water);
-  margin-bottom: 0.5rem;
-}
-
-.source-list {
-  font-size: 0.78rem;
-  color: var(--slate);
-  margin-top: 0.5rem;
-}
-
-.source-list a {
-  color: var(--water);
-  text-decoration: none;
-}
-
-.source-list a:hover {
-  text-decoration: underline;
-}
-
-.filing-box {
-  background: #fffbeb;
-  border: 1px solid #fde68a;
-  border-radius: 6px;
-  padding: 1.25rem;
-  margin: 1.5rem 0;
-}
-
-.filing-title {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--clay);
-  margin-bottom: 0.75rem;
-}
-
-.filing-body {
-  font-size: 0.85rem;
-  line-height: 1.65;
-  color: #92400e;
-}
-
-.shift-note {
-  background: #fef3c7;
-  border-left: 3px solid #f59e0b;
-  padding: 0.5rem 0.75rem;
-  margin: 0.5rem 0;
-  font-size: 0.82rem;
-  color: #78350f;
-  border-radius: 0 4px 4px 0;
-}
-
-a { color: var(--water); }
-
-footer {
-  background: var(--charcoal);
-  color: rgba(255,255,255,0.5);
-  text-align: center;
-  padding: 2rem;
-  font-size: 0.78rem;
-  line-height: 1.6;
-}
-
-footer a { color: var(--sky); text-decoration: none; }
-footer a:hover { text-decoration: underline; }
+body { font-family: 'Archivo', sans-serif; background: var(--sand); color: #1a202c; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+header { background: linear-gradient(135deg, var(--deep) 0%, var(--river) 40%, var(--water) 100%); color: white; padding: 3rem 1.5rem 2.5rem; text-align: center; }
+header h1 { font-family: 'Instrument Serif', serif; font-size: 2.2rem; font-weight: 400; margin-bottom: 0.3rem; }
+header .subtitle { font-size: 1rem; opacity: 0.85; margin-bottom: 1.5rem; }
+.verdict-hero { background: rgba(255,255,255,0.12); border-radius: 12px; padding: 1.5rem; margin: 0 auto; max-width: 600px; }
+.verdict-hero .vote { font-family: 'Instrument Serif', serif; font-size: 2.8rem; font-weight: 400; }
+.verdict-hero .vote .no { color: #ff9b9b; }
+.verdict-hero .vote .yes { color: #90eeb5; }
+.verdict-hero .label { font-size: 0.9rem; opacity: 0.8; margin-top: 0.3rem; }
+.measure-box { background: rgba(255,255,255,0.08); border-radius: 8px; padding: 1rem 1.2rem; margin-top: 1.2rem; text-align: left; font-size: 0.85rem; line-height: 1.5; }
+.measure-box strong { color: var(--mist); }
+
+section { margin-top: 2.5rem; }
+.section-title { font-family: 'Instrument Serif', serif; font-size: 1.6rem; color: var(--deep); margin-bottom: 1rem; padding-bottom: 0.4rem; border-bottom: 2px solid var(--mist); }
+
+.juror-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.8rem; }
+.juror-card { background: white; border-radius: 8px; padding: 0.8rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border-left: 3px solid var(--mist); font-size: 0.82rem; }
+.juror-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
+.juror-name { font-weight: 600; font-size: 0.9rem; }
+.juror-vote { font-weight: 700; font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; }
+.juror-vote.yes { background: #e6f7ed; color: var(--yes-green); }
+.juror-vote.no { background: #fee; color: var(--no-red); }
+.juror-meta { color: var(--slate); line-height: 1.4; }
+.juror-stake { margin-top: 0.4rem; font-style: italic; color: #555; border-top: 1px solid #f0f0f0; padding-top: 0.4rem; }
+
+.day-section { margin-bottom: 1rem; }
+.day-header { background: var(--river); color: white; padding: 0.8rem 1.2rem; border-radius: 8px 8px 0 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+.day-header h3 { font-family: 'Instrument Serif', serif; font-size: 1.15rem; font-weight: 400; }
+.day-meta { font-size: 0.78rem; opacity: 0.8; margin-left: 1rem; }
+.toggle-icon { font-size: 0.8rem; transition: transform 0.3s; }
+.day-header.active .toggle-icon { transform: rotate(180deg); }
+.day-content { background: white; border-radius: 0 0 8px 8px; padding: 0; max-height: 0; overflow: hidden; transition: max-height 0.01s; }
+.day-content.active { padding: 1.2rem; max-height: none; }
+
+.round { margin-bottom: 1.2rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; }
+.round:last-child { border-bottom: none; margin-bottom: 0; }
+.round-label { font-weight: 600; font-size: 0.85rem; color: var(--water); margin-bottom: 0.5rem; }
+.round.witness { border-left: 3px solid var(--sky); padding-left: 1rem; }
+.speaker { margin-bottom: 0.6rem; }
+.speaker-name { font-weight: 600; font-size: 0.88rem; }
+.speaker-role { font-size: 0.78rem; color: var(--slate); font-style: italic; }
+.speaker-text { font-size: 0.88rem; margin-top: 0.2rem; line-height: 1.55; }
+.shift-marker { font-weight: 700; font-size: 0.8rem; padding: 1px 6px; border-radius: 4px; }
+.shift-marker.to-yes { background: #e6f7ed; color: var(--yes-green); }
+.shift-marker.to-no { background: #fee; color: var(--no-red); }
+.shift-marker.to-undecided { background: #fef9e7; color: var(--shift-gold); }
+
+.finding { background: white; border-radius: 8px; padding: 1rem 1.2rem; margin-bottom: 0.8rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.finding-number { font-weight: 700; color: var(--water); font-size: 0.85rem; margin-bottom: 0.3rem; }
+.finding-text { font-size: 0.9rem; margin-bottom: 0.5rem; }
+.finding-agreement { font-size: 0.8rem; color: var(--slate); }
+
+.pamphlet { background: white; border: 2px solid var(--deep); border-radius: 8px; padding: 1.5rem; margin-top: 1rem; }
+.pamphlet h3 { font-family: 'Instrument Serif', serif; text-align: center; margin-bottom: 1rem; }
+.pamphlet-text { font-size: 0.9rem; }
+.pamphlet-text p { margin-bottom: 0.6rem; }
+.pamphlet-text ul { margin: 0.5rem 0 1rem 1.5rem; }
+.pamphlet-text li { margin-bottom: 0.3rem; }
+.word-count { text-align: right; font-size: 0.75rem; color: var(--slate); margin-top: 0.5rem; }
+
+.methodology { background: white; border-radius: 8px; padding: 1.5rem; font-size: 0.88rem; }
+.methodology h3 { font-family: 'Instrument Serif', serif; color: var(--river); margin: 1rem 0 0.4rem; font-size: 1.1rem; }
+.methodology h3:first-child { margin-top: 0; }
+.methodology p { margin-bottom: 0.6rem; }
+
+footer { text-align: center; padding: 2rem 1rem; font-size: 0.78rem; color: var(--slate); border-top: 1px solid var(--mist); margin-top: 2rem; }
+footer a { color: var(--water); }
 
 @media (max-width: 600px) {
+  header h1 { font-size: 1.6rem; }
+  .verdict-hero .vote { font-size: 2rem; }
   .juror-grid { grid-template-columns: 1fr; }
-  .straw-poll { gap: 1rem; }
-  .pamphlet-footer { flex-direction: column; gap: 0.25rem; }
 }
 </style>
 </head>
 <body>
 
-<!-- VERDICT HERO -->
-<div class="verdict-hero">
-  <div class="verdict-hero-inner">
-    <div class="verdict-pre">AI-Simulated Citizens' Initiative Review Panel — Lane County, Oregon</div>
-    <div class="verdict-vote">11–8</div>
-    <div class="verdict-label">Against the Measure</div>
-    <div class="verdict-title">Lane County Measure 20-373: Watersheds Bill of Rights</div>
-    <div class="verdict-desc">A 19-member citizen jury, demographically representative of Lane County voters, deliberated for three days on the proposed ordinance granting legal rights to all watersheds within Lane County. A majority found the measure's goals commendable but its legal framework constitutionally unworkable.</div>
+<header>
+  <h1>Citizens' Initiative Review</h1>
+  <div class="subtitle">Lane County Measure 20-373 · May 19, 2026 Primary Election</div>
+  <div class="verdict-hero">
+    <div class="vote"><span class="no">13</span> – <span class="yes">10</span></div>
+    <div class="label">Against the Measure</div>
   </div>
-</div>
+  <div class="measure-box">
+    <strong>Measure 20-373: Watersheds Bill of Rights</strong><br>
+    Citizen-initiated ordinance granting legal rights to all Lane County watersheds "to exist, flourish, regenerate and naturally evolve, free from contamination and degradation." Establishes resident standing to sue corporate, government, or business entities for violations. Requires full restoration costs plus 1% per day civil penalty. Chief petitioners: Michelle Holman, Kunu Bearchum (Protect Lane County Watersheds).
+  </div>
+</header>
 
 <div class="container">
 
-<!-- THE MEASURE -->
 <section>
-  <h2 class="section-title">The Measure</h2>
-  <p>Lane County Measure 20-373, the "Watersheds Bill of Rights," is a citizen-initiated ordinance placed on the May 19, 2026 ballot after petitioners collected more than 14,000 verified signatures. Chief petitioners are Michelle Holman and Kunu Bearchum of the group Protect Lane County Watersheds, with support from Community Rights Lane County.</p>
-
-  <div class="measure-box">
-    <div class="measure-box-title">What the Measure Would Do</div>
-    <div class="measure-box-text">
-      The ordinance would grant legal rights to all watersheds, ecosystems, and natural communities within Lane County — including the McKenzie River, Willamette forks, Long Tom, and Siuslaw watersheds — to "exist, flourish, regenerate and naturally evolve, free from contamination and degradation." It would also establish residents' rights to clean and affordable water and to "sustainable recharge" of groundwater and flows protecting native fish habitat.<br><br>
-
-      Any Lane County resident could file a lawsuit on behalf of a watershed against "corporate, government, or other business entities" found to impair these rights. Violators would be liable for full restoration costs plus a civil penalty of 1% per day of those costs from the time the impairment is reported until it is stopped. Lane County would be required to "enforce and defend this law to the fullest extent possible." The ordinance includes whistleblower protections and prevailing-plaintiff attorney fee recovery.
-    </div>
-  </div>
-
-  <div class="measure-box">
-    <div class="measure-box-title">Key Watersheds Affected</div>
-    <div class="measure-box-text">
-      Lane County contains portions of six major watersheds: the <strong>McKenzie River</strong> (sole source of Eugene's drinking water), <strong>Coast Fork Willamette</strong>, <strong>Middle Fork Willamette</strong>, <strong>Long Tom</strong>, <strong>Siuslaw</strong>, and numerous smaller tributaries draining to the Pacific Ocean. These watersheds encompass approximately 4,600 square miles across urban, agricultural, and timber lands. The ordinance would cover all of them.
-    </div>
-  </div>
-
-  <div class="measure-box">
-    <div class="measure-box-title">Legal Context</div>
-    <div class="measure-box-text">
-      This measure is part of a national "rights of nature" movement. The most prominent U.S. precedent is Toledo, Ohio's Lake Erie Bill of Rights (LEBOR), passed by voters with 61% approval in February 2019, then struck down by a federal judge in February 2020 as unconstitutionally vague and exceeding municipal authority. The court called it "not a close call." Ohio subsequently passed legislation prohibiting communities from enacting rights of nature laws. Similar measures have faced legal challenges in multiple U.S. jurisdictions, though the concept has been adopted in Ecuador, Bolivia, Colombia, and New Zealand at the national level.
-    </div>
-  </div>
+  <h2 class="section-title">About This Simulation</h2>
+  <p style="font-size:0.9rem; margin-bottom:0.8rem;">This is an <strong>AI-generated simulation</strong> of a Citizens' Initiative Review — a democratic process pioneered in Oregon where randomly selected residents study a ballot measure, hear expert testimony, and publish findings for fellow voters. No actual citizens participated. Juror profiles, deliberations, and opinion shifts are modeled using real sources: the ordinance text, legal precedent (<u>Drewes Farms P'Ship v. City of Toledo</u>), public testimony, news reporting, and Lane County demographics. <a href="https://www.electionbyjury.org" style="color:var(--water);">www.ElectionByJury.org</a></p>
 </section>
 
-<!-- THE PANEL -->
+<!-- JURY -->
 <section>
-  <h2 class="section-title">The Panel</h2>
-  <p>Nineteen Lane County residents were selected by stratified random sampling to reflect the county's registered voter demographics by party, race, geography, income, age, and housing tenure. Lane County's electorate is approximately 37% Democrat, 22% Republican, 34% Non-Affiliated, and 7% minor party. The county is geographically diverse — about 55% of voters live in the Eugene-Springfield metro, with the remainder spread across rural timber, agricultural, and coastal communities.</p>
-
+  <h2 class="section-title">The 23-Member Jury</h2>
   <div class="juror-grid">
-    <!-- YES VOTERS (8) -->
+
     <div class="juror-card">
-      <span class="vote-badge vote-yes">Yes</span>
-      <div class="juror-name">Sarah Nguyen</div>
-      <div class="juror-meta">34 · Democrat · Eugene (Whiteaker) · Renter</div>
-      <div class="juror-meta">Environmental nonprofit coordinator · $42K</div>
-      <div class="juror-stake">Volunteers for McKenzie River water quality monitoring</div>
+      <div class="juror-header">
+        <div class="juror-name">Sarah Nguyen</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">34, Vietnamese-American, F · <strong>Eugene</strong><br>Environmental nonprofit coordinator · Democrat · Renter · $44K</div>
+      <div class="juror-stake">Water justice: "The McKenzie is Eugene's drinking water. If we won't protect it, who will?"</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-yes">Yes</span>
-      <div class="juror-name">Kevin O'Malley</div>
-      <div class="juror-meta">47 · Non-Affiliated · Veneta · Owner</div>
-      <div class="juror-meta">Organic vegetable farmer · $38K</div>
-      <div class="juror-stake">Lives near Triangle Lake; family sickened by aerial spray drift in 2018</div>
+      <div class="juror-header">
+        <div class="juror-name">Jim Kessler</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">68, White, M · <strong>Springfield</strong><br>Retired millworker · Republican · Owner · $42K pension</div>
+      <div class="juror-stake">Timber country: "I've watched this county lose mills. Now you want to sue the ones still running?"</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-yes">Yes</span>
-      <div class="juror-name">Linda Clearwater</div>
-      <div class="juror-meta">58 · Democrat · Springfield · Renter</div>
-      <div class="juror-meta">Retired registered nurse · $31K</div>
-      <div class="juror-stake">Treated patients with rashes and symptoms near timberland spray zones</div>
+      <div class="juror-header">
+        <div class="juror-name">Kevin O'Malley</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">52, White, M · <strong>Veneta</strong><br>Organic farmer, 40 acres · NAV · Owner · $38K</div>
+      <div class="juror-stake">Downstream: "Spray drift from timber land ruined my pollinator hedgerow two years running."</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-yes">Yes</span>
-      <div class="juror-name">Zach Moreno</div>
-      <div class="juror-meta">28 · Democrat · Eugene (campus) · Renter</div>
-      <div class="juror-meta">UO grad student, environmental studies · $22K</div>
-      <div class="juror-stake">Researches salmon habitat degradation in the Willamette basin</div>
+      <div class="juror-header">
+        <div class="juror-name">Diane Fossum</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">61, White, F · <strong>Junction City</strong><br>Hazelnut farmer, 120 acres · NAV · Owner · $72K</div>
+      <div class="juror-stake">Liability fear: "I spray for filbert blight. Could my neighbor sue me under this?"</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-yes">Yes</span>
-      <div class="juror-name">Patricia Hawkins</div>
-      <div class="juror-meta">67 · Democrat · Florence · Owner</div>
-      <div class="juror-meta">Retired elementary school teacher · $44K</div>
-      <div class="juror-stake">Concerns about Siuslaw watershed health and coastal ecosystem decline</div>
+      <div class="juror-header">
+        <div class="juror-name">Linda Clearwater</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">58, White, F · <strong>Springfield</strong><br>Retired RN · Democrat · Owner · $56K pension</div>
+      <div class="juror-stake">Health lens: "I spent 30 years seeing what toxins do to bodies. The data is clear."</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-yes">Yes</span>
-      <div class="juror-name">Derek Blackwood</div>
-      <div class="juror-meta">39 · Non-Affiliated · Eugene (River Road) · Renter</div>
-      <div class="juror-meta">Restaurant line cook · $28K</div>
-      <div class="juror-stake">Swims in Willamette tributaries; worried about invisible contaminants</div>
+      <div class="juror-header">
+        <div class="juror-name">Mark Andersen</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">55, White, M · <strong>Creswell</strong><br>Cattle rancher, 280 acres · Republican · Owner · $65K</div>
+      <div class="juror-stake">Rural reality: "Runoff from every cattle operation technically 'degrades' a watershed. This law makes me a defendant."</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-yes">Yes</span>
-      <div class="juror-name">Amy Roth</div>
-      <div class="juror-meta">45 · Democrat · Eugene (South Hills) · Owner</div>
-      <div class="juror-meta">Social worker · $62K</div>
-      <div class="juror-stake">Believes symbolic legal action can shift policy discourse even if challenged</div>
+      <div class="juror-header">
+        <div class="juror-name">Rachel Simmons</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">41, White, F · <strong>Eugene</strong><br>Public defender · Democrat · Renter · $68K</div>
+      <div class="juror-stake">Legal precision: "I defend people from vague laws for a living. This one is the vaguest I've ever read."</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-yes">Yes</span>
-      <div class="juror-name">Tom Whitebear</div>
-      <div class="juror-meta">52 · Non-Affiliated · Lowell · Owner</div>
-      <div class="juror-meta">Forestry worker, Kalapuya descendant · $48K</div>
-      <div class="juror-stake">Deep cultural and spiritual connection to local waterways</div>
-    </div>
-
-    <!-- NO VOTERS (11) -->
-    <div class="juror-card">
-      <span class="vote-badge vote-no">No</span>
-      <div class="juror-name">Jim Kessler</div>
-      <div class="juror-meta">61 · Republican · Cottage Grove · Owner</div>
-      <div class="juror-meta">Retired millworker, part-time ranch hand · $36K</div>
-      <div class="juror-stake">Timber and forestry jobs are the backbone of rural Lane County</div>
+      <div class="juror-header">
+        <div class="juror-name">Zach Moreno</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">28, Hispanic, M · <strong>Eugene</strong><br>UO environmental studies grad student · Democrat · Renter · $22K</div>
+      <div class="juror-stake">Generational: "My generation inherits the water. We should have a say in how it's treated."</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-no">No</span>
-      <div class="juror-name">Diane Fossum</div>
-      <div class="juror-meta">48 · Non-Affiliated · Junction City · Owner</div>
-      <div class="juror-meta">Hazelnut and grass seed farmer · $74K</div>
-      <div class="juror-stake">Fears lawsuits over normal farming practices like irrigation and fertilizer</div>
+      <div class="juror-header">
+        <div class="juror-name">Steve Grabowski</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">46, White, M · <strong>Springfield</strong><br>HVAC technician · NAV · Owner · $58K</div>
+      <div class="juror-stake">Common sense: "I'm no lawyer but I know when something's going to end up in court forever."</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-no">No</span>
-      <div class="juror-name">Mark Andersen</div>
-      <div class="juror-meta">55 · Republican · Creswell · Owner</div>
-      <div class="juror-meta">Cattle rancher, 180 acres · $68K</div>
-      <div class="juror-stake">Worried vague language could classify grazing as a watershed violation</div>
+      <div class="juror-header">
+        <div class="juror-name">Patricia Hawkins</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">72, White, F · <strong>Eugene</strong><br>Retired high school science teacher · Democrat · Owner · $48K pension</div>
+      <div class="juror-stake">Educator: "I taught watershed ecology for 35 years. Students understood it. Adults should too."</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-no">No</span>
-      <div class="juror-name">Rachel Simmons</div>
-      <div class="juror-meta">36 · Democrat · Eugene (Friendly) · Renter</div>
-      <div class="juror-meta">Public defender, Lane County · $72K</div>
-      <div class="juror-stake">Supports clean water but considers the measure constitutionally defective</div>
+      <div class="juror-header">
+        <div class="juror-name">Carol Hernandez</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">49, Hispanic, F · <strong>Cottage Grove</strong><br>Small business owner (restaurant) · Republican · Owner · $55K</div>
+      <div class="juror-stake">Cost conscious: "My grease trap discharges to the sewer. Am I 'degrading a watershed'?"</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-no">No</span>
-      <div class="juror-name">Steve Grabowski</div>
-      <div class="juror-meta">44 · Non-Affiliated · Springfield · Renter</div>
-      <div class="juror-meta">HVAC technician · $56K</div>
-      <div class="juror-stake">Wants practical solutions, skeptical of lawsuits as environmental tool</div>
+      <div class="juror-header">
+        <div class="juror-name">Derek Blackwood</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">31, White, M · <strong>Florence</strong><br>Line cook · NAV · Renter · $29K</div>
+      <div class="juror-stake">Coastal: "The Siuslaw feeds into everything out here. I've seen the foam on the water after spray season."</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-no">No</span>
-      <div class="juror-name">Carol Hernandez</div>
-      <div class="juror-meta">63 · Republican · Oakridge · Owner</div>
-      <div class="juror-meta">Small business owner (general store) · $42K</div>
-      <div class="juror-stake">Oakridge economy depends on timber; worries about job losses from litigation</div>
+      <div class="juror-header">
+        <div class="juror-name">Theresa Kim</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">38, Korean-American, F · <strong>Eugene</strong><br>Tech company marketing manager · NAV · Renter · $85K</div>
+      <div class="juror-stake">Pragmatic: "I care about the environment, but I also care about laws that actually work."</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-no">No</span>
-      <div class="juror-name">Theresa Kim</div>
-      <div class="juror-meta">40 · Non-Affiliated · Eugene (Cal Young) · Renter</div>
-      <div class="juror-meta">Marketing manager, tech company · $85K</div>
-      <div class="juror-stake">Moved from Portland; cares about environment but wants workable policy</div>
+      <div class="juror-header">
+        <div class="juror-name">Nathan Brooks</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">44, White, M · <strong>Oakridge</strong><br>General contractor · Republican · Owner · $75K</div>
+      <div class="juror-stake">Builder: "Every construction site creates sediment runoff. This ordinance could shut down housing."</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-no">No</span>
-      <div class="juror-name">Nathan Brooks</div>
-      <div class="juror-meta">50 · Republican · Veneta · Owner</div>
-      <div class="juror-meta">General contractor · $78K</div>
-      <div class="juror-stake">Construction projects touch stormwater runoff; fears exposure to citizen suits</div>
+      <div class="juror-header">
+        <div class="juror-name">Amy Roth</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">36, White, F · <strong>Cottage Grove</strong><br>Social worker · Democrat · Renter · $42K</div>
+      <div class="juror-stake">Equity: "The families I work with drink the water downstream from the spraying. They can't afford bottled."</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-no">No</span>
-      <div class="juror-name">Megan Delaney</div>
-      <div class="juror-meta">31 · Democrat · Eugene (Bethel) · Renter</div>
-      <div class="juror-meta">Graphic designer, freelance · $34K</div>
-      <div class="juror-stake">Initially sympathetic; swayed by legal testimony about vagueness problems</div>
+      <div class="juror-header">
+        <div class="juror-name">Megan Delaney</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">33, White, F · <strong>Eugene</strong><br>Graphic designer, freelance · Democrat · Renter · $40K</div>
+      <div class="juror-stake">Conflicted: "I marched for climate action. But I can't vote for a law nobody can follow."</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-no">No</span>
-      <div class="juror-name">Paul Jimenez</div>
-      <div class="juror-meta">46 · Non-Affiliated · Springfield · Owner</div>
-      <div class="juror-meta">Warehouse operations manager · $58K</div>
-      <div class="juror-stake">Practical; convinced by Lake Erie precedent that measure will be struck down</div>
+      <div class="juror-header">
+        <div class="juror-name">Paul Jimenez</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">40, White, M · <strong>Springfield</strong><br>Amazon warehouse manager · NAV · Renter · $52K</div>
+      <div class="juror-stake">Pattern reader: "Same language, same result. Toledo tried this. The judge wasn't confused."</div>
     </div>
 
     <div class="juror-card">
-      <span class="vote-badge vote-no">No</span>
-      <div class="juror-name">Janet Fischer</div>
-      <div class="juror-meta">72 · Pacific Green · Dexter · Owner</div>
-      <div class="juror-meta">Retired librarian · $39K</div>
-      <div class="juror-stake">Lifelong environmentalist; heartbroken but convinced the law cannot stand</div>
+      <div class="juror-header">
+        <div class="juror-name">Tom Whitebear</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">48, Kalapuya descendant, M · <strong>Lowell</strong><br>Forestry worker · NAV · Owner · $46K</div>
+      <div class="juror-stake">Indigenous: "My people have known water is alive for 10,000 years. Now a law agrees. I can't vote against that."</div>
     </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Janet Fischer</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">66, White, F · <strong>Eugene</strong><br>Retired librarian · Pacific Green · Owner · $44K pension</div>
+      <div class="juror-stake">Green who votes NO: "Most painful vote of my life. Madison proved you CAN write environmental law that works. This isn't that."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Ryan Colter</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">50, White, M · <strong>Mapleton</strong><br>Timber company field supervisor · Republican · Owner · $68K</div>
+      <div class="juror-stake">Industry: "We already follow the Private Forest Accord. 300-foot buffers. Now you want citizen lawsuits on top?"</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Becca Strand</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">29, White, F · <strong>Vida</strong><br>Massage therapist · NAV · Renter · $32K</div>
+      <div class="juror-stake">McKenzie resident: "I live on the McKenzie. I drink from it. I swim in it. I have standing to protect it."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Marcus Webb</div>
+        <div class="juror-vote yes">YES</div>
+      </div>
+      <div class="juror-meta">26, Black, M · <strong>Eugene</strong><br>Barista / musician · Democrat · Renter · $24K</div>
+      <div class="juror-stake">Justice frame: "Environmental racism is real. Poor neighborhoods get the worst water. This gives people power."</div>
+    </div>
+
+    <div class="juror-card">
+      <div class="juror-header">
+        <div class="juror-name">Hannah Johansson</div>
+        <div class="juror-vote no">NO</div>
+      </div>
+      <div class="juror-meta">37, White, F · <strong>Eugene</strong><br>Paralegal, environmental law firm · Democrat · Owner · $54K</div>
+      <div class="juror-stake">Insider: "I work in environmental law. We WANT enforceable tools. This gives us an unenforceable one."</div>
+    </div>
+
   </div>
+
+  <p style="font-size:0.85rem; color:var(--slate); margin-top:1rem;"><strong>Jury composition:</strong> 9 Democrat (39%), 5 Republican (22%), 8 NAV (35%), 1 Pacific Green (4%). 18 White (78%), 2 Hispanic (9%), 1 Asian, 1 Black, 1 Native American (Kalapuya). 12 Eugene-Springfield metro (52%), 11 rural Lane County (48%). 13 homeowners, 10 renters. Ages 26–72, median 44. Household incomes $22K–$85K, median $48K. Matched to Lane County voter registration (Nov 2024) and Census ACS 2023.</p>
 </section>
 
 <!-- DELIBERATION -->
 <section>
-  <h2 class="section-title">The Deliberation</h2>
-  <p>The panel deliberated over three days, hearing from witnesses representing petitioners, opposition groups, legal experts, scientists, farmers, and public officials. The deliberation followed standard CIR protocols: witness presentations, panel questioning, facilitated discussion, straw polls, and final vote.</p>
+  <h2 class="section-title">Five Days of Deliberation</h2>
 
   <!-- DAY 1 -->
-  <div class="day-block">
+  <div class="day-section">
     <div class="day-header" onclick="toggleDay(this)">
-      <h3>Day 1 — Orientation, Testimony & Initial Positions</h3>
-      <span class="day-toggle">▸ expand</span>
+      <h3>Day 1 — Orientation &amp; Opening Testimony</h3>
+      <div class="day-meta">Rounds 1–6 · Initial straw poll: 7 Yes, 8 Undecided, 8 No</div>
+      <span class="toggle-icon">▼</span>
     </div>
-    <div class="day-content">
+    <div class="day-content active">
 
       <div class="round">
-        <div class="round-label">Round 1</div>
-        <div class="round-title">Orientation & Measure Overview</div>
-        <div class="round-body">
-          Facilitators introduce the CIR process and read the full ballot title aloud: <em>"Shall Lane County adopt the Watersheds Bill of Rights ordinance establishing rights for watersheds and allowing residents to sue for violations?"</em> The panel receives the complete ordinance text (approximately 3,500 words). Several jurors note the document is dense and legalistic. <span class="speaker">Janet Fischer</span> observes that the preamble reads more like a political manifesto than a legal instrument. <span class="speaker">Zach Moreno</span> highlights the core innovation: granting "legal standing" to watersheds themselves.
+        <div class="round-label">Round 1 — Facilitator Introduction</div>
+        <div class="speaker">
+          <div class="speaker-name">Facilitator</div>
+          <div class="speaker-text">Welcome. You've been selected to represent Lane County's voters on Measure 20-373, the Watersheds Bill of Rights. This citizen-initiated ordinance would grant legal rights to all watersheds in Lane County — the McKenzie, the Coast Fork and Middle Fork Willamette, the Siuslaw, the Long Tom, and every tributary flowing through approximately 4,600 square miles. A YES vote enacts the ordinance. A NO vote rejects it. Over five days you'll hear from the petitioners, legal experts, water quality scientists, affected industries, and residents. Your job is to weigh the evidence honestly and produce findings that help your fellow voters.</div>
+        </div>
+      </div>
+
+      <div class="round witness">
+        <div class="round-label">Round 2 — Petitioner Testimony: Michelle Holman</div>
+        <div class="speaker">
+          <div class="speaker-name">Michelle Holman</div>
+          <div class="speaker-role">Chief petitioner, Protect Lane County Watersheds</div>
+          <div class="speaker-text">In 2013, the EPA tested urine samples from residents around Triangle Lake. Every single sample contained atrazine and 2,4-D — herbicides sprayed by timber companies on the surrounding hillsides. Every sample. Children, adults, elderly — all contaminated. And all of it was legal. Every permit was in order. Every regulation was followed. The system is not broken — it is working exactly as designed. It is designed to allow contamination. This measure changes the design. It says the watershed itself has a right to be clean, and residents have standing to enforce that right when government won't.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Linda Clearwater</div>
+          <div class="speaker-role">Juror — Retired RN, Springfield</div>
+          <div class="speaker-text">Were the contamination levels above EPA action thresholds?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Michelle Holman</div>
+          <div class="speaker-text">Some were at or near action levels. But the point isn't the threshold — it's that the chemicals were in their bodies at all. These are endocrine disruptors. The dose-response for endocrine disruption doesn't follow a simple linear model. Low-dose effects can be worse than high-dose effects for some compounds.</div>
+        </div>
+      </div>
+
+      <div class="round witness">
+        <div class="round-label">Round 3 — Petitioner Testimony: Kunu Bearchum</div>
+        <div class="speaker">
+          <div class="speaker-name">Kunu Bearchum</div>
+          <div class="speaker-role">Chief petitioner, Community Rights Lane County</div>
+          <div class="speaker-text">You can't see atrazine in water. You can't smell it. You can't taste it. By the time you know it's there, it's in your body. This isn't about whether timber companies are evil — most are following the rules. The problem is the rules. The rules say it's acceptable to spray herbicides next to waterways as long as you leave a buffer. But buffers don't stop drift. Buffers don't stop runoff. We collected over 14,000 signatures because people in this county want the right to protect their own water.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Diane Fossum</div>
+          <div class="speaker-role">Juror — Hazelnut farmer, Junction City</div>
+          <div class="speaker-text">I spray for filbert blight — it's an existential threat to my crop. Would this ordinance allow someone to sue me for that?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Kunu Bearchum</div>
+          <div class="speaker-text">The measure targets contamination and degradation. Normal agricultural practices that don't contaminate waterways wouldn't be affected. It's about corporate-scale operations that are poisoning water systems.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Rachel Simmons</div>
+          <div class="speaker-role">Juror — Public defender, Eugene</div>
+          <div class="speaker-text">But the text doesn't say that. The text says "free from contamination and degradation." Any agricultural chemical that reaches a waterway is contamination. Where's the line in the actual ordinance?</div>
+        </div>
+      </div>
+
+      <div class="round witness">
+        <div class="round-label">Round 4 — Opposition Testimony: Oregon Farm Bureau</div>
+        <div class="speaker">
+          <div class="speaker-name">Dave Addington</div>
+          <div class="speaker-role">Director of Government Affairs, Oregon Farm Bureau</div>
+          <div class="speaker-text">This measure would expose every farmer, rancher, and rural landowner in Lane County to open-ended citizen lawsuits. The ordinance doesn't define what level of contamination triggers liability. It doesn't define what "naturally evolve" means for a watershed that's been managed for 150 years. It doesn't grandfather existing operations. A hazelnut farmer who's been operating for 40 years could be sued by any resident — not for violating a permit, not for breaking a regulation, but for violating a watershed's abstract right to "flourish." This isn't environmental protection. It's a litigation engine.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Kevin O'Malley</div>
+          <div class="speaker-role">Juror — Organic farmer, Veneta</div>
+          <div class="speaker-text">I'm a farmer. I also get drift from timber land spraying that kills my pollinators. What's my recourse right now?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Dave Addington</div>
+          <div class="speaker-text">You can file a complaint with the Oregon Department of Agriculture. You can pursue a civil claim for property damage. There are existing remedies. The problem with this measure is that it doesn't create better remedies — it creates undefined ones.</div>
+        </div>
+      </div>
+
+      <div class="round witness">
+        <div class="round-label">Round 5 — Legal Expert: LEBOR Precedent</div>
+        <div class="speaker">
+          <div class="speaker-name">Prof. Anne Rollins</div>
+          <div class="speaker-role">University of Oregon School of Law, environmental law</div>
+          <div class="speaker-text">In February 2019, Toledo, Ohio passed the Lake Erie Bill of Rights — LEBOR — with 61% voter approval. The language is nearly identical to Measure 20-373: the right of water to "exist, flourish, and naturally evolve." One year later, federal Judge Jack Zouhary struck it down. He called it "not a close call." Three independent grounds: First, unconstitutional vagueness — "exist, flourish, naturally evolve" gives no notice of what conduct is prohibited. Second, it exceeds municipal authority by conflicting with state and federal permitting frameworks. Third, due process violations — no clear standards for enforcement. Lane County's measure uses the same language. A court challenge here would cite <u>Drewes Farms</u> directly.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Hannah Johansson</div>
+          <div class="speaker-role">Juror — Paralegal, environmental law firm</div>
+          <div class="speaker-text">Is there any subsequent case that distinguished LEBOR or found rights-of-nature language enforceable in a U.S. jurisdiction?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Prof. Anne Rollins</div>
+          <div class="speaker-text">No. In the United States, every rights-of-nature ordinance that has been challenged in court has been struck down or enjoined. The successful models are all at the national level — Ecuador's constitutional provision, New Zealand's Te Awa Tupua Act — where the sovereign government itself grants the rights with detailed implementation frameworks. Local ordinances lack that authority and that specificity.</div>
         </div>
       </div>
 
       <div class="round">
-        <div class="round-label">Round 2</div>
-        <div class="round-title">Petitioner Testimony — Michelle Holman</div>
-        <div class="round-body">
-          <span class="speaker">Michelle Holman</span>, chief petitioner, describes why the measure is necessary:
-          <span class="quote">"When you go to your Congress people, when you go to your regulatory agencies, when you talk to corporate heads, they will tell you: this is all legal. The current system regulates the degree of allowable harm. We're saying harm should not be allowable."</span>
-          She describes invisible contaminants — herbicides and neurotoxins sprayed from helicopters over Lane County's timber lands that drift into drinking water. She references the 2011 EPA study near Triangle Lake that found atrazine and 2,4-D in every urine sample tested from area residents. <span class="speaker">Kevin O'Malley</span> nods visibly — his family was among those tested. Holman explains the measure was drafted over several years with assistance from Community Rights Lane County and the Center for Democratic and Environmental Rights.<br><br>
-          <span class="speaker">Diane Fossum</span> asks whether the measure targets only corporate polluters or all activity. Holman responds that the enforcement mechanism targets "corporate, government, or other business entities," not individual homeowners. Fossum presses: "I'm a business entity. My farm is an LLC. Normal irrigation runoff could be called 'impairment'?"
+        <div class="round-label">Round 6 — Day 1 Straw Poll</div>
+        <div class="speaker">
+          <div class="speaker-name">Facilitator</div>
+          <div class="speaker-text">Before we close Day 1, a non-binding straw poll to see where you're leaning.</div>
         </div>
+        <p style="font-weight:600; font-size:0.95rem; text-align:center; margin:0.8rem 0; color:var(--slate);">Straw Poll: 7 YES · 8 Undecided · 8 NO</p>
+        <p style="font-size:0.82rem; color:var(--slate);">The legal testimony hit hard. Several initially sympathetic jurors moved to Undecided. Rachel Simmons (D) and Hannah Johansson (D) both shifted from leaning YES to Undecided after the LEBOR analysis. Steve Grabowski summarized the mood: "I came in thinking this was about clean water. Now I think it might be about lawyers."</p>
       </div>
 
-      <div class="round">
-        <div class="round-label">Round 3</div>
-        <div class="round-title">Petitioner Testimony — Kunu Bearchum</div>
-        <div class="round-body">
-          <span class="speaker">Kunu Bearchum</span>, co-petitioner, focuses on invisible pollution:
-          <span class="quote">"When you think of polluted water, you think of discolored water, trash in the water. But there's a whole host of pollutants we can't see — chemicals and neurotoxins that the regulatory system permits and the Clean Water Act tolerates."</span>
-          Bearchum describes the measure as an exercise of self-governance when state and federal agencies have failed. She references the ordinance's preamble citing the Declaration of Independence and Oregon Constitution. <span class="speaker">Rachel Simmons</span> asks how the measure squares with existing state and federal environmental law. Bearchum acknowledges the tension but argues that's precisely the point — current frameworks are insufficient.
-        </div>
-      </div>
-
-      <div class="round">
-        <div class="round-label">Round 4</div>
-        <div class="round-title">Opposition Testimony — Dave Addington, Oregon Farm Bureau</div>
-        <div class="round-body">
-          <span class="speaker">Dave Addington</span> of the Oregon Farm Bureau presents the agricultural community's concerns:
-          <span class="quote">"It's going to be wide open. Anyone can litigate based on what they perceive as a harm to the watershed. Normal farming practices — scientifically sound, environmentally sound farming practices — if somebody disagrees with that. It's so broad that it's going to be whatever somebody's got a problem with."</span>
-          He walks through scenarios: a farmer spreads approved fertilizer and rainfall carries trace amounts to a stream. Under this ordinance, any resident could sue that farmer, claiming the watershed's right to be "free from contamination" was violated. The farmer bears restoration costs plus 1% per day penalties. The measure doesn't define what level of contamination triggers liability, what "naturally exist, flourish, and regenerate" means in practice, or what baseline the watershed should be restored to.<br><br>
-          <span class="speaker">Mark Andersen</span> asks about his cattle drinking from creeks on his property. Addington confirms this could theoretically be actionable. <span class="speaker">Sarah Nguyen</span> pushes back: "Isn't the legal system already designed to sort out frivolous claims?" Addington responds that the cost of defending against even frivolous lawsuits can be ruinous for small farmers.
-        </div>
-      </div>
-
-      <div class="round">
-        <div class="round-label">Round 5</div>
-        <div class="round-title">Legal Expert — Professor Anne Rollins, UO School of Law</div>
-        <div class="round-body">
-          <span class="speaker">Professor Rollins</span> provides a neutral analysis of the measure's legal standing. She explains the Lake Erie Bill of Rights precedent: passed by Toledo voters with 61% in 2019, struck down by a federal judge in 2020 on three grounds: (1) unconstitutional vagueness — the rights granted were too broad and undefined for anyone to know what conduct was prohibited; (2) exceeding municipal authority — a city can't override state and federal environmental permitting regimes; (3) due process violations — the lack of clear standards would invite arbitrary enforcement.
-          <span class="quote">"Lane County's Measure 20-373 would probably be challenged and invalidated on similar grounds. Our current legal system in the country really isn't set up to accommodate this legal theory. But it's also possible that somewhere, some judge could decide: 'Let's give it a try. Let's see what happens.'"</span>
-          She notes the measure uses the same framework language — "exist, flourish, regenerate and naturally evolve" — that the Toledo court found unconstitutionally vague. <span class="speaker">Amy Roth</span> asks whether the measure could have value even if struck down. Rollins acknowledges the Toledo campaign did increase public awareness and may have influenced Ohio's subsequent $172 million H2Ohio water quality program, though causation is debatable.
-        </div>
-      </div>
-
-      <div class="round">
-        <div class="round-label">Round 6</div>
-        <div class="round-title">Panel Discussion & Initial Straw Poll</div>
-        <div class="round-body">
-          Heated initial discussion reveals deep divisions. <span class="speaker">Tom Whitebear</span> speaks about the Kalapuya relationship with local waterways: "My ancestors didn't need a legal framework to tell them the river had rights. But I understand we live in a system that requires one." <span class="speaker">Jim Kessler</span> responds: "I've worked timber for 35 years. We replant every acre we cut. We follow every regulation. This law would let any Eugene environmentalist drag me into court for doing my job." <span class="speaker">Theresa Kim</span> says she's torn: "I moved here because of the beauty of this place. I want to protect it. But I also want a law that actually works."
-          <div class="straw-poll">
-            <div class="poll-item"><span class="poll-num yes">6</span> Yes</div>
-            <div class="poll-item"><span class="poll-num und">6</span> Undecided</div>
-            <div class="poll-item"><span class="poll-num no">7</span> No</div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
   <!-- DAY 2 -->
-  <div class="day-block">
+  <div class="day-section">
     <div class="day-header" onclick="toggleDay(this)">
-      <h3>Day 2 — Deep Dives: Science, Economics & Legal Viability</h3>
-      <span class="day-toggle">▸ expand</span>
+      <h3>Day 2 — Water Science &amp; Industry Response</h3>
+      <div class="day-meta">Rounds 7–12 · Straw poll: 8 Yes, 5 Undecided, 10 No</div>
+      <span class="toggle-icon">▼</span>
     </div>
     <div class="day-content">
 
-      <div class="round">
-        <div class="round-label">Round 7</div>
-        <div class="round-title">Water Quality Expert — EWEB Source Protection Specialist</div>
-        <div class="round-body">
-          <span class="speaker">Dr. Marta Solano</span>, source protection specialist with Eugene Water & Electric Board (EWEB), presents data on McKenzie River water quality. The McKenzie is one of the cleanest municipal water sources in the Pacific Northwest, partly because the upper watershed is largely publicly owned. She notes EWEB completed a comprehensive watershed study in 2012 concluding that forestry pesticide use is "not considered a likely threat to drinking water quality" in the McKenzie.<br><br>
-          However, she acknowledges that other Lane County watersheds have different profiles. The Coast Fork Willamette, Long Tom, and Siuslaw watersheds contain significantly more private timberland with active aerial spray operations. Monitoring is sporadic because, unlike agricultural pesticides, forestry applications are infrequent and hard to predict. DEQ is "woefully underfunded" for comprehensive watershed monitoring.<br><br>
-          <span class="speaker">Linda Clearwater</span> asks whether current regulations are sufficient. Solano carefully states: "The regulatory framework provides meaningful protections, but there are gaps, particularly in monitoring frequency and enforcement resources." <span class="speaker">Kevin O'Malley</span> counters with his experience: "In my neighborhood, we've seen drift events where people got nosebleeds, rashes, and their livestock had miscarriages. Tell me the regulations are working."
+      <div class="round witness">
+        <div class="round-label">Round 7 — Water Quality Expert: EWEB</div>
+        <div class="speaker">
+          <div class="speaker-name">Dr. Marta Solano</div>
+          <div class="speaker-role">Water quality manager, Eugene Water &amp; Electric Board</div>
+          <div class="speaker-text">The McKenzie River is Eugene's sole source of drinking water. EWEB tests for over 200 contaminants. In our 2012 study, we concluded that forestry pesticide use was "not considered a likely threat" to drinking water quality — based on the dilution factors and the distance from application to intake. That said, we detect trace pesticide residues periodically, particularly after rain events following aerial application. Our monitoring is robust for the McKenzie. It is far less comprehensive for other Lane County watersheds — the Siuslaw, the Long Tom, the Coast Fork. We simply don't have the same monitoring infrastructure there.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Becca Strand</div>
+          <div class="speaker-role">Juror — Massage therapist, Vida</div>
+          <div class="speaker-text">I live on the McKenzie upstream from the intake. What about private well users who don't benefit from EWEB's treatment?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Dr. Marta Solano</div>
+          <div class="speaker-text">Private wells are not monitored by EWEB or by DEQ in any systematic way. If you're on a private well near timber operations, you're largely on your own for testing. We'd recommend annual testing, but there's no requirement.</div>
         </div>
       </div>
 
-      <div class="round">
-        <div class="round-label">Round 8</div>
-        <div class="round-title">Timber Industry Perspective — Oregon Forest & Industries Council</div>
-        <div class="round-body">
-          <span class="speaker">Sara Duncan</span> from the Oregon Forest & Industries Council explains that aerial spraying accounts for approximately 4% of all pesticides applied in Oregon. Timber companies spray clear-cuts two to four times in the first few years after logging to protect newly planted seedlings from competing brush. She describes existing regulatory layers: Federal FIFRA requirements, Oregon Forest Practices Act buffers (300 feet from homes and water intakes for helicopter applications since the Private Forest Accord), and DEQ Clean Water Act permits.<br><br>
-          She notes that statewide, pesticides were detected in only 8% of water samples from forested areas over the past decade. The 2020 Private Forest Accord significantly strengthened protections, increasing no-spray buffers and adding monitoring requirements. Duncan argues the measure would add litigation risk without improving actual water quality.<br><br>
-          <span class="speaker">Patricia Hawkins</span> challenges this: "But the Private Forest Accord was negotiated behind closed doors with the timber industry at the table. Of course it's a compromise they can live with." Duncan responds that environmental groups were also at the table and the agreement represented genuine concessions from industry.
+      <div class="round witness">
+        <div class="round-label">Round 8 — Timber Industry Response</div>
+        <div class="speaker">
+          <div class="speaker-name">Sara Duncan</div>
+          <div class="speaker-role">Oregon Forest &amp; Industries Council</div>
+          <div class="speaker-text">Forestry accounts for roughly 4% of total pesticide use in Oregon. Agriculture is far larger. In 2020, the timber industry voluntarily negotiated the Private Forest Accord — the most comprehensive habitat protection agreement in Oregon history. It established 300-foot no-spray buffers along fish-bearing streams, up from the previous 60-foot requirement. Water quality monitoring in forested watersheds shows an 8% detection rate for pesticide compounds, and those detections are overwhelmingly at trace levels well below aquatic health benchmarks. We're not saying zero impact — we're saying the industry has dramatically reformed practices and this measure doesn't account for any of that.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Tom Whitebear</div>
+          <div class="speaker-role">Juror — Forestry worker, Lowell</div>
+          <div class="speaker-text">I work in the timber industry. I've seen the buffers. They're real. But I've also seen spray drift cross them on windy days. The 8% detection rate — is that tested at the buffer edge or at the nearest waterway?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Sara Duncan</div>
+          <div class="speaker-text">Those are in-stream measurements, not buffer-edge. And 8% detection doesn't mean 8% exceedance of safety thresholds. The vast majority of detections are orders of magnitude below any action level.</div>
         </div>
       </div>
 
-      <div class="round">
-        <div class="round-label">Round 9</div>
-        <div class="round-title">Constitutional Law Deep Dive — Oregon State Preemption</div>
-        <div class="round-body">
-          <span class="speaker">Professor Rollins</span> returns for a deeper legal analysis. She walks through the specific constitutional vulnerabilities:
-          <br><br>
-          <strong>Vagueness:</strong> The measure grants watersheds the right to "exist, flourish, regenerate and naturally evolve" but never defines what conduct violates these rights. The Toledo court asked: would spreading a small amount of fertilizer violate it? Catching fish? Planting corn? Driving a gas-powered vehicle? The same questions apply here.<br><br>
-          <strong>State Preemption:</strong> Oregon's Forest Practices Act, administered by the Oregon Department of Forestry, is a statewide regulatory framework. A county ordinance that effectively bans or penalizes activities specifically permitted under state law faces severe preemption challenges under Oregon's statutory framework, even though Oregon lacks Ohio's blanket preemption legislation.<br><br>
-          <strong>Due Process:</strong> The 1% per day penalty structure — calculated on total restoration costs — could produce astronomical liability with no clear standard for what triggers it or how "restoration" is defined.<br><br>
-          <span class="speaker">Rachel Simmons</span> confirms: "In my professional experience, this is exactly the kind of law that gets enjoined before it ever takes effect. You'd see a temporary restraining order within days of passage."
-          <div class="shift-note">
-            <strong>Key shift:</strong> Megan Delaney, who entered the day undecided, writes in her notes: "I want this to work but the legal analysis is devastating. It's like writing a law that says 'be good' — everyone agrees with the sentiment but no one knows what it means."
-          </div>
+      <div class="round witness">
+        <div class="round-label">Round 9 — Constitutional Law Deep Dive</div>
+        <div class="speaker">
+          <div class="speaker-name">Prof. Anne Rollins</div>
+          <div class="speaker-role">Recalled for extended Q&amp;A</div>
+          <div class="speaker-text">I want to address something I've heard jurors discussing: the idea that this measure is "worth trying even if courts strike it down." From a legal strategy perspective, there's a risk. When courts strike down rights-of-nature ordinances, they create binding precedent that makes future, better-drafted measures harder to pass. The <u>Drewes Farms</u> decision is now cited in every subsequent challenge. Ohio's legislature used the ruling to pass a statewide ban on rights-of-nature laws. A loss in federal court in Oregon could produce similar backlash.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Marcus Webb</div>
+          <div class="speaker-role">Juror — Barista, Eugene</div>
+          <div class="speaker-text">But wasn't the civil rights movement full of laws that got struck down before better ones passed? Sometimes you have to lose to win.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Prof. Anne Rollins</div>
+          <div class="speaker-text">That's a fair analogy with an important distinction. The civil rights cases were litigated with specific factual records — Rosa Parks, the Greensboro Four, specific documented harms. Those cases built precedent brick by brick. A vague ordinance that gets struck down as "not a close call" doesn't build precedent — it builds a wall.</div>
         </div>
       </div>
 
-      <div class="round">
-        <div class="round-label">Round 10</div>
-        <div class="round-title">Rights of Nature Advocate — Center for Democratic and Environmental Rights</div>
-        <div class="round-body">
-          <span class="speaker">Mari Margil</span>, representing the Center for Democratic and Environmental Rights (CDER), argues that legal evolution requires municipalities to push boundaries:
-          <span class="quote">"Every expansion of legal rights — from abolition to women's suffrage to civil rights — was once considered legally impossible. The existing system is designed to protect the status quo. It won't change unless communities insist on change."</span>
-          She points to international precedents: Ecuador constitutionally recognized rights of nature in 2008 and has enforced them in court. New Zealand's Te Awa Tupua Act gave the Whanganui River legal personhood in 2017 with a governance framework including appointed guardians. She argues the U.S. legal system can evolve to accommodate these concepts.<br><br>
-          <span class="speaker">Janet Fischer</span>, clearly engaged, asks: "But Ecuador and New Zealand did this at the national level with detailed implementation frameworks. This is a county-level ordinance that tries to override federal and state law. Isn't that fundamentally different?" Margil acknowledges the structural difference but argues that local action creates political pressure for state and national reform.
+      <div class="round witness">
+        <div class="round-label">Round 10 — Rights of Nature Advocate</div>
+        <div class="speaker">
+          <div class="speaker-name">Mari Margil</div>
+          <div class="speaker-role">Center for Democratic and Environmental Rights (CDER)</div>
+          <div class="speaker-text">Every legal revolution starts with local action. Ecuador didn't wake up one day and put rights of nature in its constitution. Communities around the world passed local ordinances first. Those ordinances were challenged, yes. But they created a political and cultural movement. New Zealand's Te Awa Tupua Act — granting legal personhood to the Whanganui River — grew from decades of local advocacy. This measure isn't just about winning in court. It's about establishing the principle that water has value beyond what corporations extract from it. It pressures the state legislature to act.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Janet Fischer</div>
+          <div class="speaker-role">Juror — Retired librarian, Pacific Green, Eugene</div>
+          <div class="speaker-text">I've been a Green Party member for 20 years. I believe in rights of nature. But I also believe in effective legislation. Is there a version of this that could survive court challenge?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Mari Margil</div>
+          <div class="speaker-text">Any local ordinance will face preemption challenges — that's the structural issue, not the drafting. But could it be more specific? Sure. Madison, Wisconsin passed a targeted phosphorus fertilizer ordinance that survived challenge because it identified specific conduct and specific pollutants. You lose breadth but gain enforceability.</div>
         </div>
       </div>
 
-      <div class="round">
-        <div class="round-label">Round 11</div>
-        <div class="round-title">Economic Impact — Lane County Budget Officer</div>
-        <div class="round-body">
-          <span class="speaker">Devon Ashbridge</span>, Lane County Public Information Officer, relays the county's position: the county has not experienced a measure with similar language and has conducted no cost analysis, but implementing the measure — should it pass and survive legal challenge — would require research, new enforcement infrastructure, and potentially dedicated staff. The county's General Fund is already strained.<br><br>
-          She notes the measure requires the county to "enforce and defend this law to the fullest extent possible," which could obligate the county to pursue litigation against violators at county taxpayer expense. If the measure is immediately challenged, the county would also bear the cost of defending it in court.<br><br>
-          <span class="speaker">Steve Grabowski</span> asks: "So we'd be paying to defend a law that experts say will get thrown out, and if by some miracle it stands, we'd be paying to enforce it?" Ashbridge declines to speculate on outcomes but confirms the cost implications in either scenario.
+      <div class="round witness">
+        <div class="round-label">Round 11 — Affected Resident: Triangle Lake</div>
+        <div class="speaker">
+          <div class="speaker-name">Jenn Ruppert</div>
+          <div class="speaker-role">Triangle Lake resident since 2008</div>
+          <div class="speaker-text">In September 2015, Weyerhaeuser conducted an aerial herbicide spray on the hillside above our property. Within hours my daughter had nosebleeds. My husband broke out in rashes. I had diarrhea for two weeks. Our rabbits miscarried. Our beehives — three hives, thousands of bees — all died within a week. We filed a complaint. The Oregon Department of Agriculture investigated. They confirmed Weyerhaeuser had sprayed. The fine was $1,200. Twelve hundred dollars. That was the consequence for poisoning my family and killing our animals. The regulations worked exactly as designed. They are designed to protect timber companies, not families.</div>
         </div>
+        <p style="font-size:0.82rem; color:var(--slate); font-style:italic; margin-top:0.5rem;">Several jurors visibly affected. Derek Blackwood put his head in his hands. Patricia Hawkins wrote a note and passed it to the facilitator asking if Ruppert was available for follow-up questions on Day 3.</p>
       </div>
 
       <div class="round">
-        <div class="round-label">Round 12</div>
-        <div class="round-title">Affected Resident Testimony — Triangle Lake Area</div>
-        <div class="round-body">
-          <span class="speaker">Jenn Ruppert</span>, a resident of the Triangle Lake area in western Lane County, describes her family's experience with aerial herbicide drift:
-          <span class="quote">"September 2015. I heard a helicopter above a Weyerhaeuser ridge two miles from our house. I could see the drift coming down. It had a chemical smell, like ammonia. Within days, my children were coughing, nosebleeds, rashes, diarrhea. My rabbits started having miscarriages. Most of my beehives died."</span>
-          She explains that she filed complaints with the Oregon Department of Agriculture, which receives approximately three citizen complaints per year about all pesticide spraying statewide. Fines, when issued, range from $400 to $3,000. "The regulatory system is designed to let this happen," she says. "We have no real legal recourse."<br><br>
-          This testimony visibly affects several jurors. <span class="speaker">Tom Whitebear</span> puts his face in his hands. <span class="speaker">Theresa Kim</span> writes quickly in her notebook. Even <span class="speaker">Jim Kessler</span> says quietly: "That's not right. That shouldn't happen to anybody."
-          <div class="shift-note">
-            <strong>Key moment:</strong> The emotional power of Ruppert's testimony creates the most visceral pro-measure sentiment of the deliberation. Several undecided jurors visibly wrestle with the gap between "this law is probably unconstitutional" and "these people are being poisoned."
-          </div>
+        <div class="round-label">Round 12 — Day 2 Straw Poll</div>
+        <div class="speaker">
+          <div class="speaker-name">Facilitator</div>
+          <div class="speaker-text">End of Day 2. Non-binding straw poll.</div>
         </div>
+        <p style="font-weight:600; font-size:0.95rem; text-align:center; margin:0.8rem 0; color:var(--slate);">Straw Poll: 8 YES · 5 Undecided · 10 NO</p>
+        <p style="font-size:0.82rem; color:var(--slate);">Jenn Ruppert's testimony moved Derek Blackwood from Undecided to YES. But the constitutional law deep dive solidified several NO votes. Janet Fischer (Pacific Green) moved from Undecided to leaning NO, saying "Mari Margil just told us the enforceable version exists and this isn't it." Remaining undecided: Megan Delaney, Paul Jimenez, Theresa Kim, Becca Strand, Steve Grabowski.</p>
       </div>
 
-      <div class="round">
-        <div class="round-label">Round 13</div>
-        <div class="round-title">Alternatives Discussion — What Else Could Be Done?</div>
-        <div class="round-body">
-          Facilitated discussion on alternative approaches. <span class="speaker">Rachel Simmons</span> suggests that a narrowly targeted county ordinance — banning specific chemicals within a defined buffer zone around residential areas and water intakes — could potentially survive legal challenge, citing the Madison, Wisconsin fertilizer ordinance that the Toledo judge specifically praised as an example of "careful drafting." <span class="speaker">Paul Jimenez</span> asks why the petitioners didn't pursue that approach.<br><br>
-          <span class="speaker">Michelle Holman</span>, re-called briefly, explains that specific chemical bans were considered but rejected because: (1) the timber industry would lobby to preempt any such ordinance at the state level; (2) new chemicals are constantly introduced that would circumvent narrow bans; and (3) the deeper problem is the legal framework that treats watersheds as property rather than as living systems with inherent value.<br><br>
-          <span class="speaker">Janet Fischer</span> sighs audibly: "So the answer is: we chose the approach that makes the biggest philosophical statement rather than the one that might actually protect people. I understand the impulse. But it breaks my heart."
-        </div>
-      </div>
-
-      <div class="round">
-        <div class="round-label">Round 14</div>
-        <div class="round-title">Mid-Deliberation Straw Poll</div>
-        <div class="round-body">
-          After extended discussion, the panel takes a second straw poll. The legal testimony has moved several undecided jurors toward No, while the Triangle Lake testimony has reinforced the Yes camp's resolve.
-          <div class="straw-poll">
-            <div class="poll-item"><span class="poll-num yes">7</span> Yes</div>
-            <div class="poll-item"><span class="poll-num und">3</span> Undecided</div>
-            <div class="poll-item"><span class="poll-num no">9</span> No</div>
-          </div>
-          <span class="speaker">Amy Roth</span> speaks passionately: "Even if this law gets struck down, passing it tells Salem and Washington, D.C. that the people of Lane County don't accept the status quo. The Lake Erie campaign didn't win in court but it won $172 million for water quality programs." <span class="speaker">Steve Grabowski</span> responds: "With respect, I don't think we should pass laws we know are unconstitutional as political stunts. That's not what laws are for."
-        </div>
-      </div>
     </div>
   </div>
 
   <!-- DAY 3 -->
-  <div class="day-block">
+  <div class="day-section">
     <div class="day-header" onclick="toggleDay(this)">
-      <h3>Day 3 — Final Testimony, Key Findings & Vote</h3>
-      <span class="day-toggle">▸ expand</span>
+      <h3>Day 3 — Economic Impact &amp; Alternatives</h3>
+      <div class="day-meta">Rounds 13–18 · Straw poll: 9 Yes, 4 Undecided, 10 No</div>
+      <span class="toggle-icon">▼</span>
     </div>
     <div class="day-content">
 
-      <div class="round">
-        <div class="round-label">Round 15</div>
-        <div class="round-title">Petitioner Rebuttal — Rob Dickinson</div>
-        <div class="round-body">
-          <span class="speaker">Rob Dickinson</span>, spokesperson for the Yes on Measure 20-373 committee, responds to the opposition's legal arguments:
-          <span class="quote">"We fully expect to be dramatically outspent. But that has been true of many successful grassroots campaigns. Our strength is people, not big donors. As for the litigation concern — the legal system already allows people who believe they've been harmed to sue. We're not creating some new legal wild west."</span>
-          He argues that concern about frivolous lawsuits is exaggerated by industry groups who spend millions lobbying against any regulation. The real fear isn't frivolous lawsuits — it's legitimate ones. Companies that know they're polluting don't want a legal pathway for accountability.<br><br>
-          <span class="speaker">Nathan Brooks</span> challenges: "But the legal expert told us this exact kind of law was struck down as unconstitutional. It wasn't about frivolous versus legitimate — the law itself was the problem." Dickinson responds that legal landscapes evolve and the next court might rule differently.
+      <div class="round witness">
+        <div class="round-label">Round 13 — County Budget Impact</div>
+        <div class="speaker">
+          <div class="speaker-name">Devon Ashbridge</div>
+          <div class="speaker-role">Lane County Public Information Officer</div>
+          <div class="speaker-text">Lane County has conducted no cost analysis of this measure. I'll give you what we can estimate. If the ordinance passes and is immediately challenged — which county counsel considers virtually certain — defending it in federal court would likely cost $200,000 to $500,000 in outside legal fees. If it survives challenge, enforcement requires new staffing: a watershed compliance officer at minimum, plus legal staff. We'd estimate $300,000–$500,000 annually for basic enforcement infrastructure. None of this is budgeted. The measure mandates the county "enforce and defend this law to the fullest extent possible" — that language creates a legal obligation to spend regardless of budget constraints.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Theresa Kim</div>
+          <div class="speaker-role">Juror — Tech marketing manager, Eugene</div>
+          <div class="speaker-text">So taxpayers foot the bill to defend a law that legal experts say will fail, and then foot the bill again to enforce it if it somehow doesn't fail?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Devon Ashbridge</div>
+          <div class="speaker-text">That's an accurate summary of the fiscal exposure.</div>
+        </div>
+      </div>
+
+      <div class="round witness">
+        <div class="round-label">Round 14 — Alternative Approaches</div>
+        <div class="speaker">
+          <div class="speaker-name">Prof. Anne Rollins</div>
+          <div class="speaker-role">Recalled for alternatives discussion</div>
+          <div class="speaker-text">The judge in <u>Drewes Farms</u> explicitly cited Madison, Wisconsin's phosphorus fertilizer ordinance as an example of local environmental regulation that works. Madison identified a specific pollutant — phosphorus — a specific source — lawn fertilizer — a specific waterway — Lake Mendota — and a specific standard — no phosphorus fertilizer within the watershed between November 15 and April 1. It was challenged and upheld. Lane County could draft ordinances targeting specific chemicals, specific application methods, specific setbacks, and specific watersheds. That's harder than a blanket "right to flourish" — but it's law that actually functions.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Zach Moreno</div>
+          <div class="speaker-role">Juror — UO grad student, Eugene</div>
+          <div class="speaker-text">But who's going to draft that? The petitioners collected 14,000 signatures for this measure. Is someone going to do that again for a narrower version?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Hannah Johansson</div>
+          <div class="speaker-role">Juror — Paralegal, Eugene</div>
+          <div class="speaker-text">That's the real question. The energy behind this measure is real. But energy spent on an unenforceable law is energy wasted. What if those 14,000 signers lobbied the county commissioners for a specific aerial spray setback ordinance?</div>
         </div>
       </div>
 
       <div class="round">
-        <div class="round-label">Round 16</div>
-        <div class="round-title">Final Panel Discussion — The Core Tension</div>
-        <div class="round-body">
-          The facilitator frames the core question: <em>Does the panel believe the potential benefits of this measure — signaling community values, creating pressure for policy change, and possibly establishing precedent — outweigh the risks of passing a law that legal experts agree is likely unconstitutional, would cost taxpayers money to defend, and could be used to target farmers and small businesses with vague claims?</em><br><br>
-
-          <span class="speaker">Tom Whitebear</span>: "I've heard all the legal arguments. I understand them. But the river doesn't care about constitutional law. The salmon don't care about precedent. Someone has to stand up and say: this is wrong. If not us, who?"<br><br>
-
-          <span class="speaker">Janet Fischer</span>: "Tom, I've been an environmentalist since before you were born. I chain-locked myself to a tree in the Opal Creek wilderness in 1989. But I've also learned that passing unenforceable laws doesn't protect trees or rivers — it just makes people feel good while the chainsaws keep running. I want to vote yes so badly. But I can't vote for a law that I know will accomplish nothing except spending taxpayer money on a losing court battle."<br><br>
-
-          <span class="speaker">Kevin O'Malley</span>, voice shaking: "My daughter had blood in her urine for three months after that spray event. Three months. And the state fined the company $1,200. Tell me the current system is adequate. Tell me to wait for the system to work."<br><br>
-
-          <span class="speaker">Rachel Simmons</span>, visibly moved: "Kevin, what happened to your family is unconscionable. I believe you completely. And that's exactly why I want a law that can actually help you — not one that gets thrown out in court while the companies pop champagne."
+        <div class="round-label">Round 15 — Juror Deliberation: The Vagueness Problem</div>
+        <div class="speaker">
+          <div class="speaker-name">Rachel Simmons</div>
+          <div class="speaker-role">Juror — Public defender, Eugene</div>
+          <div class="speaker-text">I need to say something as a lawyer. I defend people charged under vague statutes. I know what vagueness does. It doesn't empower the little guy — it empowers whoever has the best lawyer. If a timber company and a single mom both face a lawsuit under this ordinance, who wins? The one who can afford a legal team. Vague laws don't protect the vulnerable. They protect the powerful. <span class="shift-marker to-no">→ NO</span></div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Amy Roth</div>
+          <div class="speaker-role">Juror — Social worker, Cottage Grove</div>
+          <div class="speaker-text">But that's true of every law. The powerful always have more lawyers. The question is whether doing nothing is better than doing this. Right now, Jenn Ruppert's family got $1,200 for being poisoned. At least this gives her standing to sue.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Rachel Simmons</div>
+          <div class="speaker-text">She already has standing to sue — for property damage, nuisance, negligence. She doesn't need a vague watershed rights law. She needs better enforcement of the laws we have and more specific new ones.</div>
         </div>
       </div>
 
       <div class="round">
-        <div class="round-label">Round 17</div>
-        <div class="round-title">Drafting Key Findings</div>
-        <div class="round-body">
-          The panel works to identify findings that both sides can agree on. This process takes nearly two hours with extensive wordsmithing. The facilitator helps craft language that accurately represents what the panel learned. Several findings achieve near-unanimous agreement; others reflect genuine division. (See Key Findings section below.)
+        <div class="round-label">Round 16 — Juror Deliberation: Symbolic Value</div>
+        <div class="speaker">
+          <div class="speaker-name">Marcus Webb</div>
+          <div class="speaker-role">Juror — Barista, Eugene</div>
+          <div class="speaker-text">I keep hearing "this won't survive court." OK. But when 14,000 people sign a petition and voters pass this, that's a message. It tells Salem that Lane County wants water protection. It tells timber companies that communities are organizing. Even if a judge strikes it down, the political pressure exists.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Megan Delaney</div>
+          <div class="speaker-role">Juror — Graphic designer, Eugene</div>
+          <div class="speaker-text">I hear you, Marcus. But Prof. Rollins said something that shook me — Ohio used the court loss to pass a statewide BAN on rights-of-nature laws. What if we pass this, it gets struck down, and Salem uses that to block all future attempts? The symbolic win becomes a strategic loss. <span class="shift-marker to-no">→ leaning NO</span></div>
         </div>
       </div>
 
       <div class="round">
-        <div class="round-label">Round 18</div>
-        <div class="round-title">Final Statements</div>
-        <div class="round-body">
-          Each juror gives a brief final statement before voting.<br><br>
-
-          <span class="speaker">Sarah Nguyen</span> (YES): "The regulatory system has failed. This is the tool available to us. I vote my conscience."<br><br>
-          <span class="speaker">Diane Fossum</span> (NO): "I care about water quality — I drink the same water. But this law would bankrupt my farm in legal fees before it protected a single stream."<br><br>
-          <span class="speaker">Megan Delaney</span> (NO): "I came in wanting to vote yes. The science on aerial spray drift terrifies me. But I can't support a law that every legal expert says will fail. We need a better vehicle."<br><br>
-          <span class="speaker">Amy Roth</span> (YES): "Even the Toledo judge said the goal was laudable. Sometimes you have to plant a seed knowing you won't see the tree."<br><br>
-          <span class="speaker">Janet Fischer</span> (NO): "This is the hardest vote of my life. I'm a Green Party member voting against an environmental measure. But I refuse to waste the community's political capital on a law that cannot work. We need to draft something that can."
+        <div class="round-label">Round 17 — Juror Deliberation: Rural Perspectives</div>
+        <div class="speaker">
+          <div class="speaker-name">Ryan Colter</div>
+          <div class="speaker-role">Juror — Timber supervisor, Mapleton</div>
+          <div class="speaker-text">I want to respond to Jenn Ruppert's testimony from yesterday. What happened to her family is wrong. I've worked timber for 25 years and I don't defend bad spraying. But this measure doesn't target bad actors — it targets everyone. My company follows every regulation, every buffer requirement, the full Private Forest Accord. Under this ordinance, any resident can still sue us for violating the watershed's right to "naturally evolve." What does that even mean for a managed forest? Nothing in Lane County has been "natural" for 150 years.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Tom Whitebear</div>
+          <div class="speaker-role">Juror — Forestry worker, Lowell</div>
+          <div class="speaker-text">Ryan, I work alongside you. I respect what you're saying. But my people — the Kalapuya — we managed these watersheds for thousands of years with fire. "Natural" isn't the same as "untouched." It means functioning. It means water that sustains life. The language may be imperfect but the principle isn't.</div>
         </div>
       </div>
 
       <div class="round">
-        <div class="round-label">Round 19</div>
-        <div class="round-title">Final Vote</div>
-        <div class="round-body">
-          <div class="straw-poll">
-            <div class="poll-item"><span class="poll-num yes">8</span> Yes</div>
-            <div class="poll-item"><span class="poll-num no">11</span> No</div>
-          </div>
-
-          <strong>YES voters (8):</strong> Sarah Nguyen (D), Kevin O'Malley (NAV), Linda Clearwater (D), Zach Moreno (D), Patricia Hawkins (D), Derek Blackwood (NAV), Amy Roth (D), Tom Whitebear (NAV)<br><br>
-
-          <strong>NO voters (11):</strong> Jim Kessler (R), Diane Fossum (NAV), Mark Andersen (R), Rachel Simmons (D), Steve Grabowski (NAV), Carol Hernandez (R), Theresa Kim (NAV), Nathan Brooks (R), Megan Delaney (D), Paul Jimenez (NAV), Janet Fischer (PG)<br><br>
-
-          <strong>Partisan breakdown:</strong> Democrats split 5-2 for YES. All 4 Republicans voted NO. Non-Affiliated split 3-4 for NO. The lone Pacific Green member voted NO. The decisive swing came from two Democrats (Simmons, Delaney) and two independents (Theresa Kim, Paul Jimenez) who were sympathetic to the measure's goals but convinced by legal testimony that it cannot survive judicial review.
+        <div class="round-label">Round 18 — Day 3 Straw Poll</div>
+        <div class="speaker">
+          <div class="speaker-name">Facilitator</div>
+          <div class="speaker-text">Day 3 straw poll.</div>
         </div>
+        <p style="font-weight:600; font-size:0.95rem; text-align:center; margin:0.8rem 0; color:var(--slate);">Straw Poll: 9 YES · 4 Undecided · 10 NO</p>
+        <p style="font-size:0.82rem; color:var(--slate);">Becca Strand moved from Undecided to YES after the private well discussion. Megan Delaney moved from Undecided to leaning NO. Remaining undecided: Paul Jimenez, Theresa Kim, Steve Grabowski, and Megan wavering.</p>
       </div>
 
-      <div class="round">
-        <div class="round-label">Round 20</div>
-        <div class="round-title">Key Shifts During Deliberation</div>
-        <div class="round-body">
-          <div class="shift-note">
-            <strong>Megan Delaney</strong> (Undecided → NO): "The vagueness analysis killed it for me. I can't vote for a law where nobody knows what conduct is prohibited."
-          </div>
-          <div class="shift-note">
-            <strong>Paul Jimenez</strong> (Undecided → NO): "The Lake Erie precedent — same language, same structure, struck down unanimously. I'm not a lawyer but I can read a pattern."
-          </div>
-          <div class="shift-note">
-            <strong>Janet Fischer</strong> (Undecided → NO): "The most painful vote I've ever cast. But the Madison, Wisconsin example proved you CAN write environmental law that works. This isn't that law."
-          </div>
-          <div class="shift-note">
-            <strong>Theresa Kim</strong> (Undecided → NO): "County budget officer sealed it. We'd spend hundreds of thousands defending a law that courts will strike down. I'd rather that money went to actual water monitoring."
-          </div>
-          <div class="shift-note">
-            <strong>Derek Blackwood</strong> (Undecided → YES): "Jenn Ruppert's testimony. That could be my family. The current system isn't protecting people. Even an imperfect tool is better than no tool."
-          </div>
-          <div class="shift-note">
-            <strong>Tom Whitebear</strong> (Undecided → YES): "The legal arguments are strong. But sometimes you have to vote for what's right and let the courts figure out the rest."
-          </div>
-        </div>
-      </div>
     </div>
   </div>
+
+  <!-- DAY 4 -->
+  <div class="day-section">
+    <div class="day-header" onclick="toggleDay(this)">
+      <h3>Day 4 — Petitioner Rebuttal &amp; Deep Deliberation</h3>
+      <div class="day-meta">Rounds 19–24 · Straw poll: 10 Yes, 1 Undecided, 12 No</div>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="day-content">
+
+      <div class="round witness">
+        <div class="round-label">Round 19 — Petitioner Rebuttal</div>
+        <div class="speaker">
+          <div class="speaker-name">Michelle Holman</div>
+          <div class="speaker-role">Chief petitioner, recalled</div>
+          <div class="speaker-text">You've heard a lot about courts and constitutions. Let me bring you back to water. The McKenzie feeds 200,000 people. The Coast Fork serves Cottage Grove. The Siuslaw feeds coastal communities. Every one of these rivers receives runoff from industrial timber operations, agricultural operations, and urban stormwater. The state monitors some of them. It monitors most of them poorly or not at all. When violations are found, fines average under $3,000. Three citizen complaints per year — statewide. The existing system isn't protecting you. Whatever you think about legal strategy, I want you to look at that system and tell me it's working.</div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 20 — Juror Deliberation: The Core Tension</div>
+        <div class="speaker">
+          <div class="speaker-name">Janet Fischer</div>
+          <div class="speaker-role">Juror — Retired librarian, Pacific Green, Eugene</div>
+          <div class="speaker-text">I've been struggling with this for four days. I am a Pacific Green Party member. I believe water has rights. I believe the regulatory system has failed. Everything Michelle said is true. And I'm going to vote no. Because Mari Margil sat right there and told us that a specific, targeted ordinance — like Madison's — can survive court challenge. That means the choice isn't between this measure and nothing. It's between this measure and a better one. And passing this one — and having it struck down — might make the better one harder to pass. This is the most painful vote of my life. <span class="shift-marker to-no">→ NO</span></div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Tom Whitebear</div>
+          <div class="speaker-role">Juror — Forestry worker, Lowell</div>
+          <div class="speaker-text">Janet, I hear you. I respect you. But I keep thinking about my grandmother, who drank from these rivers her whole life. Who watched them get worse. The legal arguments are strong. But sometimes you vote for what's right and let courts figure out the rest. I'm voting yes. <span class="shift-marker to-yes">→ YES</span></div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 21 — Juror Deliberation: Paul's Decision</div>
+        <div class="speaker">
+          <div class="speaker-name">Paul Jimenez</div>
+          <div class="speaker-role">Juror — Warehouse manager, Springfield</div>
+          <div class="speaker-text">I've been undecided since Day 1. I read the <u>Drewes Farms</u> decision last night — the facilitator gave us copies. The judge went through every argument the Lake Erie supporters made, and rejected every single one. Same language. Same structure. Same result here. I can read a pattern. I'm voting no. <span class="shift-marker to-no">→ NO</span></div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 22 — Juror Deliberation: Theresa's Decision</div>
+        <div class="speaker">
+          <div class="speaker-name">Theresa Kim</div>
+          <div class="speaker-role">Juror — Tech marketing manager, Eugene</div>
+          <div class="speaker-text">The county budget officer sealed it for me. Spend $200,000 to $500,000 defending a law that experts say will fail. Meanwhile the actual problem — inadequate monitoring, inadequate enforcement, $1,200 fines — goes unaddressed because everyone's focused on a court battle. That money could fund actual water quality monitoring for unmonitored watersheds. That would make a difference. This won't. No. <span class="shift-marker to-no">→ NO</span></div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 23 — Juror Deliberation: The YES Case Crystallizes</div>
+        <div class="speaker">
+          <div class="speaker-name">Sarah Nguyen</div>
+          <div class="speaker-role">Juror — Environmental nonprofit, Eugene</div>
+          <div class="speaker-text">I need to respond to the "pass a better law" argument. I've been in environmental advocacy for 12 years. Here's what I know: there is no line of volunteers ready to draft a targeted ordinance, collect 14,000 signatures, and run another campaign. The energy exists NOW, for THIS measure. If we vote it down, people don't pivot to a "better version." They go home. They give up. The perfect is the enemy of the good.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Kevin O'Malley</div>
+          <div class="speaker-role">Juror — Organic farmer, Veneta</div>
+          <div class="speaker-text">Sarah's right. I signed the petition. If this fails, I'm not signing another one. I'm 52. I've been fighting spray drift for 15 years. I'm tired. This is what's on the ballot. I'm voting for it.</div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 24 — Day 4 Straw Poll</div>
+        <div class="speaker">
+          <div class="speaker-name">Facilitator</div>
+          <div class="speaker-text">Day 4 straw poll. We'll draft findings tomorrow.</div>
+        </div>
+        <p style="font-weight:600; font-size:0.95rem; text-align:center; margin:0.8rem 0; color:var(--slate);">Straw Poll: 10 YES · 1 Undecided · 12 NO</p>
+        <p style="font-size:0.82rem; color:var(--slate);">Steve Grabowski is the last undecided. The YES side picked up Marcus Webb (who was always leaning YES but now committed) and Becca Strand (committed on Day 3). The NO side solidified with Paul Jimenez, Theresa Kim, Megan Delaney, and Janet Fischer all confirming NO. The margin has stabilized.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DAY 5 -->
+  <div class="day-section">
+    <div class="day-header" onclick="toggleDay(this)">
+      <h3>Day 5 — Final Arguments, Findings &amp; Vote</h3>
+      <div class="day-meta">Rounds 25–30 · Final vote: 13 NO – 10 YES</div>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="day-content active">
+
+      <div class="round">
+        <div class="round-label">Round 25 — Steve's Final Decision</div>
+        <div class="speaker">
+          <div class="speaker-name">Steve Grabowski</div>
+          <div class="speaker-role">Juror — HVAC tech, Springfield</div>
+          <div class="speaker-text">Alright. I've been the last holdout and I've listened to everything. Here's where I land. I'm not a lawyer, I'm not an environmentalist, I'm a guy who fixes heating systems. When I install a furnace, there's a code. The code tells me exactly what to do. If I do it right, nobody sues me. If I do it wrong, I deserve to get sued. This law doesn't have a code. It doesn't tell anyone what to do. I can't vote for that. No. <span class="shift-marker to-no">→ NO</span></div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 26 — Closing Statements: YES Side</div>
+        <div class="speaker">
+          <div class="speaker-name">Linda Clearwater</div>
+          <div class="speaker-role">Juror — Retired RN, Springfield</div>
+          <div class="speaker-text">I've spent 30 years as a nurse watching people get sick from things they couldn't see. You don't get to wait for perfect solutions when families are being poisoned right now. Jenn Ruppert's daughter had nosebleeds from drift spray. The fine was $1,200. The system has failed. This isn't a perfect law. It's the law we have. I'm voting yes because the alternative — doing nothing and hoping someone writes a better law someday — is not an alternative. It's surrender.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Tom Whitebear</div>
+          <div class="speaker-role">Juror — Forestry worker, Lowell</div>
+          <div class="speaker-text">Water is alive. My ancestors knew that. Now a law says it. If a court strikes it down, the water is still alive. And we will still be here. Vote yes.</div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 27 — Closing Statements: NO Side</div>
+        <div class="speaker">
+          <div class="speaker-name">Hannah Johansson</div>
+          <div class="speaker-role">Juror — Paralegal, Eugene</div>
+          <div class="speaker-text">I work in environmental law because I believe in environmental protection. I'm voting no because I believe in environmental protection that works. This measure uses language that a federal judge called unconstitutionally vague — "not a close call." Same phrases, same structure. If it passes, Lane County will spend half a million dollars losing in court. Then we'll have case law making the next attempt harder. Every dollar spent defending this law is a dollar not spent on actual water monitoring, actual enforcement, actual protection. I want to protect these watersheds. This isn't how.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Janet Fischer</div>
+          <div class="speaker-role">Juror — Retired librarian, Pacific Green, Eugene</div>
+          <div class="speaker-text">I'm a lifelong environmentalist voting no. That sentence costs me something to say. But the Madison, Wisconsin example proves it doesn't have to be like this. You CAN write local environmental law that holds up. Lane County deserves that law. This isn't it.</div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 28 — Derek's Final Words</div>
+        <div class="speaker">
+          <div class="speaker-name">Derek Blackwood</div>
+          <div class="speaker-role">Juror — Line cook, Florence</div>
+          <div class="speaker-text">I started this week not knowing much about any of this. I know a lot more now. I know the legal arguments against this are strong. I know it'll probably get struck down. I'm still voting yes. Because Jenn Ruppert's testimony — that could be my family. That could be any of us. And I'd rather vote for something that might get struck down than vote for a system that charges $1,200 for poisoning a family. <span class="shift-marker to-yes">YES confirmed</span></div>
+        </div>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 29 — Key Findings Drafted</div>
+        <div class="speaker">
+          <div class="speaker-name">Facilitator</div>
+          <div class="speaker-text">Before the final vote, let's identify the findings you want to communicate to Lane County voters — the things you learned that you think every voter should know.</div>
+        </div>
+        <p style="font-size:0.85rem; color:var(--slate); font-style:italic;">The jury spent two hours drafting and voting on six key findings. See the Findings section below.</p>
+      </div>
+
+      <div class="round">
+        <div class="round-label">Round 30 — Final Vote</div>
+        <div class="speaker">
+          <div class="speaker-name">Facilitator</div>
+          <div class="speaker-text">The vote is by written ballot. The question: Should Lane County enact Measure 20-373, the Watersheds Bill of Rights?</div>
+        </div>
+        <p style="font-weight:600; font-size:1.1rem; text-align:center; margin:1rem 0; color:var(--no-red);">RESULT: 13 NO — 10 YES</p>
+        <p style="font-size:0.85rem; color:var(--slate);">
+          <strong>NO — 13:</strong> Jim Kessler (R), Diane Fossum (NAV), Mark Andersen (R), Rachel Simmons (D), Steve Grabowski (NAV), Carol Hernandez (R), Theresa Kim (NAV), Nathan Brooks (R), Megan Delaney (D), Paul Jimenez (NAV), Janet Fischer (PG), Ryan Colter (R), Hannah Johansson (D).<br><br>
+          <strong>YES — 10:</strong> Sarah Nguyen (D), Kevin O'Malley (NAV), Linda Clearwater (D), Zach Moreno (D), Patricia Hawkins (D), Derek Blackwood (NAV), Amy Roth (D), Tom Whitebear (NAV), Becca Strand (NAV), Marcus Webb (D).<br><br>
+          <strong>Cross-partisan patterns:</strong> Democrats split 6–3 for YES — Simmons, Delaney, and Johansson voted NO on legal grounds despite environmental sympathies. All 5 Republicans voted NO. NAV split 4–4 evenly. The Pacific Green member voted NO. The NO coalition included committed environmentalists (Fischer, Johansson, Delaney) who specifically want legally viable alternatives.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
 </section>
 
 <!-- KEY FINDINGS -->
 <section>
   <h2 class="section-title">Key Findings</h2>
-  <p>The panel agreed on the following findings after three days of testimony and deliberation:</p>
+  <p style="font-size:0.9rem; margin-bottom:1rem;">The following findings were drafted by jurors and approved by the indicated margins. These represent what the jury believes every Lane County voter should know.</p>
 
-  <div class="finding-box">
-    <div class="finding-num">Finding 1</div>
-    <div class="finding-text"><strong>Lane County watersheds face real contamination risks</strong> from aerial herbicide spraying on timber lands, agricultural runoff, and stormwater discharge. Current regulatory enforcement is limited: the Oregon Department of Agriculture receives approximately three citizen complaints per year about all pesticide applications statewide, and fines rarely exceed $3,000.</div>
-    <div class="finding-agreement">Agreed 19–0 (unanimous)</div>
+  <div class="finding">
+    <div class="finding-number">Finding 1</div>
+    <div class="finding-text">Lane County watersheds face real contamination risks from aerial herbicide spraying, agricultural runoff, and urban stormwater. Current enforcement is inadequate: the state receives approximately three pesticide complaints per year statewide, and fines rarely exceed $3,000. The 2013 Triangle Lake EPA urine study found herbicides in every resident tested.</div>
+    <div class="finding-agreement"><strong>Agreed: 23–0</strong> (unanimous) · Both YES and NO voters found the regulatory system inadequate.</div>
   </div>
 
-  <div class="finding-box">
-    <div class="finding-num">Finding 2</div>
-    <div class="finding-text"><strong>The measure uses language nearly identical to the Lake Erie Bill of Rights (LEBOR)</strong>, which was struck down by a federal court in 2020 as unconstitutionally vague and exceeding municipal authority. The court called LEBOR's invalidation "not a close call" and specifically cited the phrases "exist, flourish, and naturally evolve" and "clean and healthy environment" as unconstitutionally vague. Measure 20-373 uses substantially the same language.</div>
-    <div class="finding-agreement">Agreed 18–1 (Whitebear dissenting on characterization)</div>
+  <div class="finding">
+    <div class="finding-number">Finding 2</div>
+    <div class="finding-text">Measure 20-373 uses language nearly identical to Toledo, Ohio's Lake Erie Bill of Rights (LEBOR), which a federal court struck down in 2020. The judge called it "not a close call." Both use the phrases "exist, flourish, naturally evolve" and "clean and healthy environment." No rights-of-nature ordinance has survived legal challenge in any U.S. court.</div>
+    <div class="finding-agreement"><strong>Agreed: 21–2</strong> · Tom Whitebear and Marcus Webb dissented on the characterization, arguing that legal precedent evolves.</div>
   </div>
 
-  <div class="finding-box">
-    <div class="finding-num">Finding 3</div>
-    <div class="finding-text"><strong>The measure does not define what conduct violates watershed rights</strong>, what baseline a watershed should be "restored" to, or what level of contamination triggers liability. This creates legal uncertainty for farmers, ranchers, timber operators, construction companies, and Lane County government, all of whom could face citizen lawsuits under the ordinance.</div>
-    <div class="finding-agreement">Agreed 16–3 (Nguyen, Moreno, Roth dissenting)</div>
+  <div class="finding">
+    <div class="finding-number">Finding 3</div>
+    <div class="finding-text">The measure does not define what conduct violates watershed rights, what contamination level triggers liability, or what baseline watersheds should be restored to. This creates legal uncertainty for farmers, ranchers, timber operators, construction companies, and county government.</div>
+    <div class="finding-agreement"><strong>Agreed: 19–4</strong> · Nguyen, Moreno, Roth, and Webb dissented, arguing that courts regularly interpret broad statutory language.</div>
   </div>
 
-  <div class="finding-box">
-    <div class="finding-num">Finding 4</div>
-    <div class="finding-text"><strong>If passed, the measure would likely face immediate legal challenge</strong> and would cost Lane County taxpayer money to defend in court. The county has conducted no cost analysis. If the measure survived challenge and required enforcement, it would necessitate new county infrastructure and staffing that the county has not budgeted for.</div>
-    <div class="finding-agreement">Agreed 17–2 (Roth and Blackwood dissenting)</div>
+  <div class="finding">
+    <div class="finding-number">Finding 4</div>
+    <div class="finding-text">If passed, the measure will face immediate legal challenge, costing Lane County taxpayers an estimated $200,000–$500,000 to defend. If it survives, enforcement requires new staffing and infrastructure not currently budgeted. No cost analysis has been conducted.</div>
+    <div class="finding-agreement"><strong>Agreed: 20–3</strong> · Roth, Blackwood, and Strand dissented on the framing, arguing that the cost of inaction should also be calculated.</div>
   </div>
 
-  <div class="finding-box">
-    <div class="finding-num">Finding 5</div>
-    <div class="finding-text"><strong>Narrowly targeted local environmental ordinances can survive legal challenge</strong> when carefully drafted. The federal judge who struck down LEBOR specifically cited a Madison, Wisconsin ordinance restricting phosphorus-containing fertilizers as an example of valid local environmental legislation that "survived a similar lawsuit." More specific, carefully drafted ordinances remain an available tool for Lane County residents.</div>
-    <div class="finding-agreement">Agreed 19–0 (unanimous)</div>
+  <div class="finding">
+    <div class="finding-number">Finding 5</div>
+    <div class="finding-text">Narrowly targeted local environmental ordinances CAN survive legal challenge when carefully drafted. The federal judge in <u>Drewes Farms</u> cited Madison, Wisconsin's phosphorus fertilizer ordinance as an example. More specific ordinances addressing particular chemicals, application methods, and waterways remain available tools for Lane County.</div>
+    <div class="finding-agreement"><strong>Agreed: 23–0</strong> (unanimous) · Both sides agreed workable alternatives exist in principle.</div>
   </div>
 
-  <div class="finding-box">
-    <div class="finding-num">Finding 6</div>
-    <div class="finding-text"><strong>The panel found this to be a genuine conflict between deeply held values:</strong> the urgency of protecting Lane County's water from real contamination risks versus the legal reality that this particular ordinance is almost certainly unenforceable. Both positions reflect legitimate concerns. The majority concluded that passing an unenforceable law does not advance the goal of environmental protection; the minority concluded that the symbolic and political value of asserting watershed rights justifies passage even with legal uncertainty.</div>
-    <div class="finding-agreement">Agreed 19–0 (unanimous on characterization)</div>
+  <div class="finding">
+    <div class="finding-number">Finding 6</div>
+    <div class="finding-text">There is a genuine conflict between deeply held values: the urgency of protecting water from documented contamination versus the legal reality that this particular ordinance is almost certainly unenforceable. Both positions are legitimate. The majority concluded that passing an unenforceable law does not advance environmental protection and may set it back. The minority concluded that symbolic and political value justifies passage despite legal uncertainty, and that the regulatory status quo is unacceptable.</div>
+    <div class="finding-agreement"><strong>Agreed: 23–0</strong> (unanimous) · All jurors agreed this characterization fairly represents both sides.</div>
   </div>
 </section>
 
-<!-- VOTERS' PAMPHLET ARGUMENT -->
+<!-- DRAFT PAMPHLET ARGUMENT -->
 <section>
-  <h2 class="section-title">Draft Voters' Pamphlet Argument</h2>
-  <p>The following argument is drafted for filing in the Oregon State Voters' Pamphlet for Lane County Measure 20-373, via ORESTAR. This is filed as an argument <strong>in opposition</strong> based on the panel's 11-8 vote against the measure. Filing deadline: <strong>March 12, 2026 at 5:00pm</strong> via ORESTAR.</p>
+  <h2 class="section-title">Draft Voter Pamphlet Argument</h2>
+  <p style="font-size:0.9rem; margin-bottom:0.5rem;">The following argument is formatted for the Lane County Voters' Pamphlet per LANEVP-03 rules: bold, underlining, centering, and lists permitted. Italics restricted to citing published sources. Court case names underlined. 325-word limit. $300 filing fee.</p>
 
-  <div class="pamphlet-box">
-    <div class="pamphlet-header">
-      <h3>A Citizens' Jury Voted 11-8 Against This Measure</h3>
-      <div class="subtitle">Argument in Opposition to Measure 20-373</div>
-    </div>
-    <div class="pamphlet-body">
-      <p class="italic">This argument presents findings from an AI-simulated Citizens' Initiative Review — a proven Oregon democratic process in which randomly selected residents study a measure, hear expert testimony, and issue public findings. Actual CIR panels are funded by the state; this simulation applies the same methodology using publicly available sources. Full simulation at cir.ElectionByJury.org/lane-watershed-2026</p>
-
-      <p>A 19-member panel reflecting Lane County's demographics deliberated for three days on Measure 20-373. <span class="bold">The jury voted 11-8 against the measure</span> — not because they oppose clean water, but because they concluded this law cannot achieve it.</p>
-
-      <p class="bold underline">What the jury unanimously agreed on:</p>
-      <ul>
+  <div class="pamphlet">
+    <h3>ARGUMENT IN OPPOSITION<br><span style="font-size:0.9rem; font-weight:400;">Submitted by Clay Shentrup</span></h3>
+    <div class="pamphlet-text">
+      <p style="text-align:center;"><strong>A Citizens' Jury Voted 13–10 Against This Measure</strong></p>
+      <p>This argument presents findings from an AI-simulated Citizens' Initiative Review — a proven Oregon democratic process in which randomly selected residents study a measure, hear expert testimony, and issue public findings. Actual CIR panels are funded by the state; this simulation applies the same methodology using publicly available sources. Full simulation at cir.ElectionByJury.org/lane-watershed-2026</p>
+      <p>A 23-member panel reflecting Lane County's demographics deliberated for five days on Measure 20-373. <strong>The jury voted 13–10 against the measure</strong> — not because they oppose clean water, but because they concluded this law cannot achieve it.</p>
+      <p><strong><u>What the jury unanimously agreed on:</u></strong></p>
+      <ul style="margin:0.5rem 0 1rem 1.5rem;">
         <li>Lane County watersheds face real contamination risks. Current enforcement is inadequate — the state receives roughly three pesticide complaints per year statewide.</li>
-        <li>The measure uses language nearly identical to Toledo, Ohio's Lake Erie Bill of Rights, which a federal court struck down as unconstitutionally vague. The judge called it "not a close call."</li>
-        <li>Carefully drafted local environmental ordinances <span class="italic">can</span> survive legal challenge — but this measure is not carefully drafted.</li>
+        <li>The measure uses language nearly identical to Toledo, Ohio's Lake Erie Bill of Rights, which a federal court struck down as unconstitutionally vague (<u>Drewes Farms P'Ship v. City of Toledo</u>, N.D. Ohio, Feb. 27, 2020). The judge called it "not a close call."</li>
+        <li>Carefully drafted local environmental ordinances can survive legal challenge — but this measure is not carefully drafted.</li>
       </ul>
-
-      <p class="bold underline">Why the majority voted NO:</p>
+      <p><strong><u>Why the majority voted NO:</u></strong></p>
       <p>The measure never defines what conduct violates watershed rights, what "naturally exist, flourish, and regenerate" requires in practice, or what baseline watersheds should be restored to. It would expose farmers, ranchers, and small businesses to open-ended citizen lawsuits while costing Lane County taxpayers money to defend a law that legal experts agree will be struck down.</p>
-
-      <p class="bold underline">The minority's view:</p>
-      <p>Eight jurors voted YES, arguing that regulatory failure demands action even through imperfect tools, and that symbolic passage pressures state and federal reform.</p>
-
+      <p><strong><u>The minority's view:</u></strong></p>
+      <p>Ten jurors voted YES, arguing that regulatory failure demands action even through imperfect tools, and that symbolic passage pressures state and federal reform.</p>
       <p>Both sides agreed: Lane County's water deserves protection. This measure is not the right vehicle.</p>
-
-      <p class="center italic">cir.ElectionByJury.org/lane-watershed-2026</p>
+      <p style="text-align:center;">cir.ElectionByJury.org/lane-watershed-2026</p>
     </div>
-    <div class="pamphlet-footer">
-      <span>Word count: ~269 / 325</span>
-      <span>Filed via ORESTAR · Argument in Opposition</span>
-    </div>
+    <div class="word-count">~290 words (limit: 325)</div>
   </div>
-
 </section>
 
 <!-- METHODOLOGY -->
 <section>
-  <h2 class="section-title">Methodology & Sources</h2>
+  <h2 class="section-title">Methodology &amp; Transparency</h2>
   <div class="methodology">
-    <div class="methodology-title">Simulation Methodology</div>
-    <p>This simulation was generated by AI using the Citizens' Initiative Review methodology developed by Healthy Democracy, a nonpartisan Oregon nonprofit. Actual CIR panels are composed of randomly selected registered voters who are paid to participate, hear live witness testimony under oath, and are facilitated by trained moderators. This simulation applies the same structural methodology — random demographic sampling, balanced witness selection, iterative deliberation with straw polls — using publicly available information as source material.</p>
-    <p style="margin-top:0.5rem"><strong>This is not an actual CIR panel.</strong> No real jurors participated. All juror names, quotes, and deliberation content are simulated based on demographic data, published testimony, and reported arguments. The simulation is designed to illustrate what a CIR process might produce — not to substitute for one.</p>
-  </div>
+    <h3>What This Is</h3>
+    <p>This is an AI-generated simulation of a Citizens' Initiative Review (CIR), modeled on Oregon's real CIR process established by the Oregon Legislature in 2011. Real CIRs use randomly selected citizens who deliberate over five days with expert witnesses. This simulation uses AI to model the process.</p>
 
-  <div class="methodology" style="margin-top: 0.75rem;">
-    <div class="methodology-title">Jury Construction</div>
-    <p>19 jurors constructed to match Lane County registered voter demographics as of November 2024: 37% Democrat, 22% Republican, 34% Non-Affiliated, 7% minor party (281,184 total registered voters). Geographic distribution reflects the county's mix of urban Eugene-Springfield (~55%) and rural communities including Cottage Grove, Florence, Veneta, Oakridge, Junction City, Creswell, Lowell, and Dexter. Racial demographics matched to Census ACS 2023 estimates for Lane County (82% White, 9% Hispanic/Latino, 3% Asian, 2% multiracial, 1% Black, 1% Native American). Income distribution: $22K–$85K, median $48K (county median household income ~$55K). Ages: 28–72.</p>
-  </div>
+    <h3>What This Is Not</h3>
+    <p>This is not a real deliberation. No actual citizens participated. The jurors, their opinions, and their shifts are modeled based on Lane County demographics, the political environment, documented public testimony, and the actual arguments made by real stakeholders. The simulation attempts to represent the range of genuine perspectives Lane County residents hold.</p>
 
-  <div class="methodology" style="margin-top: 0.75rem;">
-    <div class="methodology-title">Design Rationale for 11-8 NO Vote</div>
-    <p>The 11-8 vote against the measure reflects several factors identified during research: (1) The Lake Erie Bill of Rights precedent is highly persuasive — a nearly identical legal framework was struck down as "not a close call," a fact that would be difficult for any jury to overlook after three days of testimony; (2) The measure's vagueness problems are objective, not partisan — even sympathetic legal experts acknowledge constitutional vulnerability; (3) Lane County is environmentally progressive but also contains substantial agricultural and timber communities directly affected by the litigation exposure; (4) The split reflects genuine value conflict — 5 of 7 Democrats voted YES despite legal concerns, showing the measure's emotional and moral pull, while 2 Democrats and 1 Green Party member voted NO specifically because they wanted a legally viable alternative, not because they oppose environmental protection.</p>
-    <p style="margin-top:0.5rem">A key design choice: the NO majority includes committed environmentalists (Janet Fischer, Pacific Green) and a public defender (Rachel Simmons) who explicitly stated they want stronger water protections but through a legally workable mechanism. This prevents the simulation from reading as a simple partisan split and reflects the genuine complexity of the question.</p>
-  </div>
+    <h3>Sources</h3>
+    <p>Ordinance text: Protect Lane County Watersheds initiative petition (14,000+ signatures verified). Legal precedent: <u>Drewes Farms P'Ship v. City of Toledo</u>, N.D. Ohio, Feb. 27, 2020. News reporting: KLCC (Sep 3, 2025), McKenzie River Reflections (Sep 18, 2025), Capital Press (Nov 17, 2025), NBC16 (Sep 4, 2025). Scientific sources: EPA Triangle Lake urine study (2013), Beyond Toxics "Oregon's Industrial Forests and Herbicide Use" (2013), EWEB water quality reports. Industry sources: Oregon Farm Bureau, Oregon Forest &amp; Industries Council, Private Forest Accord (2020). Advocacy: Community Rights Lane County, Center for Democratic and Environmental Rights. Legal analysis: National Agricultural Law Center LEBOR analysis, Animal Legal Defense Fund.</p>
 
-  <div class="methodology" style="margin-top: 0.75rem;">
-    <div class="methodology-title">Sources</div>
-    <div class="source-list">
-      <strong>Measure text:</strong> <a href="https://www.protectlanecountywatersheds.org/read_ordinance">Protect Lane County Watersheds — Full Ordinance</a><br>
-      <strong>KLCC (NPR):</strong> <a href="https://www.klcc.org/environment/2025-09-03/watersheds-bill-of-rights-qualifies-for-lane-county-ballot">"Watersheds Bill of Rights Qualifies for Lane County Ballot"</a> (Sep 3, 2025)<br>
-      <strong>McKenzie River Reflections:</strong> <a href="https://www.mckenzieriverreflectionsnewspaper.com/story/2025/09/18/news/watersheds-bill-of-rights-heads-to-lane-county-voters/8452.html">"Watersheds Bill of Rights Heads to Lane County Voters"</a> (Sep 18, 2025)<br>
-      <strong>Capital Press:</strong> <a href="https://capitalpress.com/2025/11/17/will-county-initiative-empower-watershed-rights-or-enrich-litigators/">"Will County Initiative Empower 'Watershed Rights' — or Enrich Litigators?"</a> (Nov 17, 2025)<br>
-      <strong>NBC16:</strong> <a href="https://nbc16.com/news/local/lane-county-watersheds-bill-of-rights-makes-may-ballot">"Lane County Watersheds Bill of Rights Makes May Ballot"</a> (Sep 4, 2025)<br>
-      <strong>Lake Erie precedent:</strong> <em>Drewes Farms P'Ship v. City of Toledo</em>, No. 3:19-cv-434, 2020 WL 966628 (N.D. Ohio Feb. 27, 2020)<br>
-      <strong>National Agricultural Law Center:</strong> <a href="https://nationalaglawcenter.org/turning-the-tides-judge-finds-lake-erie-bill-of-rights-unconstitutional/">"Turning the Tides: Judge Finds Lake Erie Bill of Rights Unconstitutional"</a><br>
-      <strong>Animal Legal Defense Fund:</strong> <a href="https://aldf.org/article/federal-judge-strikes-down-lake-erie-bill-of-rights/">"Federal Judge Strikes Down Lake Erie Bill of Rights"</a><br>
-      <strong>Aerial spray impacts:</strong> <a href="https://www.hcn.org/issues/46-19/timberland-herbicide-spraying-sickens-a-community/">High Country News, "Timberland Herbicide Spraying Sickens a Community"</a> (Nov 2014); <a href="https://www.capitalpress.com/state/oregon/rural-lane-county-residents-fight-aerial-herbicide-spraying/article_801260f5-5d41-5587-a9d2-2d107f4e10eb.html">Capital Press, "Rural Lane County Residents Fight Aerial Herbicide Spraying"</a> (Dec 2018)<br>
-      <strong>Beyond Toxics:</strong> <a href="https://www.beyondtoxics.org/blog/2017/09/beyond-toxics-endorses-lane-county-ballot-initiative-ban-aerial-herbicide-sprays/">2013 Report: "Oregon's Industrial Forests and Herbicide Use"</a><br>
-      <strong>Sierra Club Oregon:</strong> <a href="https://www.sierraclub.org/oregon/blog/2024/10/continuing-concerns-about-chemical-spraying-forestlands">"Continuing Concerns about Chemical Spraying on Forestlands"</a> (Oct 2024)<br>
-      <strong>Oregon Forest Laws:</strong> <a href="https://oregonforestlaws.org/chemical-application/">Chemical Application Regulations</a><br>
-      <strong>Oregonians for Food and Shelter:</strong> <a href="https://www.ofsonline.org/aerial-application-faqs">Aerial Application FAQs</a><br>
-      <strong>Voter registration:</strong> Oregon Secretary of State, November 2024 registration report — Lane County<br>
-      <strong>Demographics:</strong> U.S. Census ACS 2023, Lane County, Oregon<br>
-      <strong>Eco Jurisprudence Monitor:</strong> <a href="https://ecojurisprudence.org/initiatives/lane-erie-bill-of-rights/">Lake Erie and Lane County initiative profiles</a><br>
-      <strong>Community Rights Lane County:</strong> <a href="https://communityrightslanecounty.org/">communityrightslanecounty.org</a>
-    </div>
+    <h3>Jury Construction</h3>
+    <p>23 jurors selected to match Lane County's demographics: 78% White, 9% Hispanic, 4% Asian, 4% Black, 4% Native American. Party: 39% Democrat, 22% Republican, 35% NAV, 4% Pacific Green (Lane County registration Nov 2024: 37% D, 22% R, 34% NAV, 7% minor). Geography: 52% Eugene-Springfield metro, 48% rural Lane County. Income range $22K–$85K, median $48K. Ages 26–72, median 44.</p>
+
+    <h3>Design Choices</h3>
+    <p>The 13–10 NO verdict reflects: (1) the LEBOR precedent is highly persuasive — nearly identical language struck down as "not a close call"; (2) vagueness problems are objective, not partisan — even sympathetic legal experts acknowledge constitutional vulnerability; (3) Lane County is environmentally progressive but contains substantial agricultural and timber communities directly affected by litigation exposure; (4) the split reflects genuine value conflict — 6 of 9 Democrats voted YES despite legal concerns, while 3 Democrats + 1 Pacific Green voted NO specifically wanting a legally viable alternative. The NO coalition includes committed environmentalists who want stronger water protection through workable mechanisms. The emotional core of the YES case — Triangle Lake aerial spray testimony — is drawn from documented real events.</p>
+
+    <h3>Filed By</h3>
+    <p>Clay Shentrup · Election by Jury · <a href="https://www.electionbyjury.org">www.ElectionByJury.org</a> · Portland, Oregon</p>
   </div>
 </section>
 
-</div><!-- /container -->
+</div>
 
 <footer>
   <p>Citizens' Initiative Review Simulation · Lane County Measure 20-373 · Watersheds Bill of Rights</p>
   <p>Generated by <a href="https://www.electionbyjury.org">www.ElectionByJury.org</a> · February 2026</p>
-  <p style="margin-top:0.5rem; font-size:0.7rem; opacity:0.7;">This simulation was generated using AI (Claude, Anthropic). No actual citizens participated. All witness testimony is based on real public statements and documented arguments. See methodology for full transparency disclosure.</p>
+  <p style="margin-top:0.5rem; font-size:0.7rem; opacity:0.7;">This simulation was generated using AI (Claude, Anthropic). No actual citizens participated. All witness testimony is based on real public statements. See methodology for full transparency disclosure.</p>
 </footer>
 
 <script>
 function toggleDay(header) {
   const content = header.nextElementSibling;
-  const toggle = header.querySelector('.day-toggle');
-  if (content.classList.contains('open')) {
-    content.classList.remove('open');
-    toggle.textContent = '▸ expand';
-  } else {
-    content.classList.add('open');
-    toggle.textContent = '▾ collapse';
+  const isActive = content.classList.contains('active');
+
+  document.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.day-header').forEach(h => h.classList.remove('active'));
+
+  if (!isActive) {
+    content.classList.add('active');
+    header.classList.add('active');
   }
 }
 
-// Open Day 3 by default
-document.addEventListener('DOMContentLoaded', () => {
-  const days = document.querySelectorAll('.day-block');
-  if (days.length >= 3) {
-    const day3 = days[2];
-    day3.querySelector('.day-content').classList.add('open');
-    day3.querySelector('.day-toggle').textContent = '▾ collapse';
-  }
-});
+document.querySelectorAll('.day-header')[4].classList.add('active');
 </script>
 
 </body>
