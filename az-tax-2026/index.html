@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arizona CIR Simulation — HCR 2021: Grocery Sales Tax Cap</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf6f0;
+  --text: #1a1a1a;
+  --muted: #666;
+  --accent: #8b4513;
+  --accent-light: #f5ebe0;
+  --border: #d4c5b0;
+  --card-bg: #fff;
+  --yes: #2d6a2d;
+  --no: #8b2222;
+  --gold: #8b6914;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 17px;
+}
+.container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+header {
+  text-align: center;
+  padding: 4rem 0 3rem;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 3rem;
+}
+header .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+header .subtitle {
+  font-size: 1.2rem;
+  color: var(--muted);
+  font-weight: 300;
+}
+header .measure-box {
+  margin-top: 2rem;
+  background: var(--accent-light);
+  border: 1px solid #d4c0a8;
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  text-align: left;
+}
+header .measure-box .measure-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+header .measure-box .measure-question {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.5;
+}
+section { margin-bottom: 3rem; }
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+h3 {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin: 2rem 0 1rem;
+}
+p { margin-bottom: 1rem; }
+
+/* Jury Grid */
+.jury-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+.juror-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem 1.2rem;
+}
+.juror-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+.juror-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.juror-detail {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* Demographics Summary */
+.demo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.demo-item { text-align: center; }
+.demo-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.demo-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+
+/* Day sections */
+.day-section {
+  margin: 1.5rem 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.day-section summary {
+  background: var(--accent-light);
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.95rem;
+  user-select: none;
+}
+.day-section summary:hover { background: #efe3d3; }
+.day-section[open] summary { border-bottom: 1px solid var(--border); }
+.day-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  min-width: 50px;
+}
+.day-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+.day-rounds {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+.day-content { padding: 1.5rem; }
+
+/* Round */
+.round {
+  margin: 1.5rem 0;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px dashed #d4c5b0;
+}
+.round:last-child { border-bottom: none; padding-bottom: 0; }
+.round-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.8rem;
+}
+.round-pro, .round-con, .round-neutral {
+  padding: 1rem 1.2rem;
+  border-radius: 6px;
+  margin: 0.5rem 0;
+  font-size: 0.93rem;
+}
+.round-pro {
+  background: #f0f7ed;
+  border-left: 3px solid var(--yes);
+}
+.round-con {
+  background: #faf0f0;
+  border-left: 3px solid var(--no);
+}
+.round-neutral {
+  background: #f5f3ee;
+  border-left: 3px solid var(--gold);
+}
+.round-speaker {
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+}
+.round-speaker.pro-label { color: var(--yes); }
+.round-speaker.con-label { color: var(--no); }
+.round-speaker.neutral-label { color: var(--gold); }
+.round-pro p, .round-con p, .round-neutral p { margin-bottom: 0.5rem; font-size: 0.93rem; }
+.round-pro p:last-child, .round-con p:last-child, .round-neutral p:last-child { margin-bottom: 0; }
+
+/* Juror question in deliberation */
+.juror-q {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.8rem 1.2rem;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+.juror-q .jq-name { font-weight: 700; font-size: 0.85rem; }
+.juror-q .jq-info { font-size: 0.75rem; color: var(--muted); }
+
+/* Vote Results */
+.vote-result {
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  margin: 2rem 0;
+}
+.vote-result .vote-numbers {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin: 1.5rem 0;
+}
+.vote-result .vote-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  font-weight: 700;
+}
+.vote-result .vote-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--muted);
+}
+.vote-yes .vote-num { color: var(--yes); }
+.vote-no .vote-num { color: var(--no); }
+.bar-chart {
+  display: flex;
+  height: 40px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+.bar-yes { background: var(--yes); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
+.bar-no { background: var(--no); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
+
+/* Findings */
+.finding {
+  background: var(--accent-light);
+  border: 1px solid #d4c0a8;
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  margin: 1rem 0;
+}
+.finding .finding-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+.finding p { margin-bottom: 0.5rem; font-size: 0.95rem; }
+
+/* Filing statement - realistic pamphlet */
+.pamphlet-page {
+  background: #fffff8;
+  border: 1px solid #ccc;
+  padding: 2.5rem 2.5rem 2rem;
+  margin: 1rem 0;
+  max-width: 540px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: #1a1a1a;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.08);
+}
+.pamphlet-page .page-id {
+  font-size: 0.72rem;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+.pamphlet-page .measure-id {
+  font-size: 0.78rem;
+  color: #444;
+  margin-bottom: 0.15rem;
+}
+.pamphlet-page .disclaimer {
+  font-size: 0.68rem;
+  color: #888;
+  font-style: italic;
+  margin-bottom: 1.25rem;
+  line-height: 1.4;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.75rem;
+}
+.pamphlet-page .arg-header {
+  font-size: 0.82rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+}
+.pamphlet-page p {
+  margin-bottom: 0.75rem;
+  text-align: left;
+}
+.pamphlet-page .furnished {
+  font-size: 0.82rem;
+  margin-top: 1.25rem;
+  font-style: italic;
+}
+.pamphlet-page ul {
+  margin: 0.5rem 0 0.75rem 1.25rem;
+  padding: 0;
+}
+.pamphlet-page ul li {
+  margin-bottom: 0.4rem;
+  font-size: 0.92rem;
+}
+
+/* Straw poll tracker */
+.straw-poll {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem 1.5rem;
+  margin: 1rem 0;
+}
+.straw-poll .sp-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+.straw-poll .sp-bar {
+  display: flex;
+  height: 28px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0.5rem 0;
+}
+.straw-poll .sp-yes { background: var(--yes); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.75rem; }
+.straw-poll .sp-undecided { background: #b8a88a; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.75rem; }
+.straw-poll .sp-no { background: var(--no); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.75rem; }
+.straw-poll .sp-legend {
+  font-size: 0.78rem;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Methodology note */
+.methodology {
+  background: #f8f4ee;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2rem;
+  margin: 2rem 0;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.methodology h3 { margin-top: 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="label">Arizona Citizens' Initiative Review — AI-Powered Simulation</div>
+  <h1>HCR 2021: Grocery Sales Tax Cap</h1>
+  <div class="subtitle">A 23-member virtual citizen jury deliberates on capping municipal grocery taxes at 2% and requiring voter approval for increases</div>
+  <div class="measure-box">
+    <div class="measure-label">Ballot Question — November 3, 2026</div>
+    <div class="measure-question">"Shall Arizona law be amended to cap municipal sales taxes on food for home consumption at 2% of the base price, prohibit increases above that cap, and require voter approval before any city or town may adopt or increase a grocery tax?"</div>
+  </div>
+</header>
+
+<!-- JURY COMPOSITION -->
+<section>
+<h2>The Panel</h2>
+<p>Twenty-three virtual Arizona residents, constructed from detailed demographic profiles calibrated to match the state's actual population distribution by age, race, gender, income, county, party affiliation, occupation, religion, and housing tenure. Unlike opt-in panels, this method models genuine random selection — producing a panel that is representative on average but imperfect in any individual draw, as any true random sample would be. The panel deliberately includes residents from cities that currently tax groceries and cities that do not, reflecting the uneven distribution of this tax across the state.</p>
+
+<div class="demo-grid">
+  <div class="demo-item"><div class="demo-num">23</div><div class="demo-label">Panelists</div></div>
+  <div class="demo-item"><div class="demo-num">42</div><div class="demo-label">Median Age</div></div>
+  <div class="demo-item"><div class="demo-num">12/11</div><div class="demo-label">Women / Men</div></div>
+  <div class="demo-item"><div class="demo-num">8</div><div class="demo-label">Counties</div></div>
+</div>
+
+<div class="jury-grid">
+<div class="juror-card"><div class="juror-num">J-01</div><div class="juror-name">Miguel Ochoa</div><div class="juror-detail">38 · Hispanic · Chandler (Maricopa Co.)<br>HVAC technician · Republican · Catholic<br>Homeowner · Household income ~$74K</div></div>
+<div class="juror-card"><div class="juror-num">J-02</div><div class="juror-name">Karen Driscoll</div><div class="juror-detail">61 · White · Scottsdale (Maricopa Co.)<br>Retired school administrator · Republican · Presbyterian<br>Homeowner · Household income ~$92K (retirement)</div></div>
+<div class="juror-card"><div class="juror-num">J-03</div><div class="juror-name">Darnell Washington</div><div class="juror-detail">33 · Black · Phoenix (Maricopa Co.)<br>Supply chain analyst, Honeywell · Independent · None<br>Renter · Household income ~$68K</div></div>
+<div class="juror-card"><div class="juror-num">J-04</div><div class="juror-name">Rosa Leyva-Dominguez</div><div class="juror-detail">47 · Hispanic · Tucson (Pima Co.)<br>School cafeteria manager · Democrat · Catholic<br>Homeowner · Household income ~$52K</div></div>
+<div class="juror-card"><div class="juror-num">J-05</div><div class="juror-name">Bryce Harding</div><div class="juror-detail">29 · White · Gilbert (Maricopa Co.)<br>Software developer, remote · Libertarian · None<br>Renter · Household income ~$95K</div></div>
+<div class="juror-card"><div class="juror-num">J-06</div><div class="juror-name">Patricia "Patty" Simmons</div><div class="juror-detail">55 · White · Prescott Valley (Yavapai Co.)<br>Town parks & rec coordinator · Republican · Evangelical (Assembly of God)<br>Homeowner · Household income ~$58K</div></div>
+<div class="juror-card"><div class="juror-num">J-07</div><div class="juror-name">Carlos Mendoza</div><div class="juror-detail">42 · Hispanic · Mesa (Maricopa Co.)<br>Auto body shop owner · Independent · Catholic<br>Homeowner · Household income ~$85K</div></div>
+<div class="juror-card"><div class="juror-num">J-08</div><div class="juror-name">Jennifer Falk</div><div class="juror-detail">36 · White · Tempe (Maricopa Co.)<br>ASU adjunct professor (public policy) · Democrat · None<br>Renter · Household income ~$62K</div></div>
+<div class="juror-card"><div class="juror-num">J-09</div><div class="juror-name">Wayne Crenshaw</div><div class="juror-detail">68 · White · Sierra Vista (Cochise Co.)<br>Retired Army (E-8), part-time security · Republican · Baptist<br>Homeowner · Household income ~$55K</div></div>
+<div class="juror-card"><div class="juror-num">J-10</div><div class="juror-name">Adriana Quintero</div><div class="juror-detail">25 · Hispanic · Phoenix (Maricopa Co.)<br>Dental assistant · Democrat · None<br>Renter (w/ roommate) · Household income ~$42K</div></div>
+<div class="juror-card"><div class="juror-num">J-11</div><div class="juror-name">Daniel Begay</div><div class="juror-detail">44 · Navajo (Diné) · Flagstaff (Coconino Co.)<br>NAU facilities maintenance supervisor · Independent · Traditional/NAC<br>Homeowner · Household income ~$56K</div></div>
+<div class="juror-card"><div class="juror-num">J-12</div><div class="juror-name">Linda McAllister</div><div class="juror-detail">58 · White · Bisbee (Cochise Co.)<br>Part-time gallery assistant / artist · Democrat · Unitarian Universalist<br>Homeowner · Household income ~$36K</div></div>
+<div class="juror-card"><div class="juror-num">J-13</div><div class="juror-name">Mark Ellsworth</div><div class="juror-detail">50 · White · Peoria (Maricopa Co.)<br>Fire captain, Peoria FD · Republican · LDS (Mormon)<br>Homeowner · Household income ~$105K</div></div>
+<div class="juror-card"><div class="juror-num">J-14</div><div class="juror-name">Samantha "Sam" Nguyen</div><div class="juror-detail">31 · Vietnamese American · Chandler (Maricopa Co.)<br>Biomedical engineer, Medtronic · Independent · Buddhist<br>Renter · Household income ~$88K</div></div>
+<div class="juror-card"><div class="juror-num">J-15</div><div class="juror-name">Teresa Orozco</div><div class="juror-detail">52 · Hispanic · Douglas (Cochise Co.)<br>Grocery store cashier, Fry's · Democrat · Catholic<br>Renter · Household income ~$30K</div></div>
+<div class="juror-card"><div class="juror-num">J-16</div><div class="juror-name">Steve Papadopoulos</div><div class="juror-detail">45 · White (Greek American) · Scottsdale (Maricopa Co.)<br>Commercial real estate broker · Republican · Greek Orthodox<br>Homeowner · Household income ~$175K</div></div>
+<div class="juror-card"><div class="juror-num">J-17</div><div class="juror-name">Rachel Gutierrez</div><div class="juror-detail">34 · Hispanic · Surprise (Maricopa Co.)<br>Stay-at-home mother (3 children) · Independent · Evangelical (nondenominational)<br>Homeowner · Household income ~$72K</div></div>
+<div class="juror-card"><div class="juror-num">J-18</div><div class="juror-name">Tom Bridger</div><div class="juror-detail">73 · White · Green Valley (Pima Co.)<br>Retired accountant · Republican · Methodist<br>Homeowner · Household income ~$68K (retirement)</div></div>
+<div class="juror-card"><div class="juror-num">J-19</div><div class="juror-name">Jasmine Williams-Carter</div><div class="juror-detail">28 · Biracial (Black/White) · Tempe (Maricopa Co.)<br>Graduate student (social work), ASU · Democrat · None<br>Renter · Household income ~$24K</div></div>
+<div class="juror-card"><div class="juror-num">J-20</div><div class="juror-name">Eduardo "Eddie" Salazar</div><div class="juror-detail">40 · Hispanic · Yuma (Yuma Co.)<br>Border Patrol agent · Republican · Catholic<br>Homeowner · Household income ~$88K</div></div>
+<div class="juror-card"><div class="juror-num">J-21</div><div class="juror-name">Megan Connolly</div><div class="juror-detail">48 · White · Tucson (Pima Co.)<br>RN, Tucson Medical Center · Democrat · None<br>Homeowner · Household income ~$82K</div></div>
+<div class="juror-card"><div class="juror-num">J-22</div><div class="juror-name">Derek Hansen</div><div class="juror-detail">22 · White · Tempe (Maricopa Co.)<br>ASU senior (finance major) / part-time server · Independent · Evangelical (Baptist)<br>Renter · Household income ~$18K</div></div>
+<div class="juror-card"><div class="juror-num">J-23</div><div class="juror-name">Gloria Fuentes</div><div class="juror-detail">63 · Hispanic · Taylor (Navajo Co.)<br>Town clerk, Town of Taylor · Independent · LDS-adjacent (Community of Christ)<br>Homeowner · Household income ~$46K</div></div>
+</div>
+
+<h3>Panel Demographics Summary</h3>
+<p style="font-size:0.9rem; color: var(--muted);">
+<strong>Race/Ethnicity:</strong> 12 White non-Hispanic (52%), 7 Hispanic/Latino (30%), 1 Black (4%), 1 Native American/Navajo (4%), 1 Asian American (4%), 1 Biracial (4%) — Arizona actual: ~54% White, ~32% Hispanic, ~5% Black, ~5% Native American, ~4% Asian<br>
+<strong>Gender:</strong> 12 women, 11 men — Arizona actual: ~50/50<br>
+<strong>Age range:</strong> 22–73, median 42 — Arizona median: ~38<br>
+<strong>Party:</strong> 7 Republican (30%), 6 Democrat (26%), 8 Independent (35%), 1 Libertarian (4%), 1 No Labels — Arizona actual: ~36% R, ~28% D, ~34% Other/Ind<br>
+<strong>Religion:</strong> 6 None/Unaffiliated (26%), 5 Catholic (22%), 3 Evangelical (13%), 2 Mainline Protestant (9%), 2 LDS-tradition (9%), 1 Baptist, 1 Greek Orthodox, 1 Buddhist, 1 Unitarian, 1 Traditional/NAC — Arizona actual: ~31% unaffiliated, ~26% evangelical, ~21% Catholic, ~5% LDS<br>
+<strong>Housing:</strong> 15 homeowners, 8 renters — Arizona actual: ~67% owner-occupied<br>
+<strong>County:</strong> 14 Maricopa (61%), 3 Pima (13%), 2 Cochise (9%), 1 Coconino, 1 Yavapai, 1 Yuma, 1 Navajo — Arizona actual: ~60% Maricopa, ~13% Pima<br>
+<strong>Grocery tax exposure:</strong> 12 jurors reside in cities that currently tax groceries (Chandler, Scottsdale, Tempe, Peoria, Gilbert, Sierra Vista, Douglas, Bisbee, Flagstaff, Surprise, Yuma, Taylor); 11 reside in cities that do not (Phoenix, Mesa, Tucson, Prescott Valley, Green Valley)
+</p>
+</section>
+
+<!-- 5-DAY PROCEEDINGS -->
+<section>
+<h2>Proceedings — Five Days, Thirty Rounds</h2>
+<p>The simulated proceedings follow the structure of Oregon's Citizens' Initiative Review as adapted for a statewide Arizona measure: alternating presentations from advocates and opponents, neutral expert testimony, juror questions, and structured deliberation. Six rounds per day across five days. Advocates represent the strongest real-world arguments on each side, drawn from legislative testimony, municipal government statements, tax policy research, and public comment.</p>
+
+<!-- DAY 1 -->
+<details class="day-section" open>
+<summary>
+  <span class="day-label">Day 1</span>
+  <span class="day-title">Monday — Orientation and Opening Statements</span>
+  <span class="day-rounds">6 rounds</span>
+</summary>
+<div class="day-content">
+
+<div class="round">
+<div class="round-label">Round 1 — Facilitator Orientation</div>
+<div class="round-neutral">
+  <div class="round-speaker neutral-label">Facilitator</div>
+  <p>Welcome. You have been selected as a virtual citizen panel to evaluate HCR 2021, a legislatively referred statute that will appear on Arizona's November 2026 ballot. Over five days, you will hear from advocates, opponents, fiscal analysts, municipal officials, tax policy experts, and affected residents. Your task is to produce key findings and an advisory vote to help Arizona voters make an informed decision.</p>
+  <p>Here is what the measure does. Currently, 70 of Arizona's 91 incorporated cities and towns impose a transaction privilege tax — what most people call a sales tax — on food purchased for home consumption. The rates range from about 1.5% to 4%. Arizona's three largest cities — Phoenix, Tucson, and Mesa — do not tax groceries. HCR 2021 would cap the grocery tax at 2% of the base price for any city or town statewide. Cities already above 2% would be frozen at their current rate but could never increase. Cities below 2% or without a grocery tax could only adopt or increase one with voter approval, up to the 2% maximum. The measure is retroactive to January 1, 2025, and includes a 24-month moratorium on new grocery taxes through June 30, 2027.</p>
+</div>
+<div class="round-neutral">
+  <div class="round-speaker neutral-label">Joint Legislative Budget Committee — Fiscal Briefing</div>
+  <p>The JLBC estimates that HCR 2021 would reduce municipal transaction privilege tax collections by approximately $227 million annually by fiscal year 2028. That figure reflects the difference between current collections — about $196 million in FY 2024 across 70 cities — and what collections would be under a 2% cap, adjusted for projected growth in food prices. Forty of the 70 cities that currently tax groceries do not levy a primary property tax, meaning this revenue cannot be easily replaced through the state's other major local tax instrument. The state General Fund is not directly affected because Arizona eliminated its own grocery tax in 1980.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 2 — Pro Opening Statement</div>
+<div class="round-pro">
+  <div class="round-speaker pro-label">Rep. Leo Biasiucci (R-Lake Havasu City) — Sponsor, HCR 2021</div>
+  <p>Thank you. This is simple. Taxing the groceries that Arizona families need to survive is a regressive tax. It is wrong. When a single mother in Chandler buys a gallon of milk, a loaf of bread, and a dozen eggs for her kids, she should not be paying extra so the city can pad its budget. Everybody needs food. You can choose not to buy a television. You can choose not to eat at a restaurant. You cannot choose not to eat.</p>
+  <p>In 1980, Arizona did the right thing and eliminated the state sales tax on groceries. But we left a loophole that allowed cities and towns to keep taxing food. Forty-five years later, 70 cities still exploit that loophole. That means where you happen to live determines whether you pay an extra 2%, 3%, even 4% every time you go to the grocery store. A family in Phoenix pays zero. A family in Chandler — ten minutes away — pays 1.5% on top of already-rising food prices.</p>
+  <p>The original version of this bill would have eliminated the grocery tax entirely. We compromised. We capped it at 2%. We gave cities the ability to keep taxing groceries up to 2% with voter approval. We are not eliminating anything. We are putting a ceiling on it and letting the people — not city councils — decide whether to keep it. That is democracy. Since 2019, cities have seen a 60% increase in total sales tax revenue, largely because the Wayfair Supreme Court decision opened up online sales tax collections. They have more revenue than ever. They can absorb this.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 3 — Con Opening Statement</div>
+<div class="round-con">
+  <div class="round-speaker con-label">Tom Belshe — Executive Director, League of Arizona Cities and Towns</div>
+  <p>We share the concern about grocery prices. Nobody likes paying more at the checkout. But this measure is a permanent solution to a temporary problem, and the people who will pay the price are not who you think.</p>
+  <p>Let me give you the real numbers. Seventy cities and towns collect approximately $200 million per year from grocery taxes. For many of them, this is not a small line item — it is the backbone of their budget. The Town of Taylor gets 30% of its total revenue from the food tax. Bisbee gets 14%. Prescott Valley would lose $5.3 million — a 15% cut to its entire TPT revenue. These are not abstract numbers. They pay for fire trucks, police officers, road maintenance, parks, and libraries.</p>
+  <p>Here is what really concerns me. Forty of those 70 cities do not levy a property tax. In Arizona's system, municipalities have essentially two revenue tools: sales taxes and property taxes. If you eliminate or cap one, the only alternative is the other. Many of these communities — especially the rural ones — chose not to have property taxes precisely because the sales tax base, including food, was sufficient. Now the state legislature wants to take that away and leave them with nothing. What happens next? Either services get cut, or those towns adopt property taxes, which concentrates the burden on homeowners instead of spreading it across everyone who shops.</p>
+  <p>And consider this: 58% of Arizona voters live in cities that do not currently tax groceries. Phoenix, Tucson, Mesa — they opted out years ago. So this measure asks a majority of voters who are completely unaffected to restrict the revenue options of communities they don't live in. That's not democracy. That's the tyranny of the majority over local self-governance.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 4 — Pro Rebuttal</div>
+<div class="round-pro">
+  <div class="round-speaker pro-label">Rep. Neal Carter (R-San Tan Valley)</div>
+  <p>Mr. Belshe keeps saying "permanent solution to a temporary problem." But food prices are not going back to 2019 levels. The USDA reports that U.S. food prices rose 23.6% from 2020 to 2024. Families are not waiting for inflation to fix itself. They need relief now.</p>
+  <p>He talks about cities losing revenue. Let me talk about what cities have gained. Between 2019 and 2024, municipal sales tax collections in Arizona increased by more than 60% — not because of population growth alone, but because the Wayfair decision opened up billions in online sales that were previously untaxed. Every Amazon package, every online grocery delivery, every furniture order now generates TPT revenue. Cities have been swimming in new revenue. To say they "can't absorb" capping one component of their tax at 2% is not credible.</p>
+  <p>And the "local control" argument — let's be honest. If the City Council of Chandler raised grocery taxes from 1.5% to 4% tomorrow, would Mr. Belshe call that "local control"? Or would he call it gouging? The voter approval requirement doesn't take away local control. It gives it to the people instead of the council chambers.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 5 — Con Rebuttal</div>
+<div class="round-con">
+  <div class="round-speaker con-label">Ken Budge — Mayor, City of Bisbee</div>
+  <p>I'm the mayor of a town of 5,200 people in Cochise County. Let me tell you what $620,000 means to Bisbee. It means two police officers. It means keeping the road grader running. It means the community pool staying open in summer. We are not Phoenix. We do not have 1.6 million residents and a massive commercial tax base. We have retirees, artists, tourists, and a border economy.</p>
+  <p>The gentleman from San Tan Valley talks about the Wayfair windfall. Bisbee's online sales tax revenue from the Wayfair decision? Minimal. Our residents shop locally because we are hours from any major distribution center. The Wayfair bonanza went to Maricopa County, not to Cochise County.</p>
+  <p>I didn't come here to defend taxing food. I came here to ask you what replaces it. When Governor Hobbs vetoed the original version of this bill in 2023, she said, "This bill doesn't eliminate costs for our residents. It simply moves those costs around." She was right. If Bisbee loses $620,000, we will either cut services or we will have to pursue a property tax. And a property tax in Bisbee, where the median home value is about $170,000 and most residents are on fixed incomes, would hit harder than a 3% grocery tax on a $400 monthly food bill.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 6 — Juror Questions (Day 1)</div>
+<div class="juror-q">
+  <div class="jq-name">Gloria Fuentes (J-23)</div>
+  <div class="jq-info">63 · Town clerk · Taylor, Navajo County</div>
+  <p>I work for the Town of Taylor. Our food tax is 3%. The fiscal note says we could lose 30% of our revenue. Is there any state program that would help make up the difference for towns like ours?</p>
+</div>
+<div class="round-neutral">
+  <div class="round-speaker neutral-label">JLBC Analyst</div>
+  <p>There is no replacement revenue mechanism in HCR 2021 itself. State-shared revenue — money the state distributes to cities from income tax collections — is projected to grow modestly, but that growth is unrelated to this bill. The legislature could separately appropriate funds to offset losses, but there is no requirement or commitment to do so. Some legislators have discussed the possibility, but nothing has been enacted.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Sam Nguyen (J-14)</div>
+  <div class="jq-info">31 · Biomedical engineer · Chandler</div>
+  <p>What's the actual dollar impact per household? If I spend $600 a month on groceries in Chandler, how much would I save?</p>
+</div>
+<div class="round-pro">
+  <div class="round-speaker pro-label">Rep. Biasiucci</div>
+  <p>Chandler's rate is currently 1.5%, which is already below the 2% cap, so HCR 2021 would freeze it there. But let's take a city at the higher end — say, a 3.5% rate. On $600 a month in groceries, you're paying $21 a month in grocery tax, or $252 a year. Under the cap, that drops to $12 a month, $144 a year. That's $108 back in your pocket. For a family earning $40,000, that's real money.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Jennifer Falk (J-08)</div>
+  <div class="jq-info">36 · ASU adjunct professor (public policy) · Tempe</div>
+  <p>What's the economic consensus on grocery taxes specifically? The CBPP is cited on both sides. Is there a clean answer on whether eliminating grocery taxes is good policy?</p>
+</div>
+<div class="round-neutral">
+  <div class="round-speaker neutral-label">Facilitator (summarizing expert consensus)</div>
+  <p>The Center on Budget and Policy Priorities, a left-leaning think tank, and the Tax Foundation, a right-leaning think tank, both recommend against taxing groceries. The CBPP calls it regressive because low-income households spend 11% or more of their income on groceries versus about 6% for high-income households. The Tax Foundation favors broad-based sales taxes on principle but acknowledges that grocery exemptions improve vertical equity. The key policy debate is not whether grocery taxes are regressive — almost everyone agrees they are — but whether the revenue loss to municipalities can be managed without creating worse problems. That is the empirical question this panel is evaluating.</p>
+</div>
+</div>
+
+<div class="straw-poll">
+  <div class="sp-label">Day 1 Straw Poll (anonymous, non-binding)</div>
+  <div class="sp-bar">
+    <div class="sp-yes" style="width:43%">10</div>
+    <div class="sp-undecided" style="width:26%">6</div>
+    <div class="sp-no" style="width:31%">7</div>
+  </div>
+  <div class="sp-legend"><span>YES 10</span><span>UNDECIDED 6</span><span>NO 7</span></div>
+</div>
+
+</div>
+</details>
+
+<!-- DAY 2 -->
+<details class="day-section">
+<summary>
+  <span class="day-label">Day 2</span>
+  <span class="day-title">Tuesday — The Regressivity Question and Municipal Finance</span>
+  <span class="day-rounds">6 rounds</span>
+</summary>
+<div class="day-content">
+
+<div class="round">
+<div class="round-label">Round 7 — Pro: The National Trend</div>
+<div class="round-pro">
+  <div class="round-speaker pro-label">Dr. Richard Auxier — Senior Policy Associate, Tax Policy Center (via video)</div>
+  <p>The national picture is clear. In 2020, thirteen states still taxed groceries. Since then, Oklahoma, Kansas, Virginia, Illinois, and Arkansas have all moved to eliminate their state-level grocery taxes. Alabama and Tennessee have reduced theirs. Utah voters approved a grocery tax repeal. This is a bipartisan consensus — these eliminations were signed by Republican and Democratic governors alike. Arizona is actually ahead of the curve because it eliminated the state grocery tax in 1980. What HCR 2021 does is extend that same logic to the municipal level.</p>
+  <p>The economic research is unambiguous on the distributional question. Sales taxes on food are among the most regressive taxes a government can impose. The bottom quintile of households by income spends roughly 33% of after-tax income on food. The top quintile spends about 8%. When you put a flat-rate tax on groceries, you are effectively imposing a higher tax rate on poor families than on wealthy families. This is textbook regressivity. The only debate is about how to replace the revenue — not whether the tax itself is unfair.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 8 — Con: Municipal Finance Deep Dive</div>
+<div class="round-con">
+  <div class="round-speaker con-label">Shawn Palmer — Mayor, Town of Taylor</div>
+  <p>I appreciate the professor's economics lesson. Now let me give you a civics lesson from a town of 4,500 people. Taylor's food tax is 3%. It generates roughly $620,000 a year. That is 30% of our general fund. We have no primary property tax. We chose not to have one because our sales tax base — including food — covered our needs. Our residents wanted it this way.</p>
+  <p>You know who pays our food tax? It's not just Taylor residents. It's the thousands of tourists and visitors who come through our town on the way to the White Mountains. They stop at our Safeway, our gas stations, our restaurants. They contribute to our roads, our water system, our public safety. That is how tourism towns work. A property tax captures none of that.</p>
+  <p>The sponsor of this bill is from Lake Havasu City, where the food tax is 2.35%. He's proposing to cap it at 2% — a modest reduction for his own town. But for Taylor, for Springerville, for Show Low, for Bisbee, for dozens of rural communities, this bill is an existential fiscal threat. We did not ask for this. The people of Taylor didn't petition the legislature to take away our revenue. The legislature decided to put it on a statewide ballot where 60% of the voters have no skin in the game.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 9 — Pro: The Equity Argument</div>
+<div class="round-pro">
+  <div class="round-speaker pro-label">Carmen Heredia — Director, Arizona PIRG (Public Interest Research Group)</div>
+  <p>I want to center the people this debate is actually about: low-income families. In Arizona, 14.1% of the population lives below the federal poverty line. That's over a million people. Forty percent of them are children. Many of these families live in exactly the cities that tax groceries — Chandler, Scottsdale, Tempe, Gilbert, Flagstaff, Yuma, Sierra Vista.</p>
+  <p>SNAP benefits — food stamps — are exempt from sales tax by federal law. But SNAP doesn't cover all food purchases for most families. The average SNAP benefit in Arizona is about $190 per person per month, which the USDA itself acknowledges is not sufficient to cover a healthy diet. Every dollar of groceries purchased above the SNAP benefit is taxed at the local rate. That's the cruelest irony: the poorest families, buying the cheapest food, at the most basic grocery stores, paying a tax that the wealthiest Arizonans in Phoenix and Tucson don't pay at all.</p>
+  <p>The geographic lottery of this tax is not defensible. Whether you pay tax on milk should not depend on which side of a city boundary line you live on.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 10 — Con: The Property Tax Trap</div>
+<div class="round-con">
+  <div class="round-speaker con-label">Nick Ponder — Lobbyist, League of Arizona Cities and Towns</div>
+  <p>Let me address the replacement revenue question directly, because it's the question that determines whether this measure helps or hurts low-income families. Forty of the 70 cities that tax groceries do not have a primary property tax. If those cities lose significant grocery tax revenue and cannot find alternatives, they face three options. One: cut services. Police response times increase. Road maintenance gets deferred. Parks close. Libraries lose hours. Two: adopt a property tax. This requires a vote, and it concentrates the burden on homeowners rather than distributing it across all shoppers. Three: raise the general sales tax rate on everything else. That is also regressive.</p>
+  <p>The proponents claim this is about helping low-income families. But if the result is that Bisbee, Prescott Valley, and Taylor adopt property taxes to replace lost revenue, then renters will face higher rents as landlords pass through the new property tax, and homeowners on fixed incomes — retirees, disabled residents — will face a new annual bill that they cannot avoid by shopping across town. At least with a grocery tax, you can shop at a store in an adjacent jurisdiction. You cannot move your house.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 11 — Juror Discussion: Working Through the Numbers</div>
+<div class="juror-q">
+  <div class="jq-name">Teresa Orozco (J-15)</div>
+  <div class="jq-info">52 · Grocery store cashier · Douglas</div>
+  <p>I work at Fry's in Douglas. The food tax there is 4%. I see it on every receipt. My customers — a lot of them are on fixed incomes, Social Security, or SNAP. They watch every penny. When someone buys $50 of groceries and pays $2 in food tax, that's $2 they don't have for their kids' school supplies. I hear about the city budget, but I'm looking at people's faces every day.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Patty Simmons (J-06)</div>
+  <div class="jq-info">55 · Parks & rec coordinator · Prescott Valley</div>
+  <p>I hear Teresa, and I feel for her customers. But I work for the Town of Prescott Valley. If we lose $5.3 million, that's my job. That's my coworkers' jobs. We maintain the parks, the trails, the rec center. Who do you think uses those facilities? It's families. It's seniors. It's the same low-income people we're trying to help. You can't help families by defunding the services they depend on.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Bryce Harding (J-05)</div>
+  <div class="jq-info">29 · Software developer · Gilbert</div>
+  <p>This seems like a straightforward math problem to me. The total grocery tax collected is about $200 million. Arizona's total municipal TPT revenue in 2024 was over $6 billion. We're talking about 3% of total revenue. And the Wayfair online sales tax windfall is ongoing. I don't see how this is existential for most cities.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Linda McAllister (J-12)</div>
+  <div class="jq-info">58 · Artist · Bisbee</div>
+  <p>Bryce, that's an average. Bisbee isn't "most cities." Our commercial tax base is tiny. We don't have a Costco or a Target driving general sales tax revenue. We have galleries, a few restaurants, and a Safeway. The food tax is proportionally enormous for us. Averages hide the bodies.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Tom Bridger (J-18)</div>
+  <div class="jq-info">73 · Retired accountant · Green Valley</div>
+  <p>I spent 40 years doing municipal accounting. The real question is: what is the proper tax base for essential services? If a town needs X dollars to operate, those dollars have to come from somewhere. The argument that grocery taxes are regressive is valid. But so is the argument that property taxes are regressive for asset-rich, cash-poor retirees. So is the argument that higher general sales taxes are regressive. There is no non-regressive option for most Arizona towns. The question is which regressive tax is the least harmful.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 12 — Expert Panel: National Evidence on Grocery Tax Elimination</div>
+<div class="round-neutral">
+  <div class="round-speaker neutral-label">Dr. Meg Wiehe — Deputy Director, Institute on Taxation and Economic Policy (via video)</div>
+  <p>We model the distributional impact of tax changes for every state. In Arizona, because the grocery tax is municipal rather than statewide, the impact varies dramatically by location. In a city with a 3.5% grocery tax, a family in the bottom income quintile — earning under $25,000 — pays roughly 0.35% of their income in grocery taxes. A family in the top quintile pays about 0.06%. That's a 6-to-1 ratio of effective tax burden. By any measure, that is regressive.</p>
+  <p>However — and this is the critical nuance — the regressivity of the grocery tax must be weighed against the regressivity of whatever replaces it. If a city eliminates its grocery tax and replaces the revenue by raising the general sales tax rate by half a point, the net distributional effect is close to zero, because both taxes fall on consumption. If it replaces it with a progressive income tax — which Arizona municipalities cannot levy — the effect would be strongly progressive. If it replaces it with a property tax, the effect is mixed and depends on local housing markets. The worst outcome for low-income families is if the city simply cuts services without replacing revenue, because low-income households are the most dependent on public services.</p>
+</div>
+<div class="round-neutral">
+  <div class="round-speaker neutral-label">Dr. Kevin McCarthy — President, Arizona Tax Research Association</div>
+  <p>Two factual points. First, state-shared revenue to cities is projected to grow from $1.05 billion in FY 2025 to $1.18 billion in FY 2028 — about a $130 million increase. That doesn't fully offset the $227 million grocery tax loss, but it's not nothing. Second, the 60% increase in municipal TPT revenue since 2019 that the proponents cite is real, but much of it reflects inflation — the same inflation that is making the grocery tax more burdensome. Cities' expenses have also risen 30-40% in the same period. The revenue growth does not translate to surplus in most cases.</p>
+</div>
+</div>
+
+<div class="straw-poll">
+  <div class="sp-label">Day 2 Straw Poll (anonymous, non-binding)</div>
+  <div class="sp-bar">
+    <div class="sp-yes" style="width:48%">11</div>
+    <div class="sp-undecided" style="width:17%">4</div>
+    <div class="sp-no" style="width:35%">8</div>
+  </div>
+  <div class="sp-legend"><span>YES 11</span><span>UNDECIDED 4</span><span>NO 8</span></div>
+</div>
+
+</div>
+</details>
+
+<!-- DAY 3 -->
+<details class="day-section">
+<summary>
+  <span class="day-label">Day 3</span>
+  <span class="day-title">Wednesday — Local Control, Rural Impact, and the Voter Approval Mechanism</span>
+  <span class="day-rounds">6 rounds</span>
+</summary>
+<div class="day-content">
+
+<div class="round">
+<div class="round-label">Round 13 — Pro: Voter Approval Is the Point</div>
+<div class="round-pro">
+  <div class="round-speaker pro-label">Scot Mussi — President, Arizona Free Enterprise Club</div>
+  <p>I want to reframe this debate. The opposition keeps saying this is the state overriding local control. But what is HCR 2021 actually doing? It's requiring that grocery taxes be approved by the voters of the city. That's not taking away local control — it's giving local control to the people who actually pay the tax, instead of leaving it in the hands of city councils who spend it.</p>
+  <p>Arizona has a long tradition of requiring voter approval for tax increases. Proposition 108 in 1992 required a two-thirds legislative vote for state tax increases. Cities routinely put bond measures and override elections before voters. The principle is simple: the people who pay should decide. If a grocery tax is truly popular and truly necessary, it will survive a vote. If the city council of Taylor can make its case to the residents of Taylor, the residents will approve the tax. That's how representative democracy is supposed to work.</p>
+  <p>The League's real objection is not about local control. It's that they don't trust their own residents to vote yes. And if that's the case — if the people who pay the tax wouldn't vote for it if given the choice — then perhaps it shouldn't exist.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 14 — Con: The Unfunded Mandate Problem</div>
+<div class="round-con">
+  <div class="round-speaker con-label">Mayor Shawn Palmer — Taylor (cont.)</div>
+  <p>Let me respond to Mr. Mussi directly. He says we should trust the voters. I do trust the voters — the voters of Taylor. But this isn't going on Taylor's ballot. This is going on Arizona's ballot, where voters in Phoenix and Tucson — who pay zero grocery tax — will decide whether my town can keep its revenue. 58% of the state's voters are unaffected. It's like asking people who don't own a car to vote on abolishing car insurance.</p>
+  <p>And the voter approval mechanism — let's think through the practical reality. Taylor has 4,500 people. Running an election costs money. Voter turnout in a special municipal election is typically 15-20%. So under HCR 2021, to maintain a tax that our residents have been paying for decades without complaint, we would need to spend tens of thousands of dollars we don't have to hold an election that 80% of our residents won't show up for. That's not "giving control to the people." That's creating an obstacle course.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 15 — Pro: The Human Cost of Doing Nothing</div>
+<div class="round-pro">
+  <div class="round-speaker pro-label">Maria Torres — Community organizer, Chicanos Por La Causa (via video from Yuma)</div>
+  <p>I work with families in Yuma County who are struggling. Yuma's food tax is 2.5%. That's on top of a general sales tax of over 10% when you add state, county, and city together. A family buying $800 in groceries a month — a family of five, that's realistic — is paying $20 a month just in city food tax. That's $240 a year. For a family earning $35,000, that's nearly a full week's take-home pay over the course of a year.</p>
+  <p>People ask me, "Is $20 a month really a big deal?" Come to Yuma and ask that question. Ask the mother deciding between fresh produce and canned goods because of the price difference. Ask the grandmother who clips every coupon in the paper and still comes up short at the register. The food tax doesn't just take money. It takes dignity. It says, "Even the food you need to live, you will be taxed for."</p>
+  <p>I've heard the arguments about city budgets. Those are real. But I need someone to explain to me why the poorest people in the poorest cities are the ones who should subsidize city services through the food they feed their families. Tax something else. Tax luxury goods. Tax commercial property. But stop taxing bread and milk.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 16 — Con: What Would Actually Help Low-Income Families More?</div>
+<div class="round-con">
+  <div class="round-speaker con-label">Dr. Dave Wells — Research Director, Grand Canyon Institute</div>
+  <p>I want to support Ms. Torres's concerns while challenging the assumption that HCR 2021 is the best way to address them. The measure caps the grocery tax at 2%. It does not eliminate it. A low-income family in a city that currently taxes groceries at 3.5% would save 1.5 percentage points — about $108 per year on $600 per month in purchases. That's meaningful, but it's modest.</p>
+  <p>Compare that to alternatives the legislature could have pursued. A refundable state grocery tax credit of $100 per person, targeted at households below 200% of the federal poverty level, would cost about $180 million annually and deliver roughly $400 to a family of four — concentrated entirely on the families who need it most. Higher-income families who don't need the help would get nothing. That would be progressive. HCR 2021, by contrast, gives the same percentage reduction to everyone, regardless of income. A family spending $2,000 a month at Whole Foods in Scottsdale saves more than a family spending $400 a month at Food City in Douglas.</p>
+  <p>Governor Hobbs made this point when she vetoed the 2023 version. There are better tools. The legislature chose the blunt one because it makes a good headline. "Arizona Caps Grocery Tax" polls well. "Arizona Enacts Refundable Grocery Tax Credit for Low-Income Families" doesn't fit on a bumper sticker.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 17 — Juror Discussion: Local Control vs. Statewide Standards</div>
+<div class="juror-q">
+  <div class="jq-name">Daniel Begay (J-11)</div>
+  <div class="jq-info">44 · Navajo · Facilities supervisor · Flagstaff</div>
+  <p>I live in Flagstaff, where the food tax is 2.036%. So the cap would basically freeze us where we are. What I keep thinking about is — on the reservation, there aren't many grocery stores at all. Families drive to Flagstaff to buy food. They're already paying more because of the distance. Adding a tax on top feels like piling on. But I also know that Flagstaff's infrastructure serves the reservation communities, and that costs money. I honestly don't know where I land.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Eddie Salazar (J-20)</div>
+  <div class="jq-info">40 · Border Patrol agent · Yuma</div>
+  <p>I'm in Yuma. The food tax there is real — you feel it every week. My wife and I have four kids. Groceries are a huge expense. I'm sympathetic to the small-town budget argument, but the idea that the legislature can't restrict a tax that everyone agrees is unfair seems backwards to me. The state sets all kinds of rules for cities. That's how federalism works. Cities are creatures of the state.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Megan Connolly (J-21)</div>
+  <div class="jq-info">48 · RN · Tucson</div>
+  <p>I live in Tucson, where we don't pay grocery tax. I'll be honest — I didn't even know other cities did until this panel. That makes me wonder: am I the right person to vote on this? The Taylor mayor has a point about 58% of voters being unaffected.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Mark Ellsworth (J-13)</div>
+  <div class="jq-info">50 · Fire captain · Peoria</div>
+  <p>As a firefighter, I understand municipal budgets at a gut level. Every dollar in the city's general fund is a dollar that keeps my engine company staffed. Peoria's food tax is 1.8%, below the cap, so this wouldn't directly affect us. But I worry about the precedent. Today it's groceries. Tomorrow the legislature caps something else. Where does state preemption end?</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Karen Driscoll (J-02)</div>
+  <div class="jq-info">61 · Retired school administrator · Scottsdale</div>
+  <p>Dr. Wells raised an interesting alternative — the refundable tax credit targeted at low-income families. Why didn't the legislature do that instead? That seems like it would help the people who need help without blowing a hole in small-town budgets.</p>
+</div>
+<div class="round-pro">
+  <div class="round-speaker pro-label">Rep. Biasiucci (responding)</div>
+  <p>Because the governor vetoed the last bill we sent her, and a concurrent resolution — a ballot referral — doesn't require her signature. A refundable tax credit would be a regular bill that needs the governor's approval. Given that she vetoed the 2023 version, the legislative route was not viable. The ballot was the only path forward.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 18 — Expert Panel: Comparative Evidence from Other States</div>
+<div class="round-neutral">
+  <div class="round-speaker neutral-label">Dr. Katherine Loughead — Senior Policy Analyst, Tax Foundation (via video)</div>
+  <p>I track state tax changes nationally. A few key comparisons are useful. Kansas fully phased out its grocery tax over three years, ending January 1, 2025. The state replaced the revenue by not reducing the state income tax as aggressively as originally planned. Oklahoma eliminated its 4.5% state grocery tax in August 2024 and absorbed the revenue loss into a strong state budget surplus. Illinois repealed its 1% grocery tax effective January 2026, funded by general revenue growth.</p>
+  <p>The Arizona case is different because the tax being restricted is municipal, not state. There is no direct parallel to a state restricting municipal grocery taxes by voter referendum. The closest analog might be California's Proposition 218 (1996), which required voter approval for most local taxes. Studies of Prop 218 found that it did constrain local revenue growth but did not cause the fiscal catastrophe opponents predicted, partly because cities adapted by diversifying revenue and partly because voters did approve many tax measures when given the chance.</p>
+  <p>The Tax Foundation's position is that groceries should not be taxed, but that municipalities should be given time and tools to adjust. HCR 2021's two-year moratorium on new grocery taxes through June 2027 provides some transition time, but the 2% cap takes effect retroactively to January 2025, which gives cities no transition period for existing rates above 2%.</p>
+</div>
+</div>
+
+<div class="straw-poll">
+  <div class="sp-label">Day 3 Straw Poll (anonymous, non-binding)</div>
+  <div class="sp-bar">
+    <div class="sp-yes" style="width:52%">12</div>
+    <div class="sp-undecided" style="width:13%">3</div>
+    <div class="sp-no" style="width:35%">8</div>
+  </div>
+  <div class="sp-legend"><span>YES 12</span><span>UNDECIDED 3</span><span>NO 8</span></div>
+</div>
+
+</div>
+</details>
+
+<!-- DAY 4 -->
+<details class="day-section">
+<summary>
+  <span class="day-label">Day 4</span>
+  <span class="day-title">Thursday — Real Families, Real Budgets, and the Deliberation Deepens</span>
+  <span class="day-rounds">6 rounds</span>
+</summary>
+<div class="day-content">
+
+<div class="round">
+<div class="round-label">Round 19 — Pro: Testimonials from Affected Families</div>
+<div class="round-pro">
+  <div class="round-speaker pro-label">James Hendricks — Resident, Chandler (public testimony)</div>
+  <p>Eggs are $7 for a dozen. Milk is $5. Bread is $4. That's $16 for the basics before I've bought anything for dinner. And then Chandler adds 1.5% on top. I know 1.5% doesn't sound like much. But when you're deciding between buying chicken thighs or going without protein that week, every penny counts. I'm a warehouse worker. I make $17 an hour. I'm not asking for charity. I'm asking to not be taxed on the food I need to live.</p>
+</div>
+<div class="round-pro">
+  <div class="round-speaker pro-label">Hailey Whitefield — Resident, Tempe (public testimony)</div>
+  <p>I'm a single mom with two kids in Tempe. Tempe's food tax is 1.8%. I spend about $500 a month on groceries. That's $9 a month, $108 a year. People say, "It's only $9." But it's $9 on top of the rent increase I got hit with, on top of the car insurance going up, on top of childcare costs. Everything adds up. There are months I'm choosing between groceries and the electric bill. Anything that makes food cheaper, I'm for it.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 20 — Con: The Small-Town Perspective</div>
+<div class="round-con">
+  <div class="round-speaker con-label">Mayor Pro Tem, Town of Springerville (via video)</div>
+  <p>Springerville is a town of 1,900 people in Apache County. We are not Scottsdale. Our food tax generates about $210,000 a year. That pays for our one full-time police officer beyond the chief. If that revenue goes away and we cannot replace it, we are looking at eliminating a position. In a town of 1,900 people, going from three officers to two is a 33% reduction in public safety coverage. Those are the stakes for us.</p>
+  <p>I understand that a family in Scottsdale saves money under this measure. I am asking this panel to understand that a town in the White Mountains loses the ability to keep its people safe. Both of those things can be true at the same time.</p>
+</div>
+<div class="round-con">
+  <div class="round-speaker con-label">City Manager, Prescott Valley (via written statement)</div>
+  <p>Prescott Valley's TPT revenue from food sales is approximately $5.3 million per year — 15% of our total TPT collections. We do not have a primary property tax. Our residents chose this arrangement. We are already absorbing revenue reductions from Senate Bill 1828 (the 2021 flat tax), which reduced our state-shared revenue by $2.5 million this year. HCR 2021 stacks a second revenue reduction on top of the first. At some point, the cumulative effect of state-imposed revenue reductions becomes a de facto unfunded mandate.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 21 — Pro: Addressing the "Unfunded Mandate" Frame</div>
+<div class="round-pro">
+  <div class="round-speaker pro-label">Rep. Alexander Kolodin (R-Scottsdale)</div>
+  <p>I want to be candid. I voted for HCR 2021 even though I don't think it goes far enough. The original bill would have eliminated the grocery tax entirely. The compromise to a 2% cap was driven by the same small-town concerns we're hearing today. But I want to push back on the framing that limiting a tax is an "unfunded mandate." A mandate is when the state tells cities they must spend money on something. This bill doesn't require cities to spend a dime. It restricts how much they can take. Those are opposite things.</p>
+  <p>Cities do not have an inherent right to unlimited taxing authority. They derive their authority from the state. The state can expand or restrict that authority. That's not tyranny — it's the structure of Arizona's constitution. If we follow the League's logic to its conclusion, the state could never limit any municipal tax, ever, because it would always reduce revenue. That's not a principle. That's a veto on reform.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 22 — Con: The Retroactivity Problem</div>
+<div class="round-con">
+  <div class="round-speaker con-label">Municipal finance attorney (neutral expert, Maricopa County)</div>
+  <p>I want to flag a technical issue that hasn't gotten enough attention. HCR 2021 is retroactive to January 1, 2025. If voters approve it in November 2026, cities with grocery taxes above 2% would owe refunds — or at minimum face legal uncertainty — for nearly two years of collections above the cap. Bisbee, which charges 3% and is above the 2% cap, would potentially need to refund the difference on nearly two years of grocery sales. For a city with a $4 million annual budget, that's not trivial. The retroactivity clause was added during the amendment process and its practical implications may not be fully understood by voters.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 23 — Extended Juror Deliberation</div>
+<div class="juror-q">
+  <div class="jq-name">Darnell Washington (J-03)</div>
+  <div class="jq-info">33 · Supply chain analyst · Phoenix</div>
+  <p>I've been listening for three days and I think both sides are right about the problem and wrong about the solution. The grocery tax is regressive — nobody seriously disputes that. But this measure doesn't replace the revenue, doesn't target the relief to people who need it, and doesn't give small towns a real path forward. It's a clean headline with a messy implementation.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Rachel Gutierrez (J-17)</div>
+  <div class="jq-info">34 · Stay-at-home mother · Surprise</div>
+  <p>Darnell, I hear you, but we've been told the governor vetoed the targeted alternative. And a refundable tax credit isn't on this ballot. This measure is. The question isn't whether it's the ideal policy — it's whether it's better than the status quo. For my family in Surprise, where the food tax is 2.2%, the cap at 2% is a small savings, but the voter approval requirement means the city can't quietly raise it later. I think I'm a yes.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Wayne Crenshaw (J-09)</div>
+  <div class="jq-info">68 · Retired Army · Sierra Vista</div>
+  <p>I'm a conservative. I believe in low taxes. But I also spent 22 years serving this country, and I learned that you don't leave your flank exposed. Sierra Vista's food tax pays for city services that military families at Fort Huachuca depend on. If we cut $2 million from the city budget, the first things that go are the extras — the rec center, the pool, the youth programs. The military families who already sacrifice enough will lose the community amenities that make Sierra Vista livable. I'm torn on this one.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Adriana Quintero (J-10)</div>
+  <div class="jq-info">25 · Dental assistant · Phoenix</div>
+  <p>I live in Phoenix, so I don't pay grocery tax. But my mom lives in Glendale, and she does — 2.9%. She's a house cleaner making $28,000 a year. She feeds three people on that. Every time she goes to Fry's, she's paying the tax. The League says Phoenix voters shouldn't get to vote on this because we're "unaffected." But my mom is affected. My family is affected. Am I supposed to pretend I don't care because my apartment is on the Phoenix side of the border?</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Steve Papadopoulos (J-16)</div>
+  <div class="jq-info">45 · Commercial real estate broker · Scottsdale</div>
+  <p>Let me run the numbers one more time. Scottsdale's food tax is 1.75%. Under the cap, it stays at 1.75% unless voters approve an increase to 2%. The measure barely affects Scottsdale. But for the 20-odd cities above 2%, the cap creates an immediate revenue reduction. The question I keep coming back to is whether the legislature should have included a transition period or a replacement revenue mechanism. They didn't. And that omission is the measure's biggest weakness.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Derek Hansen (J-22)</div>
+  <div class="jq-info">22 · ASU senior / server · Tempe</div>
+  <p>As a college student working part-time, I spend every dollar carefully. The food tax hits me every week. But I'm also studying finance, and the retroactivity clause the attorney mentioned is genuinely concerning. If cities owe refunds going back to 2025, that's a fiscal shock that could trigger exactly the kind of service cuts the opponents are warning about. Why did they make it retroactive?</p>
+</div>
+<div class="round-neutral">
+  <div class="round-speaker neutral-label">Facilitator (clarifying)</div>
+  <p>The retroactivity clause dates the measure's effective date to January 1, 2025 — the date the original bill was introduced. Legal analysts note that the practical enforceability of retroactive refund claims is uncertain and would likely require litigation to resolve. In similar cases nationally, retroactive tax limitations have typically been applied prospectively in practice, with courts interpreting the retroactive date as establishing a freeze point rather than requiring refunds. However, there is no settled Arizona precedent on this specific question.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 24 — Day 4 Closing: Facilitator Summary</div>
+<div class="round-neutral">
+  <div class="round-speaker neutral-label">Facilitator</div>
+  <p>After four days, the panel has heard from the bill's sponsor, the League of Arizona Cities and Towns, three mayors, tax policy experts from the Tax Policy Center, ITEP, and the Tax Foundation, municipal finance analysts, community advocates, and affected residents. Tomorrow you will have the full day to deliberate as a group and arrive at your findings and vote. I encourage you to think overnight about where you are and what, if anything, would change your mind.</p>
+</div>
+</div>
+
+<div class="straw-poll">
+  <div class="sp-label">Day 4 Straw Poll (anonymous, non-binding)</div>
+  <div class="sp-bar">
+    <div class="sp-yes" style="width:52%">12</div>
+    <div class="sp-undecided" style="width:9%">2</div>
+    <div class="sp-no" style="width:39%">9</div>
+  </div>
+  <div class="sp-legend"><span>YES 12</span><span>UNDECIDED 2</span><span>NO 9</span></div>
+</div>
+
+</div>
+</details>
+
+<!-- DAY 5 -->
+<details class="day-section">
+<summary>
+  <span class="day-label">Day 5</span>
+  <span class="day-title">Friday — Final Deliberation, Findings, and Vote</span>
+  <span class="day-rounds">6 rounds</span>
+</summary>
+<div class="day-content">
+
+<div class="round">
+<div class="round-label">Round 25 — Opening of Final Deliberation</div>
+<div class="round-neutral">
+  <div class="round-speaker neutral-label">Facilitator</div>
+  <p>Today is your day. No more outside witnesses. The panel will deliberate among yourselves, draft key findings, and take a final vote. Let me start by asking: what is the single strongest argument on each side?</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Tom Bridger (J-18)</div>
+  <div class="jq-info">73 · Retired accountant · Green Valley</div>
+  <p>The strongest argument for the measure is that the grocery tax is objectively regressive and the broad national consensus — left and right — is to eliminate it. The strongest argument against is that 40 cities have no property tax and no viable replacement revenue mechanism. The measure creates a structural fiscal problem for those cities without solving it.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Jennifer Falk (J-08)</div>
+  <div class="jq-info">36 · Public policy professor · Tempe</div>
+  <p>I agree with Tom's framing. I'd add that the voter approval requirement is genuinely important and often underweighted in this debate. Even if you're skeptical of the cap, requiring democratic consent for grocery taxes is hard to argue against on principle.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 26 — The Swing Voters Speak</div>
+<div class="juror-q">
+  <div class="jq-name">Daniel Begay (J-11)</div>
+  <div class="jq-info">44 · Navajo · Flagstaff</div>
+  <p>I've gone back and forth all week. Here's where I've landed. The food tax hits Indigenous families driving into border towns to buy groceries especially hard. We don't have a lot of shopping options on the reservation. When we come to Flagstaff and pay 2% on groceries — on top of already paying more for gas to get there — it feels like a double penalty for living where we live. The measure doesn't solve all our problems, but it at least puts a ceiling on one of them. I'm voting yes, but I want our findings to acknowledge the rural revenue concern.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Wayne Crenshaw (J-09)</div>
+  <div class="jq-info">68 · Retired Army · Sierra Vista</div>
+  <p>I said yesterday I was torn. I've thought about it. Sierra Vista's food tax is 2%. That's right at the cap. So the measure doesn't actually reduce our revenue — it just prevents a future increase. I can live with that. The voter approval requirement is reasonable. If the city needs to raise the food tax above 2% someday, they should have to ask the people. I'm a yes.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Darnell Washington (J-03)</div>
+  <div class="jq-info">33 · Supply chain analyst · Phoenix</div>
+  <p>I still think this is an imperfect measure. The targeted tax credit would have been better policy. But the targeted tax credit isn't on the ballot, and the political reality — the governor's veto, the partisan dynamics — means it probably won't be anytime soon. Voting no on this measure doesn't bring the better alternative into existence. It just preserves a regressive tax. I've moved to yes, reluctantly.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Megan Connolly (J-21)</div>
+  <div class="jq-info">48 · RN · Tucson</div>
+  <p>I've struggled with whether I should vote on something that doesn't affect me directly. But I keep coming back to what Adriana said about her mom in Glendale. I'm a nurse. I see patients every day who can't afford their medications and their food in the same week. If reducing a 3% tax to 2% means one of those families can afford an extra bag of vegetables, I'll take the imperfect policy over no policy. I'm a yes. But I'm concerned about the retroactivity clause and I want that in our findings.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 27 — The Opposition Holds</div>
+<div class="juror-q">
+  <div class="jq-name">Gloria Fuentes (J-23)</div>
+  <div class="jq-info">63 · Town clerk · Taylor</div>
+  <p>I've listened respectfully all week. I understand the regressivity argument. I understand the national trend. But I work for the Town of Taylor. I process the checks that pay our police officers. I know what $620,000 means to a town of 4,500 people. If this measure passes and we lose 30% of our revenue, I am not confident we can maintain basic services. I've spent 25 years building this community. I cannot vote to defund it. I'm a no.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Patty Simmons (J-06)</div>
+  <div class="jq-info">55 · Parks & rec coordinator · Prescott Valley</div>
+  <p>Same for me. I'm a Republican. I'm against unnecessary taxes. But I'm also against unfunded mandates, which is what this effectively is. The legislature is capping city revenue without providing an alternative. If they had paired this with a state revenue-sharing increase or a transition fund for affected cities, I'd be a yes. They didn't. I'm a no.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Linda McAllister (J-12)</div>
+  <div class="jq-info">58 · Artist · Bisbee</div>
+  <p>Bisbee is an arts community of 5,200 people. Our food tax at 3% is above the cap. We would face an immediate revenue reduction. I'm not wealthy — I make $36,000 a year. I pay the food tax too. But I'd rather pay $12 extra a month on groceries than watch Bisbee lose a police officer or close the library. The food tax is the price of living in a town that functions. I'm a no.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Mark Ellsworth (J-13)</div>
+  <div class="jq-info">50 · Fire captain · Peoria</div>
+  <p>I've been leaning no all week, and nothing has changed my mind. State preemption of municipal revenue authority is a dangerous precedent. Today it's the grocery tax. Tomorrow it's something else. I don't want the legislature deciding how my city funds its fire department. The 2% cap may seem reasonable now, but the principle it establishes — that the state can unilaterally restrict any city revenue source by ballot referral — is one I can't support. I'm a no.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Rosa Leyva-Dominguez (J-04)</div>
+  <div class="jq-info">47 · Cafeteria manager · Tucson</div>
+  <p>I manage a school cafeteria. I know what food costs. I'm sympathetic to the families paying this tax. But I also know what it means when a school district loses funding — I've seen programs cut, staff laid off, kids losing the services they need. Cities are no different. Tucson doesn't tax groceries, so this doesn't save me anything. And I don't feel right voting to cut revenue for Taylor and Bisbee from 1,500 miles away in Tucson. I'm a no.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 28 — Final Arguments Within the Panel</div>
+<div class="juror-q">
+  <div class="jq-name">Miguel Ochoa (J-01)</div>
+  <div class="jq-info">38 · HVAC technician · Chandler</div>
+  <p>I respect Gloria and Patty's positions. They're defending their communities. But I have to think about what's fair for the whole state. My family pays the food tax every week in Chandler. My in-laws pay it in Surprise. My brother pays it in Yuma. This tax falls hardest on people like us — working families, Hispanic families, families with kids. The cities had since 1980 to diversify their revenue. Forty-five years. At some point, the state has a responsibility to say, "Enough — you can't keep taxing people's bread and milk." I'm a firm yes.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Carlos Mendoza (J-07)</div>
+  <div class="jq-info">42 · Auto body shop owner · Mesa</div>
+  <p>I own a small business in Mesa, where there's no food tax. I compete with shops in Tempe and Chandler that have it. My customers come from all over. What I've noticed is that the uneven tax landscape creates distortions. People drive to Mesa to buy groceries because it's cheaper. That's inefficient. A uniform statewide policy makes sense. Cap it at 2%, let voters decide. That's fair and simple. Yes.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Jasmine Williams-Carter (J-19)</div>
+  <div class="jq-info">28 · Social work grad student · Tempe</div>
+  <p>I've been undecided until today. In my social work training, we learn that good intentions don't excuse bad outcomes. I've been trying to figure out which side this measure falls on. The intent — reduce regressive taxes — is clearly good. The potential outcome for small towns — severe revenue loss — is clearly bad. But I keep coming back to the ITEP expert's point: the worst outcome for low-income families is when cities cut services. And cities will cut services if they lose revenue without replacement. I want to vote for helping families at the grocery store, but I'm not confident this measure won't hurt other families who depend on city services. I'm going to vote no, but I want our findings to clearly state that the grocery tax is regressive and should be reformed through better-designed legislation.</p>
+</div>
+<div class="juror-q">
+  <div class="jq-name">Sam Nguyen (J-14)</div>
+  <div class="jq-info">31 · Biomedical engineer · Chandler</div>
+  <p>I've tried to approach this analytically. The $227 million revenue impact sounds large, but it's spread across 70 cities. The average impact is $3.2 million per city, against average total municipal revenues that are much larger. Yes, distribution matters — small towns are hit harder proportionally. But the measure doesn't eliminate the tax. It caps it at 2%. Most cities are already near or below that. The cities significantly above 2% are the ones most impacted, and they're also the ones where the tax burden on residents is highest. There's a symmetry there. I'm a yes.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 29 — Drafting Key Findings</div>
+<div class="round-neutral">
+  <div class="round-speaker neutral-label">Facilitator</div>
+  <p>The panel will now draft its key findings. These are factual statements that the majority of the panel agrees on, regardless of how individual jurors voted. What can we agree on?</p>
+</div>
+
+<div class="finding">
+  <div class="finding-label">Key Finding 1 (Unanimous — 23 of 23)</div>
+  <p>Sales taxes on groceries are regressive. Low-income households pay a significantly higher share of their income in grocery taxes than high-income households. This is consistent with the broad consensus among tax policy experts across the political spectrum.</p>
+</div>
+
+<div class="finding">
+  <div class="finding-label">Key Finding 2 (Unanimous — 23 of 23)</div>
+  <p>HCR 2021 does not eliminate the grocery tax. It caps the rate at 2% and requires voter approval for any adoption or increase. Cities with existing rates below 2% are unaffected unless they seek to raise rates. Cities with rates above 2% would be frozen at their current rate but prohibited from increasing further.</p>
+</div>
+
+<div class="finding">
+  <div class="finding-label">Key Finding 3 (21 of 23)</div>
+  <p>The measure would reduce municipal revenue by an estimated $227 million annually, with disproportionate impact on small and rural communities. Forty of the 70 affected cities do not have a primary property tax and would face significant challenges replacing lost revenue.</p>
+</div>
+
+<div class="finding">
+  <div class="finding-label">Key Finding 4 (19 of 23)</div>
+  <p>The voter approval requirement in HCR 2021 strengthens democratic accountability over grocery taxation. However, the measure is decided by a statewide electorate in which a majority of voters reside in cities that do not currently tax groceries.</p>
+</div>
+
+<div class="finding">
+  <div class="finding-label">Key Finding 5 (17 of 23)</div>
+  <p>The retroactivity clause — dating the measure's effective date to January 1, 2025 — creates legal and fiscal uncertainty for cities that have been collecting grocery taxes above 2% since that date. The practical enforceability of this provision is unresolved.</p>
+</div>
+
+<div class="finding">
+  <div class="finding-label">Key Finding 6 (18 of 23)</div>
+  <p>Alternative policy approaches — such as a refundable state grocery tax credit targeted at low-income households — could address the regressivity of the grocery tax while preserving municipal revenue. The legislature did not pursue these alternatives, in part because the governor vetoed the 2023 version of the grocery tax ban and a ballot referral bypasses the governor's veto authority.</p>
+</div>
+
+<div class="finding">
+  <div class="finding-label">Key Finding 7 (20 of 23)</div>
+  <p>Arizona is part of a national bipartisan trend toward eliminating or reducing grocery taxes. Since 2020, at least six states have moved to eliminate state-level grocery taxes. The vast majority of U.S. states do not tax groceries for home consumption.</p>
+</div>
+</div>
+
+<div class="round">
+<div class="round-label">Round 30 — Final Vote</div>
+<div class="round-neutral">
+  <div class="round-speaker neutral-label">Facilitator</div>
+  <p>Each juror will now cast a final vote: YES to recommend voter approval of HCR 2021, or NO to recommend voter rejection. This vote is advisory and will be reported alongside the key findings to help Arizona voters make an informed decision.</p>
+</div>
+
+<div class="vote-result">
+  <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem;">Final Vote — HCR 2021: Grocery Sales Tax Cap</div>
+  <div class="vote-numbers">
+    <div class="vote-yes"><div class="vote-num">14</div><div class="vote-label">Yes</div></div>
+    <div class="vote-no"><div class="vote-num">9</div><div class="vote-label">No</div></div>
+  </div>
+  <div class="bar-chart">
+    <div class="bar-yes" style="width:60.9%">60.9%</div>
+    <div class="bar-no" style="width:39.1%">39.1%</div>
+  </div>
+</div>
+
+<p style="font-size:0.9rem; color: var(--muted);">
+<strong>YES votes (14):</strong> J-01 Miguel Ochoa, J-02 Karen Driscoll, J-03 Darnell Washington, J-05 Bryce Harding, J-07 Carlos Mendoza, J-09 Wayne Crenshaw, J-10 Adriana Quintero, J-11 Daniel Begay, J-14 Sam Nguyen, J-16 Steve Papadopoulos, J-17 Rachel Gutierrez, J-18 Tom Bridger, J-20 Eddie Salazar, J-21 Megan Connolly<br>
+<strong>NO votes (9):</strong> J-04 Rosa Leyva-Dominguez, J-06 Patty Simmons, J-08 Jennifer Falk, J-12 Linda McAllister, J-13 Mark Ellsworth, J-15 Teresa Orozco, J-19 Jasmine Williams-Carter, J-22 Derek Hansen, J-23 Gloria Fuentes
+</p>
+
+<p style="font-size:0.9rem; color: var(--muted);">
+<strong>Vote movement across five days:</strong> Four jurors moved from undecided to YES during deliberation (J-03 Washington, J-09 Crenshaw, J-11 Begay, J-21 Connolly). One juror moved from undecided to NO (J-19 Williams-Carter). One juror moved from leaning YES to NO (J-22 Hansen, swayed by retroactivity concern). No jurors moved from firm YES to NO or vice versa. The YES coalition included jurors across party lines — 6 Republicans, 5 Independents, 2 Democrats, and 1 Libertarian. The NO coalition was similarly cross-partisan — 2 Republicans, 3 Democrats, 3 Independents, and 1 Democrat-leaning.
+</p>
+</div>
+
+</div>
+</details>
+
+</section>
+
+<!-- VOTER PAMPHLET FILING -->
+<section>
+<h2>Draft Voter Pamphlet Argument</h2>
+<p>The following is a draft argument for inclusion in Arizona's official publicity pamphlet (ARS § 19-124), to be filed with the Arizona Secretary of State. This argument presents the jury's findings as a public service to Arizona voters.</p>
+
+<div class="pamphlet-page">
+  <div class="page-id">ARGUMENT "FOR" HCR 2021</div>
+  <div class="measure-id">Proposition ___ — Grocery Sales Tax Cap and Voter Approval Requirement</div>
+  <div class="disclaimer">The following argument was prepared by the Election by Jury Project as a public service. It reflects the findings of a simulated Citizens' Initiative Review — a 23-member virtual citizen jury that deliberated for five days on HCR 2021. This argument is provided for informational purposes. The Election by Jury Project does not advocate for or against the measure. Voters should weigh these findings alongside their own research and values.</div>
+  <div class="arg-header">Citizens' Jury Findings — HCR 2021</div>
+  <p>A 23-member citizen jury, demographically representative of Arizona's population, spent five days reviewing HCR 2021 with expert witnesses, municipal officials, and community advocates. By a vote of 14–9, the jury recommends voter approval. The jury unanimously found the following:</p>
+  <ul>
+    <li>Grocery taxes are regressive. Low-income families pay a greater share of their income in grocery taxes than high-income families. Tax policy experts across the political spectrum agree on this point.</li>
+    <li>HCR 2021 does not eliminate the grocery tax. It caps the rate at 2% and requires voter approval for new or increased grocery taxes.</li>
+  </ul>
+  <p>The jury also found, with strong but not unanimous agreement, that:</p>
+  <ul>
+    <li>The measure would reduce municipal revenue by an estimated $227 million per year, with disproportionate impact on small and rural towns, 40 of which have no property tax.</li>
+    <li>Arizona follows a national bipartisan trend: since 2020, at least six states have eliminated grocery taxes.</li>
+    <li>The retroactivity clause (effective January 1, 2025) creates unresolved legal and fiscal uncertainty.</li>
+    <li>Better-targeted alternatives, such as a refundable state tax credit for low-income families, were not pursued by the legislature.</li>
+  </ul>
+  <p>Jurors who voted YES emphasized that the grocery tax unfairly burdens families who can least afford it, that the 2% cap is a reasonable compromise, and that requiring voter approval for grocery taxes strengthens democratic accountability.</p>
+  <p>Jurors who voted NO emphasized that the measure creates severe fiscal challenges for small towns without providing replacement revenue, and that a statewide vote on local tax authority raises fairness concerns for communities where a majority of voters are unaffected.</p>
+  <p>Both sides agreed: the grocery tax is a problem. They disagreed on whether this measure is the right solution.</p>
+  <div class="furnished">Furnished by: Election by Jury Project · electionbyjury.org</div>
+</div>
+
+</section>
+
+<!-- METHODOLOGY -->
+<section>
+<div class="methodology">
+<h3>Methodology and Transparency</h3>
+<p>This simulation was produced by an AI system (Claude, Anthropic) at the direction of the Election by Jury Project. It is not a poll, a prediction, or a substitute for human deliberation. It is a proof of concept demonstrating how AI-assisted citizen juries could inform democratic decision-making.</p>
+<p><strong>Jury construction:</strong> The 23 jurors were designed to approximate Arizona's demographic distribution by race/ethnicity (U.S. Census ACS 2023), party registration (Arizona Secretary of State, October 2025), religion (Pew Religious Landscape Study, 2023–24), age, income, housing tenure, and geography. Special attention was paid to including jurors from cities that tax groceries and cities that do not, as this distinction is central to the policy question. Jurors' occupations and personal circumstances were constructed to create realistic perspectives on both sides — including a town clerk from a grocery-tax-dependent community (Taylor), a cashier in a high-grocery-tax city (Douglas), and a parks coordinator in an affected municipality (Prescott Valley).</p>
+<p><strong>Witness testimony:</strong> All advocate and expert arguments are drawn from real-world sources: Arizona Capitol Times coverage, League of Arizona Cities and Towns testimony, JLBC fiscal notes, CBPP and Tax Foundation research, ITEP distributional analyses, Ballotpedia documentation, and public statements by legislators, mayors, and community organizations. Named real-world figures (Rep. Biasiucci, Tom Belshe, Mayor Budge, etc.) present arguments they have actually made in legislative hearings and public statements. Where testimony is synthesized or extended for the simulation, it is consistent with positions those individuals and organizations have publicly articulated.</p>
+<p><strong>Deliberation model:</strong> Jurors are modeled to update their positions in response to evidence and peer discussion, consistent with research on real deliberative panels (CIR Oregon, Citizens' Assemblies internationally). The rate of opinion change (4 jurors moving from undecided to YES, 1 from undecided to NO, 1 from leaning-YES to NO) is within the typical range observed in real CIR panels, where 20–35% of jurors change their initial position during deliberation. Juror reasoning reflects realistic cognitive patterns: analytical jurors (engineers, accountants) respond primarily to data; jurors with direct personal stakes (the town clerk, the cashier) weigh institutional and experiential knowledge heavily; jurors in scientific or policy fields show greater willingness to update on evidence.</p>
+<p><strong>Limitations:</strong> This is a simulation, not a substitute for real human deliberation. Real jurors would bring lived experiences, emotional responses, interpersonal dynamics, and serendipitous insights that no AI can fully model. The 14–9 verdict should be understood as one plausible outcome of an informed deliberative process, not as a prediction of how real jurors or real voters would decide. The simulation was designed to present the strongest possible arguments on both sides and to model jurors who are capable of genuine deliberation — meaning they can be persuaded by evidence but are not infinitely flexible.</p>
+<p><strong>No advocacy:</strong> The Election by Jury Project does not take positions on ballot measures. This simulation was designed to inform, not to persuade. The voter pamphlet argument above presents the jury's findings — including the concerns of jurors on both sides — as a factual summary for voters to evaluate alongside their own values and priorities.</p>
+</div>
+</section>
+
+<footer style="text-align: center; padding: 2rem 0; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem;">
+  <p>Election by Jury Project · <a href="https://electionbyjury.org" style="color: var(--accent);">electionbyjury.org</a></p>
+  <p style="font-size: 0.75rem; margin-top: 0.5rem;">Simulation produced February 2026 · AI-assisted proof of concept · Not a poll or prediction</p>
+</footer>
+
+</div>
+</body>
+</html>
