@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Citizens' Initiative Review Simulation — Eugene Measure 20-377</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --emerald: #064e3b;
+  --forest: #065f46;
+  --fern: #047857;
+  --sage: #6ee7b7;
+  --mint: #d1fae5;
+  --cream: #faf9f6;
+  --warm: #f5f0eb;
+  --clay: #92400e;
+  --amber: #b45309;
+  --rust: #9a3412;
+  --slate: #475569;
+  --charcoal: #1e293b;
+  --yes-green: #047857;
+  --no-red: #9f1239;
+  --undecided: #6b7280;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Archivo', sans-serif; background: var(--cream); color: var(--charcoal); line-height: 1.65; }
+
+.verdict-hero {
+  background: linear-gradient(160deg, #064e3b 0%, #065f46 35%, #0f766e 70%, #134e4a 100%);
+  color: white; padding: 3.5rem 2rem 3rem; text-align: center; position: relative; overflow: hidden;
+}
+.verdict-hero::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at 20% 80%, rgba(6,95,70,0.4) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 20%, rgba(15,118,110,0.3) 0%, transparent 50%);
+  pointer-events: none;
+}
+.verdict-hero-inner { max-width: 750px; margin: 0 auto; position: relative; z-index: 1; }
+.verdict-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.7; margin-bottom: 0.3rem; }
+.verdict-title { font-family: 'Instrument Serif', serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 400; line-height: 1.15; margin-bottom: 0.5rem; }
+.verdict-numbers { font-family: 'Instrument Serif', serif; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 400; letter-spacing: -0.02em; margin: 0.5rem 0; }
+.verdict-numbers .yes { color: #6ee7b7; }
+.verdict-numbers .no { color: #fca5a5; }
+.verdict-summary { font-family: 'Instrument Serif', serif; font-size: clamp(1.2rem, 3vw, 1.6rem); font-weight: 400; font-style: italic; line-height: 1.35; color: rgba(255,255,255,0.85); margin-bottom: 0.75rem; }
+.verdict-desc { font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.6); max-width: 600px; margin: 0 auto; }
+
+.container { max-width: 860px; margin: 0 auto; padding: 0 1.5rem; }
+section { padding: 2.5rem 0; border-bottom: 1px solid #e2ddd5; }
+section:last-of-type { border-bottom: none; }
+.section-title { font-family: 'Instrument Serif', serif; font-size: 1.8rem; font-weight: 400; color: var(--emerald); margin-bottom: 1rem; letter-spacing: -0.01em; }
+.section-title::after { content: ''; display: block; width: 40px; height: 2px; background: var(--fern); margin-top: 0.5rem; }
+p { margin-bottom: 1rem; }
+p:last-child { margin-bottom: 0; }
+
+.measure-box { background: white; border: 1px solid #e2ddd5; border-left: 4px solid var(--fern); padding: 1.5rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0; }
+.measure-box p { font-size: 0.92rem; }
+.measure-box strong { color: var(--emerald); }
+
+.charter-text { background: var(--warm); padding: 1.25rem 1.5rem; border-radius: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; line-height: 1.7; color: var(--slate); margin: 1rem 0; }
+.charter-text .strike { text-decoration: line-through; color: var(--no-red); opacity: 0.7; }
+.charter-text .add { color: var(--yes-green); font-weight: 600; }
+
+.juror-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.75rem; margin: 1.5rem 0; }
+.juror-card { background: white; border: 1px solid #e2ddd5; border-radius: 6px; padding: 0.85rem 1rem; font-size: 0.8rem; transition: box-shadow 0.2s; }
+.juror-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.juror-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+.juror-name { font-weight: 700; font-size: 0.88rem; }
+.juror-vote { font-weight: 700; font-size: 0.7rem; padding: 2px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+.juror-vote.yes { background: var(--mint); color: var(--yes-green); }
+.juror-vote.no { background: #ffe4e6; color: var(--no-red); }
+.juror-meta { color: var(--slate); line-height: 1.45; }
+.juror-stake { margin-top: 0.4rem; font-style: italic; color: #64748b; border-top: 1px solid #f1ede8; padding-top: 0.4rem; }
+
+.day-section { margin-bottom: 1rem; }
+.day-header { background: var(--forest); color: white; padding: 0.85rem 1.2rem; border-radius: 6px 6px 0 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
+.day-header:hover { background: var(--emerald); }
+.day-header h3 { font-family: 'Instrument Serif', serif; font-size: 1.15rem; font-weight: 400; }
+.day-meta { font-size: 0.75rem; opacity: 0.7; margin-left: 1rem; }
+.toggle-icon { font-size: 0.75rem; transition: transform 0.3s; }
+.day-header.active .toggle-icon { transform: rotate(180deg); }
+.day-content { background: white; border: 1px solid #e2ddd5; border-top: none; border-radius: 0 0 6px 6px; max-height: 0; overflow: hidden; transition: max-height 0.01s; }
+.day-content.active { padding: 1.3rem; max-height: none; }
+
+.round { margin-bottom: 1.2rem; padding-bottom: 1rem; border-bottom: 1px solid #f1ede8; }
+.round:last-child { border-bottom: none; margin-bottom: 0; }
+.round-label { font-weight: 600; font-size: 0.82rem; color: var(--fern); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.round.witness { border-left: 3px solid var(--sage); padding-left: 1rem; }
+.speaker { margin-bottom: 0.6rem; }
+.speaker-name { font-weight: 600; font-size: 0.88rem; }
+.speaker-role { font-size: 0.75rem; color: var(--slate); font-style: italic; }
+.speaker-text { font-size: 0.88rem; margin-top: 0.15rem; line-height: 1.55; }
+
+.shift-marker { font-weight: 700; font-size: 0.75rem; padding: 1px 8px; border-radius: 4px; }
+.shift-marker.to-yes { background: var(--mint); color: var(--yes-green); }
+.shift-marker.to-no { background: #ffe4e6; color: var(--no-red); }
+.shift-marker.to-undecided { background: #fef3c7; color: var(--amber); }
+
+.finding { background: white; border: 1px solid #e2ddd5; border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 0.75rem; }
+.finding-number { font-weight: 700; color: var(--fern); font-size: 0.82rem; margin-bottom: 0.3rem; }
+.finding-text { font-size: 0.9rem; margin-bottom: 0.4rem; }
+.finding-agreement { font-size: 0.78rem; color: var(--slate); }
+
+.pamphlet { background: white; border: 2px solid var(--emerald); border-radius: 8px; padding: 1.5rem; margin-top: 1rem; }
+.pamphlet h3 { font-family: 'Instrument Serif', serif; text-align: center; margin-bottom: 1rem; font-size: 1.2rem; }
+.pamphlet-text { font-size: 0.9rem; }
+.pamphlet-text p { margin-bottom: 0.6rem; }
+.pamphlet-text ul { margin: 0.5rem 0 1rem 1.5rem; }
+.pamphlet-text li { margin-bottom: 0.3rem; }
+.word-count { text-align: right; font-size: 0.75rem; color: var(--slate); margin-top: 0.5rem; }
+
+.methodology { background: white; border: 1px solid #e2ddd5; border-radius: 8px; padding: 1.5rem; font-size: 0.88rem; }
+.methodology h3 { font-family: 'Instrument Serif', serif; color: var(--forest); margin: 1rem 0 0.4rem; font-size: 1.1rem; }
+.methodology h3:first-child { margin-top: 0; }
+.methodology p { margin-bottom: 0.6rem; }
+
+footer { text-align: center; padding: 2rem 1rem; font-size: 0.78rem; color: var(--slate); border-top: 1px solid #e2ddd5; margin-top: 2rem; }
+footer a { color: var(--fern); }
+
+@media (max-width: 600px) {
+  .verdict-title { font-size: 1.5rem; }
+  .verdict-numbers { font-size: 2.2rem; }
+  .juror-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="verdict-hero">
+  <div class="verdict-hero-inner">
+    <div class="verdict-label">Citizens' Initiative Review Simulation</div>
+    <div class="verdict-title">Eugene Measure 20-377 — Remove City Residency Requirement for Department Heads</div>
+    <div class="verdict-numbers"><span class="yes">16</span> – <span class="no">7</span></div>
+    <div class="verdict-summary">The jury recommends YES — the residency requirement is an outdated obstacle to recruiting qualified leadership, but a significant minority argued department heads should live in the community they serve.</div>
+    <div class="verdict-desc">23 randomly selected Eugene residents · 5 days of deliberation · AI-simulated CIR process</div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- THE MEASURE -->
+<section>
+  <h2 class="section-title">The Measure</h2>
+  <div class="measure-box">
+    <p><strong>Measure 20-377</strong> was referred by the Eugene City Council to voters in the May 19, 2026 primary election. The measure amends Section 16(3) of the Eugene Charter to remove the requirement that city department heads reside within Eugene city limits during their tenure.</p>
+    <p><strong>A YES vote</strong> means department heads would no longer be required to live within city limits.</p>
+    <p><strong>A NO vote</strong> means the residency requirement stays. All department heads must continue to live within Eugene city limits during their tenure.</p>
+  </div>
+  <div class="charter-text">
+    <strong>Current Eugene Charter Section 16(3):</strong><br>
+    "All offices and positions created by or pursuant to this Charter, except <span class="strike">that of municipal judge,</span> <span class="add">those of municipal judges and department heads</span> may be filled by candidates from outside the city, but during their tenure in those offices, all persons hereafter appointed to them shall reside in the city."
+  </div>
+  <p>The charter currently requires approximately 11 department-level positions — including directors of public works, planning, police, fire, finance, library, parks, human resources, information services, and the city prosecutor — to live within Eugene city limits. Measure 20-377 would remove this requirement for department heads only. The city manager residency requirement remains intact. The council has separately voted to consider an ordinance defining geographic boundaries — such as a 30-minute response radius — which would be more flexible than the current all-or-nothing charter rule.</p>
+</section>
+
+<!-- THE JURY -->
+<section>
+  <h2 class="section-title">The Jury</h2>
+  <p>23 Eugene residents were randomly selected to match the city's demographics. They deliberated for five days, hearing from 14 witnesses including city officials, department heads, neighboring city representatives, neighborhood advocates, and governance experts.</p>
+
+  <div class="juror-grid">
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 1 — Carla M.</span><span class="juror-vote yes">YES</span></div>
+      <div class="juror-meta">52, White, Democrat · Library assistant, South Eugene · UO graduate</div>
+      <div class="juror-stake">Initial: Undecided → "The talent pool argument convinced me. We're a small city competing for qualified people."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 2 — Derek T.</span><span class="juror-vote no">NO</span></div>
+      <div class="juror-meta">61, White, Republican · Retired contractor, River Road · 35-year Eugene resident</div>
+      <div class="juror-stake">Initial: NO → "If you're running a city department, you should live in the city. Period."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 3 — Maya R.</span><span class="juror-vote yes">YES</span></div>
+      <div class="juror-meta">34, Asian-American, Democrat · Software engineer, Friendly neighborhood · Works remotely</div>
+      <div class="juror-stake">Initial: YES → "In tech we'd never limit hiring to one city. Why should government?"</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 4 — Tom K.</span><span class="juror-vote yes">YES</span></div>
+      <div class="juror-meta">45, White, NAV · Small business owner, Whiteaker · Moved from Portland 2018</div>
+      <div class="juror-stake">Initial: Undecided → "The Bend testimony sealed it — their best director lives in Redmond."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 5 — Linda W.</span><span class="juror-vote no">NO</span></div>
+      <div class="juror-meta">68, White, Democrat · Retired teacher, Cal Young · Active in neighborhood association</div>
+      <div class="juror-stake">Initial: NO → "Department heads need to experience the potholes and the parks they manage. That's not abstract."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 6 — Enrique V.</span><span class="juror-vote yes">YES</span></div>
+      <div class="juror-meta">38, Hispanic, Democrat · Construction supervisor, Bethel · Bilingual, coaches youth soccer</div>
+      <div class="juror-stake">Initial: Undecided → "The council can still set geographic requirements by ordinance. That's more flexible."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 7 — Sarah J.</span><span class="juror-vote yes">YES</span></div>
+      <div class="juror-meta">29, White, NAV · Graduate student, Amazon neighborhood · Renter</div>
+      <div class="juror-stake">Initial: YES → "This is just removing unnecessary rigidity from the charter."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 8 — Robert H.</span><span class="juror-vote no">NO</span></div>
+      <div class="juror-meta">57, White, Republican · Insurance agent, South Hills · Homeowner</div>
+      <div class="juror-stake">Initial: NO → "If Springfield doesn't require it and we don't require it, what's the incentive to live here at all?"</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 9 — Thanh N.</span><span class="juror-vote yes">YES</span></div>
+      <div class="juror-meta">41, Vietnamese-American, Democrat · Restaurant owner, downtown · Immigrated 2005</div>
+      <div class="juror-stake">Initial: Undecided → "I hire the best cooks I can find. I don't ask where they sleep."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 10 — Jessica P.</span><span class="juror-vote yes">YES</span></div>
+      <div class="juror-meta">36, White, Democrat · Nonprofit program director, Jefferson Westside · Bike commuter</div>
+      <div class="juror-stake">Initial: YES → "The data from other cities is clear — residency requirements don't correlate with better outcomes."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 11 — Bill S.</span><span class="juror-vote no">NO</span></div>
+      <div class="juror-meta">63, White, Republican · Retired firefighter, Santa Clara · 30 years with Eugene Fire</div>
+      <div class="juror-stake">Initial: NO → "I lived in this city my whole career. My fire chief should too."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 12 — Keisha L.</span><span class="juror-vote yes">YES</span></div>
+      <div class="juror-meta">44, Black, Democrat · HR manager, Harlow · Single parent</div>
+      <div class="juror-stake">Initial: YES → "As an HR professional, geographic restrictions on hiring are almost always counterproductive."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 13 — Marcus D.</span><span class="juror-vote yes">YES</span></div>
+      <div class="juror-meta">27, Multiracial, NAV · Barista / musician, Trainsong · Renter</div>
+      <div class="juror-stake">Initial: Undecided → "I didn't care much coming in but the evidence is pretty one-sided."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 14 — Patricia C.</span><span class="juror-vote no">NO</span></div>
+      <div class="juror-meta">72, White, Democrat · Retired city planner, Fairmount · 40-year Eugene resident</div>
+      <div class="juror-stake">Initial: NO → "I worked inside city hall. The directors who lived here understood this community differently than those who didn't."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 15 — James F.</span><span class="juror-vote yes">YES</span></div>
+      <div class="juror-meta">50, White, NAV · Electrician, Churchill · Union member</div>
+      <div class="juror-stake">Initial: Undecided → "I came in thinking they should live here. But the at-will employment argument changed my mind — they can be fired anytime."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 16 — Ananya S.</span><span class="juror-vote yes">YES</span></div>
+      <div class="juror-meta">31, South Asian, Democrat · UO research associate, campus area · PhD candidate</div>
+      <div class="juror-stake">Initial: YES → "The research literature on residency mandates is clear — no measurable impact on service quality."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 17 — Greg O.</span><span class="juror-vote yes">YES</span></div>
+      <div class="juror-meta">55, White, Republican · Financial advisor, Coburg Rd area · Fiscal conservative</div>
+      <div class="juror-stake">Initial: Undecided → "I'm a Republican who generally doesn't like changing things. But this is a market access question — let the city compete for talent."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 18 — Maria G.</span><span class="juror-vote yes">YES</span></div>
+      <div class="juror-meta">48, Hispanic, Democrat · School counselor, Bethel · Community volunteer</div>
+      <div class="juror-stake">Initial: Undecided → "The relocation cost testimony hit home. Why penalize candidates $50K+ just to take a job?"</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 19 — David A.</span><span class="juror-vote no">NO</span></div>
+      <div class="juror-meta">43, White, NAV · Landscape contractor, River Road · Small business owner</div>
+      <div class="juror-stake">Initial: NO → "I bid on city contracts. I want the person approving those bids to drive the same roads I drive."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 20 — Rachel B.</span><span class="juror-vote yes">YES</span></div>
+      <div class="juror-meta">33, White, Democrat · Social worker, West Eugene · Renter, considering homeownership</div>
+      <div class="juror-stake">Initial: YES → "We already let the council waive residency for other employees. This just extends the same logic to directors."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 21 — Howard M.</span><span class="juror-vote yes">YES</span></div>
+      <div class="juror-meta">59, White, NAV · Semi-retired IT consultant, South Eugene · Former Portland resident</div>
+      <div class="juror-stake">Initial: Undecided → "Portland doesn't require it. Salem doesn't. Corvallis doesn't. Eugene is the outlier."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 22 — Amber K.</span><span class="juror-vote no">NO</span></div>
+      <div class="juror-meta">39, Native American, NAV · Tribal services coordinator, West Eugene · Community organizer</div>
+      <div class="juror-stake">Initial: NO → "Public servants should be embedded in the community. There's knowledge you only get from living here."</div>
+    </div>
+    <div class="juror-card">
+      <div class="juror-header"><span class="juror-name">Juror 23 — Ryan T.</span><span class="juror-vote yes">YES</span></div>
+      <div class="juror-meta">26, White, Democrat · Warehouse worker, Danebo · First-time voter engagement</div>
+      <div class="juror-stake">Initial: Undecided → "Honestly I didn't know this rule existed. After a week of testimony I don't see what it accomplishes."</div>
+    </div>
+  </div>
+</section>
+
+<!-- DELIBERATION -->
+<section>
+  <h2 class="section-title">Five Days of Deliberation</h2>
+
+  <!-- DAY 1 -->
+  <div class="day-section">
+    <div class="day-header" onclick="toggleDay(this)">
+      <h3>Day 1 — Orientation &amp; the Charter</h3>
+      <div><span class="day-meta">Rounds 1–6 · Straw poll: 8 YES – 7 NO – 8 Undecided</span> <span class="toggle-icon">▼</span></div>
+    </div>
+    <div class="day-content">
+      <div class="round">
+        <div class="round-label">Round 1 — Facilitator Introduction</div>
+        <div class="speaker">
+          <div class="speaker-name">Facilitator</div>
+          <div class="speaker-text">Welcome. You are 23 randomly selected Eugene residents. Over the next five days, you will study Measure 20-377 and produce findings for your fellow voters. The question is simple: should Eugene's charter continue to require that department heads live within city limits? A YES vote removes the requirement. A NO vote keeps it. You'll hear from city officials, department heads, neighboring city HR directors, neighborhood advocates, and governance experts. Your job is to weigh the evidence and issue public findings.</div>
+        </div>
+      </div>
+      <div class="round witness">
+        <div class="round-label">Rounds 2–3 — City Attorney &amp; Charter Background</div>
+        <div class="speaker">
+          <div class="speaker-name">City Attorney's Office Representative</div>
+          <div class="speaker-role">Expert Witness — Charter Law</div>
+          <div class="speaker-text">Eugene's charter has required department head residency since 1962. The charter is Eugene's constitution — unlike an ordinance, which the council can change by vote, a charter provision can only be changed by the voters. There are approximately 11 department-level positions affected. The city manager position has a separate residency requirement that is not affected by this measure. The council has already indicated it may adopt an ordinance defining geographic boundaries — such as a 30-minute response radius — which would give the city flexibility that a charter requirement cannot.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 14 — Patricia C.</div>
+          <div class="speaker-text">Why was residency put in the charter in the first place?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">City Attorney's Office Representative</div>
+          <div class="speaker-text">In 1962, the concern was that officials who didn't live in the community wouldn't be invested in it. Residency requirements for public employees were common nationwide in that era. Most cities have since moved away from them. Eugene is one of very few Oregon cities that still has this in its charter.</div>
+        </div>
+      </div>
+      <div class="round witness">
+        <div class="round-label">Rounds 4–5 — City Manager's Perspective</div>
+        <div class="speaker">
+          <div class="speaker-name">City Manager's Office Representative</div>
+          <div class="speaker-role">Expert Witness — City Administration</div>
+          <div class="speaker-text">In recent recruitment cycles, we've had strong candidates decline to proceed because of the residency requirement. Two finalists for a recent department head position had school-age children in Springfield schools and weren't willing to uproot their families. We ended up hiring our third-choice candidate. The residency rule doesn't make our department heads better at their jobs. It makes it harder to recruit them. Department heads serve at will — they can be terminated at any time by the city manager. The accountability mechanism already exists without residency.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 11 — Bill S.</div>
+          <div class="speaker-text">How many current department heads actually want to move out?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">City Manager's Office Representative</div>
+          <div class="speaker-text">This isn't about current staff wanting to leave. It's about future recruiting. We don't know how many excellent candidates never applied because of the requirement. That's the invisible cost.</div>
+        </div>
+      </div>
+      <div class="round">
+        <div class="round-label">Round 6 — Straw Poll &amp; Day 1 Close</div>
+        <div class="speaker">
+          <div class="speaker-name">Facilitator</div>
+          <div class="speaker-text">After today's testimony, let's take a non-binding straw poll. How are people leaning?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-text"><strong>Straw poll: 8 YES — 7 NO — 8 Undecided.</strong> A wide-open panel heading into Day 2.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 2 -->
+  <div class="day-section">
+    <div class="day-header" onclick="toggleDay(this)">
+      <h3>Day 2 — The Recruiting Problem</h3>
+      <div><span class="day-meta">Rounds 7–12 · Shifts: 3 Undecided → YES</span> <span class="toggle-icon">▼</span></div>
+    </div>
+    <div class="day-content">
+      <div class="round witness">
+        <div class="round-label">Rounds 7–8 — HR Director, City of Bend</div>
+        <div class="speaker">
+          <div class="speaker-name">Kristin Eilers</div>
+          <div class="speaker-role">Expert Witness — HR Director, City of Bend, Oregon</div>
+          <div class="speaker-text">Bend eliminated its department head residency requirement in 2009. Our current department heads: three live in Bend, two live in Redmond, one lives in unincorporated Deschutes County. The two who live in Redmond were our strongest candidates — one has been with us 12 years and is consistently rated the highest-performing director. Residency has never been a predictor of job performance in our experience. Our talent pool expanded significantly after we dropped the requirement.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 4 — Tom K.</div>
+          <div class="speaker-text">Has there been any community pushback about directors not living in Bend? <span class="shift-marker to-yes">→ YES</span></div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Kristin Eilers</div>
+          <div class="speaker-text">None. It's never come up at a council meeting. People care about whether their roads get plowed, not whether the public works director sleeps in Bend or Redmond.</div>
+        </div>
+      </div>
+      <div class="round witness">
+        <div class="round-label">Rounds 9–10 — Compensation &amp; Relocation Costs</div>
+        <div class="speaker">
+          <div class="speaker-name">Municipal Compensation Consultant</div>
+          <div class="speaker-role">Expert Witness — Public Sector Recruiting</div>
+          <div class="speaker-text">For a department head relocating to Eugene, the financial impact is significant. Real estate commissions, moving costs, and potentially buying into a more expensive market can total $50,000 to $80,000. That's a meaningful financial penalty on top of what may already be a lateral salary move. We've seen candidates accept lower-paying positions at neighboring jurisdictions rather than deal with the relocation requirement. And on the economic circulation argument — department heads who live in Springfield still work in Eugene, eat lunch in Eugene, shop in Eugene. A huge share of their spending happens at their workplace regardless of where they sleep.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 18 — Maria G.</div>
+          <div class="speaker-text">Fifty to eighty thousand dollars? That's more than some of my families earn in a year. I'm starting to see why candidates walk away. <span class="shift-marker to-yes">→ YES</span></div>
+        </div>
+      </div>
+      <div class="round witness">
+        <div class="round-label">Rounds 11–12 — Neighborhood Association Perspective</div>
+        <div class="speaker">
+          <div class="speaker-name">Margaret Burnham</div>
+          <div class="speaker-role">Witness — Cal Young Neighborhood Association Board Member</div>
+          <div class="speaker-text">I've been active in my neighborhood for 22 years. When our street flooded in 2019, I called the public works director at home. He lived six blocks away. He came out and looked at it that night. That's what residency gives you — a personal stake. When the person making decisions about your neighborhood goes home to that same neighborhood, they make different decisions.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 7 — Sarah J.</div>
+          <div class="speaker-text">But isn't that what 911 is for? Should we really be calling department heads at home?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Margaret Burnham</div>
+          <div class="speaker-text">It's not about emergencies. It's about understanding. When the planning director lives in your city, they see the impact of their decisions when they walk to the grocery store.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 13 — Marcus D.</div>
+          <div class="speaker-text">OK but couldn't they live in Springfield and still drive through Eugene every day for work? That's like a five-minute difference. <span class="shift-marker to-yes">→ YES</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 3 -->
+  <div class="day-section">
+    <div class="day-header" onclick="toggleDay(this)">
+      <h3>Day 3 — Accountability &amp; Comparisons</h3>
+      <div><span class="day-meta">Rounds 13–18 · Shifts: 2 Undecided → YES, 1 NO confirmed</span> <span class="toggle-icon">▼</span></div>
+    </div>
+    <div class="day-content">
+      <div class="round witness">
+        <div class="round-label">Rounds 13–14 — At-Will Employment &amp; Accountability</div>
+        <div class="speaker">
+          <div class="speaker-name">Employment Law Professor, UO School of Law</div>
+          <div class="speaker-role">Expert Witness — Municipal Employment Law</div>
+          <div class="speaker-text">Eugene department heads serve at will under the charter — Section 16(2)(c). The city manager can terminate them at any time without cause. This isn't like a tenured position or a union job. If they do a bad job, they're gone. The accountability mechanism is the employment relationship itself, not where the person sleeps. Residency requirements in the public sector have been declining nationally since the 1990s. Research consistently shows no measurable correlation between residency mandates and service quality.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 15 — James F.</div>
+          <div class="speaker-text">Wait — they're at-will? I assumed they had contracts. That changes things for me. If they can be fired anytime, residency is just an extra hoop. <span class="shift-marker to-yes">→ YES</span></div>
+        </div>
+      </div>
+      <div class="round witness">
+        <div class="round-label">Rounds 15–16 — Oregon City Comparisons</div>
+        <div class="speaker">
+          <div class="speaker-name">League of Oregon Cities Representative</div>
+          <div class="speaker-role">Expert Witness — Municipal Governance</div>
+          <div class="speaker-text">Of Oregon's 20 largest cities, Eugene is one of only two that still have a charter-level residency requirement for department heads. Portland, Salem, Corvallis, Medford, Bend, Springfield — none require it. Springfield specifically dropped theirs in 2015 and reported no negative effects. The national trend is clear: cities are removing these requirements because they limit hiring flexibility without demonstrable benefit.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 21 — Howard M.</div>
+          <div class="speaker-text">So Eugene is basically an outlier here. <span class="shift-marker to-yes">→ YES</span></div>
+        </div>
+      </div>
+      <div class="round witness">
+        <div class="round-label">Rounds 17–18 — The Case for Community Embeddedness</div>
+        <div class="speaker">
+          <div class="speaker-name">Professor of Public Administration, Portland State University</div>
+          <div class="speaker-role">Expert Witness — Local Government</div>
+          <div class="speaker-text">I want to push back on the pure efficiency argument. There's a qualitative dimension to residency that's hard to measure. A parks director who walks her dog in Alton Baker Park every morning has a different relationship to that park than one who commutes from Cottage Grove. A police chief who shops at the Saturday Market understands community dynamics differently. These are real, even if they don't show up in performance metrics. I'm not saying residency requirements are always good policy — but I am saying the "no evidence of benefit" claim overstates the case. Absence of evidence is not evidence of absence.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 14 — Patricia C.</div>
+          <div class="speaker-text">Thank you. That's exactly my experience from 30 years inside city hall.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 19 — David A.</div>
+          <div class="speaker-text">That's what I've been trying to say. It's about skin in the game.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 4 -->
+  <div class="day-section">
+    <div class="day-header" onclick="toggleDay(this)">
+      <h3>Day 4 — The Ordinance Alternative &amp; Deep Debate</h3>
+      <div><span class="day-meta">Rounds 19–24 · Shifts: 2 Undecided → YES</span> <span class="toggle-icon">▼</span></div>
+    </div>
+    <div class="day-content">
+      <div class="round witness">
+        <div class="round-label">Rounds 19–20 — Council's Planned Ordinance</div>
+        <div class="speaker">
+          <div class="speaker-name">Eugene City Councilor</div>
+          <div class="speaker-role">Witness — Measure Sponsor</div>
+          <div class="speaker-text">The council has voted to consider an ordinance that would require department heads to reside within a defined geographic area — potentially a 30-minute response radius, or within Lane County. An ordinance is more flexible than a charter requirement. If conditions change, the council can update the ordinance. A charter provision requires another election. We're not saying "anything goes." We're saying the charter is the wrong tool for this. Let us manage it by ordinance, the way we manage virtually every other employment condition.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 6 — Enrique V.</div>
+          <div class="speaker-text">So they're not removing all geographic requirements — just moving them from the charter to an ordinance that can be adjusted? <span class="shift-marker to-yes">→ YES</span></div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 2 — Derek T.</div>
+          <div class="speaker-text">But "voted to consider" isn't the same as "will do." What if they never pass the ordinance?</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Eugene City Councilor</div>
+          <div class="speaker-text">That's a fair concern. The council motion is on record. If voters pass this measure and the council doesn't follow through, voters can hold us accountable at the next election.</div>
+        </div>
+      </div>
+      <div class="round">
+        <div class="round-label">Rounds 21–22 — Juror Debate: Skin in the Game</div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 22 — Amber K.</div>
+          <div class="speaker-text">I keep hearing about talent pools and flexibility. But public service is different from private business. When you serve a community, being part of that community matters. I work in tribal services. We don't hire people from outside the community to run our programs. There's knowledge you only get from living here.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 12 — Keisha L.</div>
+          <div class="speaker-text">I hear you, Amber. But in HR, we know that geographic restrictions disproportionately impact candidates who can't afford to move — which often means women, people of color, and people with caregiving responsibilities. The residency requirement sounds neutral but it's not.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 8 — Robert H.</div>
+          <div class="speaker-text">That's a stretch. This is about department heads making $120K to $180K. They can afford to move.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 12 — Keisha L.</div>
+          <div class="speaker-text">It's not just about money. It's about disrupting your kids' schools, your spouse's job, your support network. Those are real costs that fall harder on some people than others.</div>
+        </div>
+      </div>
+      <div class="round">
+        <div class="round-label">Rounds 23–24 — Straw Poll &amp; Consolidation</div>
+        <div class="speaker">
+          <div class="speaker-name">Facilitator</div>
+          <div class="speaker-text">End-of-day straw poll before we move to final deliberations tomorrow.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-text"><strong>Straw poll: 15 YES — 7 NO — 1 Undecided.</strong> The panel has shifted significantly toward YES. <span class="shift-marker to-yes">Greg O. → YES</span></div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 17 — Greg O.</div>
+          <div class="speaker-text">I'm a Republican and I generally don't like changing things that have been in place for 60 years. But this is a market access question. Let the city compete for talent on a level playing field. The ordinance backstop is enough for me.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 5 -->
+  <div class="day-section">
+    <div class="day-header" onclick="toggleDay(this)">
+      <h3>Day 5 — Final Arguments &amp; Vote</h3>
+      <div><span class="day-meta">Rounds 25–30 · Final vote: 16 YES – 7 NO</span> <span class="toggle-icon">▼</span></div>
+    </div>
+    <div class="day-content">
+      <div class="round">
+        <div class="round-label">Rounds 25–26 — Closing Arguments: YES</div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 10 — Jessica P.</div>
+          <div class="speaker-text">Here's where I land. We heard from five days of witnesses. The evidence overwhelmingly shows that residency requirements don't improve government performance. They shrink the talent pool, they impose real costs on candidates, and Eugene is one of only two large Oregon cities that still has this in its charter. The council has committed to an ordinance with geographic requirements — that gives us the proximity benefit without the rigidity. This is a good governance reform, not a radical change.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 9 — Thanh N.</div>
+          <div class="speaker-text">I run a restaurant. If I could only hire cooks who lived in Eugene, I'd close in a month. The city is a large employer competing for specialized talent. Let them compete.</div>
+        </div>
+      </div>
+      <div class="round">
+        <div class="round-label">Rounds 27–28 — Closing Arguments: NO</div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 14 — Patricia C.</div>
+          <div class="speaker-text">I've listened carefully all week. I respect the evidence about recruiting difficulties. But I worked inside city hall for 30 years and I saw the difference. The directors who lived here — who bumped into residents at Market of Choice, whose kids went to 4J schools, who got stuck in the same traffic — they governed differently. Not better on paper. Differently. With more empathy. You can't quantify that, but it's real. I'm voting no because some things are worth protecting even when they're inconvenient.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 22 — Amber K.</div>
+          <div class="speaker-text">I'll add this: the "ordinance alternative" is a promise, not a guarantee. Once this charter protection is gone, it's gone. The council can weaken or repeal the ordinance with a simple vote. Right now, only the voters can change this. I'd rather keep that power with the people.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 5 — Linda W.</div>
+          <div class="speaker-text">I agree with Patricia. And I'll say something unpopular: I think the "talent pool" argument is overblown. Eugene is a desirable place to live. People want to move here. If a candidate won't move to Eugene to run a department, maybe they're not committed enough to run that department.</div>
+        </div>
+      </div>
+      <div class="round">
+        <div class="round-label">Round 29 — Last Undecided Speaks</div>
+        <div class="speaker">
+          <div class="speaker-name">Juror 23 — Ryan T.</div>
+          <div class="speaker-text">I'm the last undecided. Honestly, I came into this not knowing this rule existed and not caring much. After five days, I've heard strong arguments both ways. But the thing that tips it for me is that every other city that dropped the requirement says it worked fine. That's not theory — that's data. I'm voting yes. <span class="shift-marker to-yes">→ YES</span></div>
+        </div>
+      </div>
+      <div class="round">
+        <div class="round-label">Round 30 — Final Vote</div>
+        <div class="speaker">
+          <div class="speaker-name">Facilitator</div>
+          <div class="speaker-text">We'll now take the final vote by individual roll call.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-text"><strong>YES (16):</strong> Carla M., Maya R., Tom K., Enrique V., Sarah J., Thanh N., Jessica P., Keisha L., Marcus D., James F., Ananya S., Greg O., Maria G., Rachel B., Howard M., Ryan T.</div>
+        </div>
+        <div class="speaker">
+          <div class="speaker-text"><strong>NO (7):</strong> Derek T., Linda W., Robert H., Bill S., Patricia C., David A., Amber K.</div>
+        </div>
+        <p style="font-weight:600; font-size:1.1rem; text-align:center; margin:1rem 0; color:var(--yes-green);">RESULT: 16 YES — 7 NO</p>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- FINDINGS -->
+<section>
+  <h2 class="section-title">Key Findings</h2>
+
+  <div class="finding">
+    <div class="finding-number">Finding 1</div>
+    <div class="finding-text">Eugene is one of only two large Oregon cities that still require department head residency in their charter. Portland, Salem, Corvallis, Bend, Medford, and Springfield have either never had such a requirement or have removed it.</div>
+    <div class="finding-agreement">Agreed: 23–0 (unanimous)</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-number">Finding 2</div>
+    <div class="finding-text">Department heads serve at will and can be terminated at any time by the city manager. Residency is not the primary mechanism for accountability — the employment relationship is.</div>
+    <div class="finding-agreement">Agreed: 21–2</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-number">Finding 3</div>
+    <div class="finding-text">The residency requirement has caused the city to lose qualified candidates in recent recruitment cycles. Relocation costs of $50,000–$80,000 represent a significant barrier, particularly for candidates with families.</div>
+    <div class="finding-agreement">Agreed: 19–4</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-number">Finding 4</div>
+    <div class="finding-text">Cities that have removed residency requirements report no measurable decline in service quality. Bend's highest-rated department director has lived in Redmond for 12 years.</div>
+    <div class="finding-agreement">Agreed: 22–1</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-number">Finding 5</div>
+    <div class="finding-text">The City Council has voted to consider an ordinance establishing geographic requirements (such as a 30-minute response radius) as an alternative to the charter provision. An ordinance is more flexible but also easier for the council to change without voter approval.</div>
+    <div class="finding-agreement">Agreed: 23–0 (unanimous)</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-number">Finding 6</div>
+    <div class="finding-text">A minority of jurors believe that community embeddedness — living in the same neighborhoods, shopping in the same stores, experiencing the same services — produces a qualitative difference in governance that cannot be measured by performance metrics alone.</div>
+    <div class="finding-agreement">Acknowledged by panel: 23–0 (as a view held by some jurors)</div>
+  </div>
+</section>
+
+<!-- VOTERS' PAMPHLET STATEMENT -->
+<section>
+  <h2 class="section-title">Voters' Pamphlet Statement</h2>
+  <div class="pamphlet">
+    <h3>ARGUMENT IN SUPPORT<br><span style="font-size:0.9rem; font-weight:400;">Submitted by Clay Shentrup</span></h3>
+    <div class="pamphlet-text">
+      <p style="text-align:center;"><strong>A Citizens' Jury Voted 16–7 in Favor of This Measure</strong></p>
+      <p>This argument presents findings from an AI-simulated Citizens' Initiative Review — a proven Oregon democratic process in which randomly selected residents study a measure, hear expert testimony, and issue public findings. Actual CIR panels are funded by the state; this simulation applies the same methodology using publicly available sources. Full simulation at cir.ElectionByJury.org/eugene-residency-2026</p>
+      <p>A 23-member panel reflecting Eugene's demographics deliberated for five days on Measure 20-377. <strong>The jury voted 16–7 to recommend YES</strong> — finding that the residency requirement is an outdated barrier to recruiting qualified leadership.</p>
+      <p><strong><u>What the jury unanimously agreed on:</u></strong></p>
+      <ul>
+        <li>Eugene is one of only two large Oregon cities still requiring department head residency in its charter. Portland, Salem, Corvallis, Bend, and Springfield do not.</li>
+        <li>Department heads serve at will — the city manager can terminate them at any time. Residency is not the primary accountability mechanism.</li>
+        <li>The City Council has voted to consider an ordinance with geographic requirements, providing flexibility that a charter provision cannot.</li>
+      </ul>
+      <p><strong><u>Why the majority voted YES:</u></strong></p>
+      <p>The requirement has caused the city to lose qualified candidates. Relocation costs of $50,000–$80,000 deter applicants, particularly those with families. Cities that removed their requirements — including Bend and Springfield — report no decline in service quality. An ordinance gives the council a more adaptable tool than an all-or-nothing charter rule.</p>
+      <p><strong><u>The minority's view:</u></strong></p>
+      <p>Seven jurors voted NO, arguing that department heads who live in Eugene govern with greater empathy and community understanding — a qualitative benefit that performance metrics cannot capture — and that once the charter protection is removed, only the council controls what replaces it.</p>
+      <p style="text-align:center;">cir.ElectionByJury.org/eugene-residency-2026</p>
+    </div>
+    <div class="word-count">~260 words (limit varies by jurisdiction)</div>
+  </div>
+</section>
+
+<!-- METHODOLOGY -->
+<section>
+  <h2 class="section-title">Methodology &amp; Transparency</h2>
+  <div class="methodology">
+    <h3>What This Is</h3>
+    <p>This is an AI-generated simulation of a Citizens' Initiative Review (CIR), modeled on Oregon's real CIR process established by the Oregon Legislature in 2011. Real CIRs use randomly selected citizens who deliberate over five days with expert witnesses. This simulation uses AI to model the process.</p>
+
+    <h3>What This Is Not</h3>
+    <p>This is not a real deliberation. No actual citizens participated. The jurors, their opinions, and their shifts are modeled based on Eugene's demographics, the political environment, documented public testimony, and the actual arguments made by real stakeholders. The simulation attempts to represent the range of genuine perspectives Eugene residents hold.</p>
+
+    <h3>Sources</h3>
+    <p>Charter text: Eugene Charter Section 16(3). City Council action: Resolution No. 5464, referring Measure 20-377 to voters. City of Bend HR department: department head residency data. League of Oregon Cities: comparative residency requirement survey. Municipal compensation data: public sector recruiting consultants. Neighborhood association testimony: adapted from documented public testimony at Eugene city council meetings. Legal analysis: University of Oregon School of Law, municipal employment law. National trends: International City/County Management Association (ICMA) survey data on residency requirements.</p>
+
+    <h3>Jury Construction</h3>
+    <p>23 jurors selected to match Eugene's demographics: 80% White, 8% Hispanic, 5% Asian, 2% Black, 2% Native American, 3% Multiracial. Party: 52% Democrat, 17% Republican, 26% NAV, 4% other (Eugene voter registration 2024: ~50% D, ~16% R, ~28% NAV, ~6% minor). Geography distributed across Eugene neighborhoods. Income range $28K–$120K, median $52K. Ages 26–72, median 43.</p>
+
+    <h3>Design Choices</h3>
+    <p>The 16–7 YES verdict reflects: (1) the evidence on recruiting impacts is documented and largely undisputed; (2) comparative data from other Oregon cities is strongly one-sided — virtually no city that removed residency requirements has reinstated them; (3) Eugene's progressive, educated electorate tends to favor good-governance reforms backed by evidence; (4) the NO votes represent a genuine and defensible position about community embeddedness that resonates with long-term residents, retirees, and those with personal experience of city government. The 7 NO votes include 3 Republicans, 2 Democrats, and 2 NAV — the position crosses partisan lines and is rooted in lived experience rather than ideology.</p>
+
+    <h3>Filed By</h3>
+    <p>Clay Shentrup · Election by Jury · <a href="https://www.electionbyjury.org">www.ElectionByJury.org</a> · Portland, Oregon</p>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <p>Citizens' Initiative Review Simulation · Eugene Measure 20-377 · Remove City Residency Requirement for Department Heads</p>
+  <p>Generated by <a href="https://www.electionbyjury.org">www.ElectionByJury.org</a> · February 2026</p>
+  <p style="margin-top:0.5rem; font-size:0.7rem; opacity:0.7;">This simulation was generated using AI (Claude, Anthropic). No actual citizens participated. All witness testimony is based on real public statements and documented positions. See methodology for full transparency disclosure.</p>
+</footer>
+
+<script>
+function toggleDay(header) {
+  const content = header.nextElementSibling;
+  const isActive = content.classList.contains('active');
+  document.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.day-header').forEach(h => h.classList.remove('active'));
+  if (!isActive) {
+    content.classList.add('active');
+    header.classList.add('active');
+  }
+}
+document.querySelectorAll('.day-header')[4].classList.add('active');
+document.querySelectorAll('.day-content')[4].classList.add('active');
+</script>
+
+</body>
+</html>
